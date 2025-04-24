@@ -29,6 +29,13 @@ func TestParseWhiteSpace(t *testing.T) {
 	assert.Eq(t, txt, "")
 }
 
+func TestLogStandard(t *testing.T) {
+	op, err := parseCall("log")
+	assert.Eq(t, err, nil)
+	assert.True(t, op != nil)
+	op()
+}
+
 func init() {
 	// first below shouldn't be added
 	addOp("", func() string { return "Should never allow map to empty string" })

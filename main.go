@@ -4,22 +4,24 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 )
 
 type Op func() string
 
 var ops map[string]Op
 
-func hello(name string) Op {
+func log(prefix string) Op {
 	return func() string {
-		return "Hello " + name + "!"
+		// see https://cs.opensource.google/go/go/+/go1.24.2:src/time/format.go;l=639
+		fmt.Println(prefix + " " + time.Now().Format("15:04:05.00000"))
+		return ""
 	}
 }
 
 func init() {
 	ops = make(map[string]Op)
-	addOp("bob", hello("Bob"))
-	addOp("jill", hello("Jill"))
+	addOp("log", log("Log"))
 }
 
 func parseCall(call string) (Op, error) {
