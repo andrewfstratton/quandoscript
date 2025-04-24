@@ -9,6 +9,21 @@ func Eq[V comparable](t *testing.T, got, expected V) {
 	t.Helper()
 
 	if expected != got {
-		t.Errorf("assert.Eq(got:%v, expected:%v)", got, expected)
+		t.Errorf("assert should equal '%v', was '%v'", expected, got)
+	}
+}
+
+func Neq[V comparable](t *testing.T, got, expected V) {
+	t.Helper()
+
+	if expected == got {
+		t.Errorf("assert should NOT equal '%v'", expected)
+	}
+}
+
+func True(t *testing.T, b bool) {
+	t.Helper()
+	if !b {
+		t.Errorf("assert should be TRUE")
 	}
 }
