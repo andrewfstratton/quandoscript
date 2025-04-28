@@ -1,32 +1,10 @@
 # quandoscript
 Script engine for Quando
 
-- Script format mostly follows https://en.wikipedia.org/wiki/Wirth_syntax_notation
-  - `{a}` is any, i.e. 0+
-  - `+a+` is many, i.e. 1+
-  - `[a]` is optional, i.e. 0 or 1
-  - `(a|b)` are groups; without () at top level
-  - `(")` is double quote character
-  - `"+"` is (punctuation) character
+Here is the (growing) script definition, note :
 
-Here is the (growing) script definition :
-- line = {action}
-- action = word {. word} _[params]_ +whitespace+
-- params = "(" param {, param} ")"
-- param = word "=" value
-- word = letter {letter|digit}
-- value = number | range | boolean | string
-- string = (") {character} (")
-- boolean = true | false
-- letter = a..z | A..Z
-- digit = 0..9
-- character = UNICODE | prefix_character
-- prefix_character = "\\" (") | "\\" "\\"
+- xxx:: is the definition
 
-
-Notes:
-
-- _* is 0..many, + is 1..many_
 ```mermaid
 graph LR
     stop([" "])
@@ -46,17 +24,17 @@ graph LR
     stop([" "])
     word --> config
     action::--- word-->config --> run --> stop
-    word-->.word-->word
+    word-->dot["."]-->word
 ```
 
 ```mermaid
 graph LR
     stop([" "])
     word:: --- letter-->stop
-    letter-->digit
-    digit-->letter
-    letter-->r[" "]
-    r-->letter
+    letter-->l[" "]-->rl["letter"]-->r[" "]-->stop
+    r-->l
+    l-->u["_"]-->r
+    l-->digit-->r
 ```
 
 ```mermaid
