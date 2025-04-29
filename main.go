@@ -1,17 +1,14 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 	"time"
+
+	"github.com/andrewfstratton/quandoscript/op"
 )
 
-type Op func() string
-
-var ops map[string]Op
-
-func log(prefix string) Op {
+func log(prefix string) op.Op {
 	return func() string {
 		// see https://cs.opensource.google/go/go/+/go1.24.2:src/time/format.go;l=639
 		fmt.Println(prefix + " " + time.Now().Format("15:04:05.00000"))
@@ -20,48 +17,17 @@ func log(prefix string) Op {
 }
 
 func init() {
-	ops = make(map[string]Op)
-	addOp("log", log("Log"))
+	op.Add("log", log("Log"))
 }
 
-func parseCall(call string) (Op, error) {
-	var result Op
-	var err error
-	if call != "" {
-		op, ok := ops[call]
-		if ok {
-			result = op
-		} else {
-			err = errors.New("Failed to parse call '" + call + "'")
-		}
-	}
-	return result, err
-}
-
-func parseLine(line string) (string, error) {
-	var result string
-	var err error
+func parseLine(line string) (fn op.Op, err error) {
 	for _, word := range strings.Fields(line) {
-		var op Op
-		op, err = parseCall(word)
-		if err == nil {
-			result += op()
-		} else {
+		fn, err = op.Get(word)
+		if err != nil {
 			break // i.e. bail out early
 		}
 	}
-	return result, err
-}
-
-func addOp(lookup string, op Op) (err error) {
-	if lookup == "" {
-		err = errors.New("ignoring new operation with empty lookup")
-	} else if op == nil {
-		err = errors.New("ignoring nil operation for '" + lookup + "'")
-	} else {
-		ops[lookup] = op
-	}
-	return err
+	return fn, err
 }
 
 func main() {

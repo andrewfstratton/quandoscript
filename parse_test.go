@@ -4,41 +4,47 @@ import (
 	"testing"
 
 	"github.com/andrewfstratton/quandoscript/assert"
+	"github.com/andrewfstratton/quandoscript/op"
 )
 
 func TestAddEmptyStringWordOp(t *testing.T) {
-	err := addOp("", func() string { return "Should never allow map to empty string" })
+	err := op.Add("", func() string { return "Should never allow map to empty string" })
 	assert.Neq(t, err, nil)
+}
+
+func TestAddWordOp(t *testing.T) {
+	err := op.Add("word", func() string { return "word string" })
+	assert.Eq(t, err, nil)
 }
 
 func TestParse(t *testing.T) {
-	op, err := parseCall("")
+	fn, err := parseLine("")
 	assert.Eq(t, err, nil)
-	assert.True(t, op == nil)
+	assert.True(t, fn == nil)
 }
 
 func TestParseMissing(t *testing.T) {
-	op, err := parseCall("_")
+	fn, err := parseLine("_")
 	assert.Neq(t, err, nil)
-	assert.True(t, op == nil)
+	assert.True(t, fn == nil)
 }
 
 func TestParseWhiteSpace(t *testing.T) {
-	txt, err := parseLine(" ")
+	fn, err := parseLine(" ")
 	assert.Eq(t, err, nil)
-	assert.Eq(t, txt, "")
+	assert.True(t, fn == nil)
 }
 
 func TestLogStandard(t *testing.T) {
-	op, err := parseCall("log")
+	fn, err := parseLine("log")
 	assert.Eq(t, err, nil)
-	assert.True(t, op != nil)
-	op()
+	assert.True(t, fn != nil)
+	fn()
 }
 
 func init() {
 	// first below shouldn't be added
-	addOp("", func() string { return "Should never allow map to empty string" })
-	addOp("hi", func() string { return "hi" })
-	addOp("nl", func() string { return "\n" })
+	op.Add("", func() string { return "Should never allow map to empty string" })
+	op.Add("hi", func() string { return "hi" })
+	op.Add("nl", func() string { return "\n" })
 }
