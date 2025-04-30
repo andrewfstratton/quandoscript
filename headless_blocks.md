@@ -7,9 +7,12 @@ _[] &rarr; block with when/container/box_ &varr;
 ## Small
 
 - [] window title
-- (new) Open Url in browser
-- Log - _currently browser_
-- Javascript - _to replace with QuandoScript?!_
+- **[] button** - Gamepad (server)
+- **new**
+  - Open Url in browser
+  - **Log** - _currently browser_
+  - [] key (global)
+  - Javascript - _to replace with QuandoScript?!_
 
 ## Medium
 
@@ -28,14 +31,14 @@ Mouse+keyboard
   - mouse click
   - type
 
-- currently client
+- client
   - [] key
   - [] special key
   - [] (mouse) move
 
 Gamepad (server)
 
-- [] button
+- ~~[] button~~
 - [] stick move
 - [] trigger
 
