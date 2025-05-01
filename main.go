@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/andrewfstratton/quandoscript/op"
+	"github.com/andrewfstratton/quandoscript/parse"
 )
 
 func log(prefix string) op.Op {
@@ -31,9 +32,9 @@ func parseLine(line string) (fn op.Op, err error) {
 }
 
 func main() {
-	result, err := parseLine("hi bob nl jill nl")
+	fn, err := parse.Line("1 bob nl jill nl")
 	if err != nil {
 		fmt.Println("ERR:", err)
 	}
-	fmt.Println(result)
+	fmt.Println(fn)
 }

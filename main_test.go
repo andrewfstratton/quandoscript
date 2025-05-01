@@ -17,7 +17,7 @@ func TestAddWordOp(t *testing.T) {
 	assert.Eq(t, err, nil)
 }
 
-func TestParse(t *testing.T) {
+func TestParseEmpty(t *testing.T) {
 	fn, err := parseLine("")
 	assert.Eq(t, err, nil)
 	assert.True(t, fn == nil)
@@ -30,7 +30,7 @@ func TestParseMissing(t *testing.T) {
 }
 
 func TestParseWhiteSpace(t *testing.T) {
-	fn, err := parseLine(" ")
+	fn, err := parseLine(" \n\t")
 	assert.Eq(t, err, nil)
 	assert.True(t, fn == nil)
 }
