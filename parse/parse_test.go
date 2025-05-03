@@ -26,3 +26,21 @@ func TestParseId(t *testing.T) {
 	assert.Neq(t, err, nil)
 	assert.Eq(t, remaining, match)
 }
+
+func TestParseSpacer(t *testing.T) {
+	match := ""
+	remaining, err := stripSpacer(match)
+	assert.Neq(t, err, nil)
+	assert.Eq(t, remaining, match)
+
+	match = "word.word"
+	remaining, err = stripSpacer(match)
+	assert.Neq(t, err, nil)
+	assert.Eq(t, remaining, match)
+
+	match = " \t  w"
+	remaining, err = stripSpacer(match)
+	assert.Eq(t, err, nil)
+	assert.Eq(t, remaining, "w")
+
+}

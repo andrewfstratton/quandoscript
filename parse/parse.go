@@ -33,3 +33,17 @@ func GetId(line string) (id int, remaining string, err error) {
 	}
 	return
 }
+
+// strips space/tab at start of line, or err if missing.  remaining is the rest of the string
+func stripSpacer(line string) (remaining string, err error) {
+	re := regexp.MustCompile("^[( )\t]+")
+	arr := re.FindStringIndex(line)
+	if len(arr) != 2 {
+		remaining = line
+		err = errors.New("Failed to find space/tab at start of '" + line + "'")
+	} else {
+		count := arr[1] // start must be 0 due to regexp starting ^
+		remaining = line[count:]
+	}
+	return
+}
