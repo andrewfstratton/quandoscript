@@ -44,3 +44,23 @@ func TestParseSpacer(t *testing.T) {
 	assert.Eq(t, remaining, "w")
 
 }
+
+func TestParseWord(t *testing.T) {
+	match := ""
+	word, remaining, err := getWord(match)
+	assert.Neq(t, err, nil)
+	assert.Eq(t, remaining, match)
+	assert.Eq(t, word, "")
+
+	match = "w"
+	word, remaining, err = getWord(match)
+	assert.Eq(t, err, nil)
+	assert.Eq(t, remaining, "")
+	assert.Eq(t, word, match)
+
+	match = "word.word()"
+	word, remaining, err = getWord(match)
+	assert.Eq(t, err, nil)
+	assert.Eq(t, remaining, "()")
+	assert.Eq(t, word, "word.word")
+}

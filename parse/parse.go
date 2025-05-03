@@ -47,3 +47,19 @@ func stripSpacer(line string) (remaining string, err error) {
 	}
 	return
 }
+
+// returns word at start of line, or err if missing.  remaining is the rest of the string
+// word starts with a letter, then may also include digits . or _
+func getWord(line string) (word string, remaining string, err error) {
+	re := regexp.MustCompile("^[a-zA-Z][a-zA-Z0-9_.]*")
+	arr := re.FindStringIndex(line)
+	if len(arr) != 2 {
+		remaining = line
+		err = errors.New("Failed to find a word starting with a-z or A-Z at start of '" + line + "'")
+	} else {
+		count := arr[1] // start must be 0 due to regexp starting ^
+		remaining = line[count:]
+		word = line[0:count]
+	}
+	return
+}
