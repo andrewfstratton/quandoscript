@@ -17,14 +17,15 @@ type Input struct {
 type Params map[string]any
 
 func Line(line string) (fn op.Op, err error) {
-	var id int
 	input := Input{line: line}
-	id = getId(&input)
-	if err != nil {
-		return nil, errors.New("Failed to find id at start of line:\n\t" + err.Error())
+	id := getId(&input)
+	if input.err != nil {
+		err = input.err
+		return
 	}
 	fmt.Printf("Found id :%v\n leaving :'%v'\n", id, line)
-	return fn, err
+	fn = nil
+	return
 }
 
 // removes and returns a [0..9] integer from start of input.line, or err.
@@ -32,7 +33,7 @@ func getId(input *Input) (id int) {
 	re := regexp.MustCompile("^([0-9])+")
 	arr := re.FindStringIndex(input.line)
 	if len(arr) != 2 {
-		input.err = errors.New("Failed to find digits at start of '" + input.line + "'")
+		input.err = errors.New("Failed to find Id as digits at start of '" + input.line + "'")
 		return
 	}
 	count := arr[1]                          // start must be 0 due to regexp starting ^
