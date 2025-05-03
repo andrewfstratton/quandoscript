@@ -11,7 +11,7 @@ import (
 
 func Line(line string) (fn op.Op, err error) {
 	var id int
-	id, line, err = GetId(line)
+	id, line, err = getId(line)
 	if err != nil {
 		return nil, errors.New("Failed to find id at start of line:\n\t" + err.Error())
 	}
@@ -20,7 +20,7 @@ func Line(line string) (fn op.Op, err error) {
 }
 
 // returns a [0..9]+ digit value at start of line, or err.  remaining is the rest of the string
-func GetId(line string) (id int, remaining string, err error) {
+func getId(line string) (id int, remaining string, err error) {
 	re := regexp.MustCompile("^([0-9])+")
 	arr := re.FindStringIndex(line)
 	if len(arr) != 2 {
