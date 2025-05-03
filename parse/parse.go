@@ -9,7 +9,12 @@ import (
 	"github.com/andrewfstratton/quandoscript/op"
 )
 
-type Params map[string]interface{}
+type Input struct {
+	line string
+	err  error
+}
+
+type Params map[string]any
 
 func Line(line string) (fn op.Op, err error) {
 	var id int
@@ -36,18 +41,16 @@ func getId(line string) (id int, remaining string, err error) {
 	return
 }
 
-// strips space/tab at start of line, or err if missing.  remaining is the rest of the string
-func stripSpacer(line string) (remaining string, err error) {
+// strips space/tab from start of input.line, or err if missing
+func stripSpacer(input *Input) {
 	re := regexp.MustCompile("^[( )\t]+")
-	arr := re.FindStringIndex(line)
+	arr := re.FindStringIndex(input.line)
 	if len(arr) != 2 {
-		remaining = line
-		err = errors.New("Failed to find space/tab at start of '" + line + "'")
-	} else {
-		count := arr[1] // start must be 0 due to regexp starting ^
-		remaining = line[count:]
+		input.err = errors.New("Failed to find space/tab at start of '" + input.line + "'")
+		return
 	}
-	return
+	count := arr[1] // start must be 0 due to regexp starting ^
+	input.line = input.line[count:]
 }
 
 // returns word at start of line, or err if missing.  remaining is the rest of the string
