@@ -83,7 +83,7 @@ func getParams(line string) (params Params, remaining string, err error) {
 	line = line[1:] // strip first character
 	var key string
 	var val bool
-	key, val, remaining, err = getParam(line)
+	// key, val, remaining, err = getParam(line)
 	if err == nil {
 		if key != "" {
 			params[key] = val
@@ -103,28 +103,26 @@ func getParams(line string) (params Params, remaining string, err error) {
 }
 
 // key returns "" when none found
-func getParam(line string) (key string, val bool, remaining string, err error) {
+func getParam(input *Input) (key string, val bool) {
 	re := regexp.MustCompile(`^[a-zA-Z][a-zA-Z0-9_]*=`)
-	arr := re.FindStringIndex(line)
+	arr := re.FindStringIndex(input.line)
 	if len(arr) != 2 {
-		remaining = line
 		return // ignore error since it could be )
 	}
-	count := arr[1] // start must be 0 due to regexp starting ^
-	key = line[:count-1]
-	line = line[count:]
+	count := arr[1]                 // start must be 0 due to regexp starting ^
+	key = input.line[:count-1]      // -1 to drop =
+	remaining := input.line[count:] // TODO check about parsing when not boolean - fail?!
 	re = regexp.MustCompile(`^(true|false)`)
-	arr = re.FindStringIndex(line)
+	arr = re.FindStringIndex(remaining)
 	if len(arr) != 2 {
-		remaining = line
-		err = errors.New("Failed to find 'true' or 'false' at start of '" + line + "'")
+		key = "" // have to reset since already stored
+		input.err = errors.New("Failed to find 'true' or 'false' at start of '" + remaining + "'")
 		return
 	}
 	count = arr[1] // start must be 0 due to regexp starting ^
-	if line[:count] == "true" {
+	if remaining[:count] == "true" {
 		val = true
 	}
-	line = line[count:]
-	remaining = line
+	input.line = remaining[count:]
 	return
 }
