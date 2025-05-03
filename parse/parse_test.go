@@ -7,24 +7,23 @@ import (
 )
 
 func TestParseId(t *testing.T) {
-	// test valid id at start of string
-	id, remaining, err := getId("90 ignore")
+	match := Input{line: ""}
+	id := getId(&match)
+	assert.Eq(t, id, 0) // id must be 1+
+	assert.Neq(t, match.err, nil)
+	assert.Eq(t, match.line, "")
+
+	match = Input{line: ",key=false)"}
+	id = getId(&match)
+	assert.Eq(t, id, 0) // id must be 1+
+	assert.Neq(t, match.err, nil)
+	assert.Eq(t, match.line, ",key=false)")
+
+	match = Input{line: "90 ignore"}
+	id = getId(&match)
 	assert.Eq(t, id, 90)
-	assert.Eq(t, remaining, " ignore")
-	assert.Eq(t, err, nil)
-
-	// test empty string
-	id, remaining, err = getId("")
-	assert.Eq(t, id, 0) // id must be 1+
-	assert.Neq(t, err, nil)
-	assert.Eq(t, remaining, "")
-
-	// test missing id in function call
-	match := ",key=false)"
-	id, remaining, err = getId(match)
-	assert.Eq(t, id, 0) // id must be 1+
-	assert.Neq(t, err, nil)
-	assert.Eq(t, remaining, match)
+	assert.Eq(t, match.err, nil)
+	assert.Eq(t, match.line, " ignore")
 }
 
 func TestParseSpacer(t *testing.T) {

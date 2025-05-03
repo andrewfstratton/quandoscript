@@ -18,7 +18,8 @@ type Params map[string]any
 
 func Line(line string) (fn op.Op, err error) {
 	var id int
-	id, line, err = getId(line)
+	input := Input{line: line}
+	id = getId(&input)
 	if err != nil {
 		return nil, errors.New("Failed to find id at start of line:\n\t" + err.Error())
 	}
@@ -27,17 +28,16 @@ func Line(line string) (fn op.Op, err error) {
 }
 
 // returns a [0..9]+ digit value at start of line, or err.  remaining is the rest of the string
-func getId(line string) (id int, remaining string, err error) {
+func getId(input *Input) (id int) {
 	re := regexp.MustCompile("^([0-9])+")
-	arr := re.FindStringIndex(line)
+	arr := re.FindStringIndex(input.line)
 	if len(arr) != 2 {
-		remaining = line
-		err = errors.New("Failed to find digits at start of '" + line + "'")
-	} else {
-		count := arr[1]                       // start must be 0 due to regexp starting ^
-		id, err = strconv.Atoi(line[0:count]) // err should always be nil
-		remaining = line[count:]
+		input.err = errors.New("Failed to find digits at start of '" + input.line + "'")
+		return
 	}
+	count := arr[1]                          // start must be 0 due to regexp starting ^
+	id, _ = strconv.Atoi(input.line[:count]) // err must be nil
+	input.line = input.line[count:]
 	return
 }
 
