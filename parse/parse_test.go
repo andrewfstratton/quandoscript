@@ -45,22 +45,22 @@ func TestParseSpacer(t *testing.T) {
 }
 
 func TestParseWord(t *testing.T) {
-	match := ""
-	word, remaining, err := getWord(match)
-	assert.Neq(t, err, nil)
-	assert.Eq(t, remaining, match)
+	match := Input{line: ""}
+	word := getWord(&match)
+	assert.Neq(t, match.err, nil)
+	assert.Eq(t, match.line, "")
 	assert.Eq(t, word, "")
 
-	match = "w"
-	word, remaining, err = getWord(match)
-	assert.Eq(t, err, nil)
-	assert.Eq(t, remaining, "")
-	assert.Eq(t, word, match)
+	match = Input{line: "w"}
+	word = getWord(&match)
+	assert.Eq(t, match.err, nil)
+	assert.Eq(t, match.line, "")
+	assert.Eq(t, word, "w")
 
-	match = "word.word()"
-	word, remaining, err = getWord(match)
-	assert.Eq(t, err, nil)
-	assert.Eq(t, remaining, "()")
+	match = Input{line: "word.word()"}
+	word = getWord(&match)
+	assert.Eq(t, match.err, nil)
+	assert.Eq(t, match.line, "()")
 	assert.Eq(t, word, "word.word")
 }
 
