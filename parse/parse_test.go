@@ -99,6 +99,13 @@ func TestParseParamBool(t *testing.T) {
 	assert.Eq(t, key, "")
 	assert.Eq(t, match.line, "")
 	assert.Eq(t, val, false)
+	assert.Neq(t, match.err, nil)
+
+	match = Input{line: `)`} // closing ) ends parameters, no error
+	key, val = getParam(&match)
+	assert.Eq(t, key, "")
+	assert.Eq(t, match.line, ")")
+	assert.Eq(t, val, false)
 	assert.Eq(t, match.err, nil)
 
 	match = Input{line: "=a"}
@@ -106,7 +113,7 @@ func TestParseParamBool(t *testing.T) {
 	assert.Eq(t, key, "")
 	assert.Eq(t, match.line, "=a")
 	assert.Eq(t, val, false)
-	assert.Eq(t, match.err, nil)
+	assert.Neq(t, match.err, nil)
 
 	match = Input{line: "a="}
 	key, val = getParam(&match)

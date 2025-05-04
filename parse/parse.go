@@ -14,6 +14,18 @@ type Input struct {
 	err  error
 }
 
+func (input *Input) matchStart(rxp string, lookfor string) (found string) {
+	arr := regexp.MustCompile("^" + rxp).FindStringIndex(input.line)
+	if len(arr) != 2 {
+		input.err = errors.New("Failed to match " + lookfor + " with '" + rxp + "' at start of '" + input.line + "'")
+		return
+	}
+	count := arr[1] // start must be 0 due to regexp starting ^
+	found = input.line[:count]
+	input.line = input.line[count:]
+	return
+}
+
 type Params map[string]any
 
 func Line(line string) (fn op.Op, err error) {
@@ -28,105 +40,74 @@ func Line(line string) (fn op.Op, err error) {
 	return
 }
 
-// removes and returns a [0..9] integer from start of input.line, or err.
+// removes and returns a [0..9] integer from start of input.line, or input.err.
 func getId(input *Input) (id int) {
-	re := regexp.MustCompile("^([0-9])+")
-	arr := re.FindStringIndex(input.line)
-	if len(arr) != 2 {
-		input.err = errors.New("Failed to find Id as digits at start of '" + input.line + "'")
-		return
-	}
-	count := arr[1]                          // start must be 0 due to regexp starting ^
-	id, _ = strconv.Atoi(input.line[:count]) // err must be nil
-	input.line = input.line[count:]
+	found := input.matchStart("([0-9])+", "Id")
+	id, _ = strconv.Atoi(found) // error must be nil
 	return
 }
 
-// strips space/tab from start of input.line, or err if missing
+// strips space/tab from start of input.line, or input.err if missing
 func stripSpacer(input *Input) {
-	re := regexp.MustCompile("^[( )\t]+")
-	arr := re.FindStringIndex(input.line)
-	if len(arr) != 2 {
-		input.err = errors.New("Failed to find space/tab at start of '" + input.line + "'")
-		return
-	}
-	count := arr[1] // start must be 0 due to regexp starting ^
-	input.line = input.line[count:]
+	_ = input.matchStart("[( )\t]+", "space/tab")
 }
 
 // removes and returns a word at start of input.line, or err if missing.
 // word starts with a letter, then may also include digits . or _
 func getWord(input *Input) (word string) {
-	re := regexp.MustCompile("^[a-zA-Z][a-zA-Z0-9_.]*")
-	arr := re.FindStringIndex(input.line)
-	if len(arr) != 2 {
-		input.err = errors.New("Failed to find a word starting with a-z or A-Z at start of '" + input.line + "'")
-		return
-	}
-	count := arr[1] // start must be 0 due to regexp starting ^
-	word = input.line[:count]
-	input.line = input.line[count:]
-	return
+	return input.matchStart("[a-zA-Z][a-zA-Z0-9_.]*", "word starting a-z or A-Z")
 }
 
 // returns parameters as nil if just (), or Param parameters, err if not starting with ( or not terminated correctly with ).
 // remaining is the rest of the string
 func getParams(input *Input) (params Params) {
-	re := regexp.MustCompile(`^\(`)
-	arr := re.FindStringIndex(input.line)
-	if len(arr) != 2 {
-		input.err = errors.New("Failed to find ( at start of '" + input.line + "'")
+	found := input.matchStart(`\(`, "(")
+	if found == "" {
 		return
 	}
 	params = make(Params)
-	input.line = input.line[1:] // strip first character
 	for {
 		key, val := getParam(input)
-		if key == "" { // no of keys
+		if key == "" { // no key
 			break
 		}
 		if input.err != nil {
 			return
 		}
 		params[key] = val
-		re := regexp.MustCompile(`^,`)
-		arr := re.FindStringIndex(input.line)
-		if len(arr) != 2 {
+		found = input.matchStart(`,`, "")
+		if found != "," {
+			input.err = nil // clear out err and drop out of loop
 			break
 		}
-		input.line = input.line[1:]
 	}
-	re = regexp.MustCompile(`^\)`)
-	arr = re.FindStringIndex(input.line)
-	if len(arr) != 2 {
-		input.err = errors.New("Failed to find ) at start of '" + input.line + "'")
-		return
-	}
-	input.line = input.line[1:] // strip first character
+	_ = input.matchStart(`\)`, ")") // we can return whether we found or not
 	return
 }
 
 // key returns "" when none found
 func getParam(input *Input) (key string, val bool) {
-	re := regexp.MustCompile(`^[a-zA-Z][a-zA-Z0-9_]*=`)
-	arr := re.FindStringIndex(input.line)
-	if len(arr) != 2 {
-		return // ignore error since it could be )
-	}
-	count := arr[1]                 // start must be 0 due to regexp starting ^
-	key = input.line[:count-1]      // -1 to drop =
-	remaining := input.line[count:] // TODO check about parsing when not boolean - fail?!
-	re = regexp.MustCompile(`^(true|false)`)
-	arr = re.FindStringIndex(remaining)
-	if len(arr) != 2 {
-		key = "" // have to reset since already stored
-		input.err = errors.New("Failed to find 'true' or 'false' at start of '" + remaining + "'")
+	restore := input.line
+	// Check for ) and return without error or change to input if found
+	found := input.matchStart(`\)`, "")
+	input.err = nil   // supress error
+	if found == `)` { // found ) so return straight away, key and val == ""
+		input.line = restore
 		return
 	}
-	count = arr[1] // start must be 0 due to regexp starting ^
-	if remaining[:count] == "true" {
+	key = input.matchStart(`[a-zA-Z][a-zA-Z0-9_.]*=`, "word starting a-z or A-Z")
+	if key == "" {
+		return
+	}
+	key = key[:len(key)-1] // removes = at end
+	found = input.matchStart("(true|false)", "")
+	if found == "" {
+		key = "" // have to reset since already stored
+		input.line = restore
+		return
+	}
+	if found == "true" {
 		val = true
 	}
-	input.line = remaining[count:]
 	return
 }
