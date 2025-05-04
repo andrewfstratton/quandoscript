@@ -69,36 +69,40 @@ func getWord(input *Input) (word string) {
 	return
 }
 
-// returns parameters as nil if just (), or Param parameters, err is true if not starting with ( or not terminated correctly with ).
+// returns parameters as nil if just (), or Param parameters, err if not starting with ( or not terminated correctly with ).
 // remaining is the rest of the string
-func getParams(line string) (params Params, remaining string, err error) {
+func getParams(input *Input) (params Params) {
 	re := regexp.MustCompile(`^\(`)
-	arr := re.FindStringIndex(line)
+	arr := re.FindStringIndex(input.line)
 	if len(arr) != 2 {
-		remaining = line
-		err = errors.New("Failed to find ( at start of '" + line + "'")
+		input.err = errors.New("Failed to find ( at start of '" + input.line + "'")
 		return
 	}
 	params = make(Params)
-	line = line[1:] // strip first character
-	var key string
-	var val bool
-	// key, val, remaining, err = getParam(line)
-	if err == nil {
-		if key != "" {
-			params[key] = val
+	input.line = input.line[1:] // strip first character
+	for {
+		key, val := getParam(input)
+		if key == "" { // no of keys
+			break
 		}
+		if input.err != nil {
+			return
+		}
+		params[key] = val
+		re := regexp.MustCompile(`^,`)
+		arr := re.FindStringIndex(input.line)
+		if len(arr) != 2 {
+			break
+		}
+		input.line = input.line[1:]
 	}
-	line = remaining
 	re = regexp.MustCompile(`^\)`)
-	arr = re.FindStringIndex(line)
+	arr = re.FindStringIndex(input.line)
 	if len(arr) != 2 {
-		remaining = line
-		err = errors.New("Failed to find ) at start of '" + line + "'")
+		input.err = errors.New("Failed to find ) at start of '" + input.line + "'")
 		return
 	}
-	line = line[1:] // strip first character
-	remaining = line
+	input.line = input.line[1:] // strip first character
 	return
 }
 

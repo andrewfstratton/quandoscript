@@ -64,25 +64,34 @@ func TestParseWord(t *testing.T) {
 	assert.Eq(t, word, "word.word")
 }
 
-// func TestParseEmptyParam(t *testing.T) {
-// 	match := ""
-// 	params, remaining, err := getParams(match)
-// 	assert.Neq(t, err, nil)
-// 	assert.Eq(t, remaining, match)
-// 	assert.Eq(t, len(params), 0)
+func TestParseParams(t *testing.T) {
+	match := Input{line: ""}
+	params := getParams(&match)
+	assert.Neq(t, match.err, nil)
+	assert.Eq(t, match.line, "")
+	assert.True(t, params == nil)
 
-// 	match = "()"
-// 	params, remaining, err = getParams(match)
-// 	assert.Eq(t, err, nil)
-// 	assert.Eq(t, remaining, "")
-// 	assert.Eq(t, len(params), 0) //i.e. no parameters
+	match = Input{line: "()"}
+	params = getParams(&match)
+	assert.Eq(t, match.err, nil)
+	assert.Eq(t, match.line, "")
+	assert.Eq(t, len(params), 0) //i.e. no parameters
 
-// 	match = "word.word()"
-// 	params, remaining, err = getParams(match)
-// 	assert.Neq(t, err, nil)
-// 	assert.Eq(t, remaining, match)
-// 	assert.Eq(t, len(params), 0)
-// }
+	match = Input{line: "(x=true)"}
+	params = getParams(&match)
+	assert.Eq(t, match.err, nil)
+	assert.Eq(t, match.line, "")
+	assert.Eq(t, len(params), 1)
+	assert.Eq(t, params["x"], true)
+
+	match = Input{line: "(y=false,z=true)"}
+	params = getParams(&match)
+	assert.Eq(t, match.err, nil)
+	assert.Eq(t, match.line, "")
+	assert.Eq(t, len(params), 2)
+	assert.Eq(t, params["y"], false)
+	assert.Eq(t, params["z"], true)
+}
 
 func TestParseParamBool(t *testing.T) {
 	match := Input{line: ""}
