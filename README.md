@@ -15,27 +15,21 @@ graph LR
 ```mermaid
 graph LR
     stop([ ])
-    sequence::---lines--> nl["↵"]--> stop
-```
-
-```mermaid
-graph LR
-    stop([ ])
-    lines::---line--> nl["↵"]--> stop
+    sequence::---line--> nl["↵"]--> stop
     nl-->line
 ```
 
 ```mermaid
 graph LR
     stop([ ])
-    line::---id--> nl["↵"]--> stop
+    line::---id--> nl["↵"]-->stop
     id-->spacer-->action-->nl
 ```
 
 ```mermaid
 graph LR
     stop([ ])
-    id::--- digit-->stop
+    id::---digit-->stop
     digit-->s( )-->digit
 ```
 
@@ -56,17 +50,16 @@ graph LR
 ```mermaid
 graph LR
     stop([ ])
-    word --> config
-    action::--- word-->config --> run --> stop
-    word-->dot["."]-->word
+    action::--- word--> params --> stop
 ```
 
 ```mermaid
 graph LR
     stop([ ])
     word:: --- letter-->stop
-    letter-->l[ ]-->rl["letter"]-->r[ ]-->stop
+    letter-->l( )-->rl["letter"]-->r( )-->stop
     r-->l
+    l-->dot["."]-->r
     l-->u["_"]-->r
     l-->digit-->r
 ```
@@ -74,20 +67,8 @@ graph LR
 ```mermaid
 graph LR
     stop([ ])
-    letter::---l[ ]--> a..z--> stop
+    letter::---l( )--> a..z--> stop
     l--> A..Z--> stop
-```
-
-```mermaid
-graph LR
-    stop([ ])
-    config::---params-->stop
-```
-
-```mermaid
-graph LR
-    stop([ ])
-    run::---params-->stop
 ```
 
 ```mermaid
@@ -101,38 +82,39 @@ graph LR
 ```mermaid
 graph LR
     stop([ ])
-    param:: --- word --> eq["="]-->value-->stop
+    param:: --- word --> value-->stop
+    word --> variable --> stop
+```
+
+```mermaid
+graph LR
+    stop([ ])
+    variable:: ---l["="] --> word --> stop
 ```
 
 ```mermaid
 graph LR
     stop([ ])
     value:: --- l[ ]
-    l--> boolean -->stop
-    l--> string -->stop
-    l--> number -->stop
-    l--> variable -->stop
-    l--> id -->stop
+    l--> b[!]--> boolean -->stop
+    l--> q[#quot;] -->characters --> qr[#quot;] -->stop
+    l--> h["\#"]-->FLOATING_POINT -->stop
+    l--> c[":"]--> id -->stop
 ```
 
 ```mermaid
 graph LR
     stop([ ])
-    boolean::---l[ ]--> true --> stop
+    boolean::---l( )--> true --> stop
     l-->false --> stop
 ```
 
 ```mermaid
 graph LR
     stop([ ])
-    string::--- l[#quot;] -->character --> r[#quot;]--> stop
-```
-
-```mermaid
-graph LR
-    stop([ ])
-    character::---l[ ]--> UNICODE--> stop
-    l-->prefix_character --> stop
+    characters::---l[ ]--> UNICODE-->r[ ]--> stop
+    l-->prefix_character -->r
+    r-->l
 ```
 
 ```mermaid
@@ -142,10 +124,4 @@ graph LR
     l-->q[#quot;]-->stop
     l-->n-->stop
     l-->t-->stop
-```
-
-```mermaid
-graph LR
-    stop([ ])
-    variable:: ---word --> stop
 ```
