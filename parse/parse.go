@@ -124,11 +124,10 @@ func getParam(input *Input) (key string, param Param) {
 		return
 	}
 	// check for valid prefix
-	prefix := input.matchStart("(!|:)", "type prefix/assignment missing ")
+	prefix := input.matchStart("(!|:|=)", "type prefix/assignment missing ")
 	switch prefix {
 	case "":
 		param.qtype = UNKNOWN
-		break
 	case "!": // check for boolean
 		found = input.matchStart("(true|false)", "")
 		if found != "" { // i.e. if found
@@ -151,7 +150,7 @@ func getParam(input *Input) (key string, param Param) {
 			return
 		}
 	}
-	// error (or not handled, e.g. due ot mismatch with generator)
+	// error (or not handled, e.g. due to mismatch with generator)
 	key = "" // have to reset since already stored
 	input.line = restore
 	return
