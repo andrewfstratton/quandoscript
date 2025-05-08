@@ -3,6 +3,7 @@ package parse
 import (
 	"errors"
 	"fmt"
+	"os"
 	"regexp"
 	"strconv"
 
@@ -57,7 +58,15 @@ func Line(line string) (fn op.Op, err error) {
 // removes and returns a [0..9] integer from start of input.line, or input.err.
 func getId(input *Input) (id int) {
 	found := input.matchStart("([0-9])+", "Id")
-	id, _ = strconv.Atoi(found) // error must be nil
+	if found == "" {
+		return
+	}
+	var err error
+	id, err = strconv.Atoi(found) // error must be nil
+	if err != nil {
+		fmt.Println("CODING ERROR IN parse:getId()")
+		os.Exit(99)
+	}
 	return
 }
 
@@ -114,16 +123,29 @@ func getParam(input *Input) (key string, param Param) {
 	if key == "" {
 		return
 	}
-	// check for boolean
-	found = input.matchStart("!(true|false)", "")
-	if found != "" {
-		param.val = (found == "!true")
-		param.qtype = BOOLEAN
-		return
+	// check for valid prefix
+	prefix := input.matchStart("(!|:)", "type prefix/assignment missing ")
+	switch prefix {
+	case "":
+		param.qtype = UNKNOWN
+		break
+	case "!": // check for boolean
+		found = input.matchStart("(true|false)", "")
+		if found != "" { // i.e. if found
+			param.qtype = BOOLEAN
+			param.val = (found == "true")
+			return
+		}
+	case ":": // check for id
+		id := getId(input)
+		if input.err == nil {
+			param.val = id
+			param.qtype = ID
+			return
+		}
 	}
-	// not found, so reset input
+	// error (or not handled, e.g. due ot mismatch with generator)
 	key = "" // have to reset since already stored
 	input.line = restore
-	param.qtype = UNKNOWN
 	return
 }
