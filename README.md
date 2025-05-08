@@ -1,36 +1,35 @@
 # quandoscript
 Script engine for Quando
 
-Here is the (growing) script definition, note :
-
-- xxx:: is the definition
+Here is the (growing) script definition, where _xxx:: is the definition of xxx_
 
 ```mermaid
 graph LR
     stop([ ])
     start-->stop
-    start([ ])-->sequence--> stop
+    start([o])-->sequence-->nl["↵"]-->sequence--> stop
 ```
+_Note: a sequence ends with end of file or a blank line_
 
 ```mermaid
 graph LR
     stop([ ])
-    sequence::---line--> nl["↵"]--> stop
+    sequence::---line-->nl["↵"]--> stop
     nl-->line
 ```
 
 ```mermaid
 graph LR
     stop([ ])
-    line::---id--> nl["↵"]-->stop
-    id-->spacer-->action-->nl
+    id-->stop
+    line::---id-->spacer-->action-->stop
 ```
 
 ```mermaid
 graph LR
     stop([ ])
-    id::---digit-->stop
-    digit-->s( )-->digit
+    id::---digit-->s( )-->stop
+    s-->digit
 ```
 
 ```mermaid
