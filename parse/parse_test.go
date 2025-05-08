@@ -201,3 +201,35 @@ func TestParseParamVariable(t *testing.T) {
 	assert.Eq(t, match.err, nil)
 	assert.Eq(t, param.val, "V_a9")
 }
+
+func TestParseParamString(t *testing.T) {
+	match := Input{line: `a"`}
+	key, param := getParam(&match)
+	assert.Eq(t, key, "")
+	assert.Eq(t, match.line, `a"`)
+	assert.Eq(t, param.qtype, UNKNOWN)
+	assert.Neq(t, match.err, nil)
+
+	match = Input{line: `"a`}
+	key, param = getParam(&match)
+	assert.Eq(t, key, "")
+	assert.Eq(t, match.line, `"a`)
+	assert.Eq(t, param.qtype, UNKNOWN)
+	assert.Neq(t, match.err, nil)
+
+	match = Input{line: `x"y"`}
+	key, param = getParam(&match)
+	assert.Eq(t, key, "x")
+	assert.Eq(t, match.line, "")
+	assert.Eq(t, param.qtype, STRING)
+	assert.Eq(t, match.err, nil)
+	assert.Eq(t, param.val, "y")
+
+	match = Input{line: `y"\\S\tt\nr\"",x"txt"`}
+	key, param = getParam(&match)
+	assert.Eq(t, key, "y")
+	assert.Eq(t, match.line, `,x"txt"`)
+	assert.Eq(t, param.qtype, STRING)
+	assert.Eq(t, match.err, nil)
+	assert.Eq(t, param.val, "\\S\tt\nr"+`"`)
+}

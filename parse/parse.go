@@ -81,6 +81,46 @@ func (input *Input) getWord() string {
 	return input.matchStart("[a-zA-Z][a-zA-Z0-9_.]*", "word starting a-z or A-Z")
 }
 
+// removes and returns a string" at start of input.line, or err if missing.
+// the string may contain \\, \", \t and \n, which will be substituted
+// N.B. string does NOT start with '"' - this will already have parsed
+func (input *Input) getString() (str string) {
+	for {
+		if len(input.line) == 0 {
+			input.err = errors.New(`string does not terminate with '"' before end of line`)
+			break
+		}
+		ch := input.line[:1]
+		input.line = input.line[1:] // consume first character
+		var skip bool
+		if ch == `"` {
+			break
+		}
+		if ch == `\` && len(input.line) > 0 {
+			ch2 := input.line[:1]
+			switch ch2 {
+			case `\`:
+				ch = `\`
+				skip = true
+			case "t":
+				ch = "\t"
+				skip = true
+			case "n":
+				ch = "\n"
+				skip = true
+			case `"`:
+				ch = `"`
+				skip = true
+			}
+		}
+		str += ch
+		if skip {
+			input.line = input.line[1:]
+		}
+	}
+	return str
+}
+
 // returns parameters as nil if just (), or Param parameters, err if not starting with ( or not terminated correctly with ).
 // remaining is the rest of the string
 func getParams(input *Input) (params Params) {
@@ -147,6 +187,13 @@ func getParam(input *Input) (key string, param Param) {
 		if input.err == nil {
 			param.val = name
 			param.qtype = VARIABLE
+			return
+		}
+	case `"`: // check for string
+		str := input.getString()
+		if input.err == nil {
+			param.val = str
+			param.qtype = STRING
 			return
 		}
 	}
