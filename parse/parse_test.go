@@ -84,13 +84,21 @@ func TestParseParams(t *testing.T) {
 	assert.Eq(t, len(params), 1)
 	assert.Eq(t, params["x"].val, true)
 
-	match = Input{line: "(y!false,z!true)"}
+	match = Input{line: `(a"hello!",b:12345,x=val,y!true,z#-12.34e56)`}
 	params = getParams(&match)
 	assert.Eq(t, match.err, nil)
 	assert.Eq(t, match.line, "")
-	assert.Eq(t, len(params), 2)
-	assert.Eq(t, params["y"].val, false)
-	assert.Eq(t, params["z"].val, true)
+	assert.Eq(t, len(params), 5)
+	assert.Eq(t, params["a"].qtype, STRING)
+	assert.Eq(t, params["a"].val, "hello!")
+	assert.Eq(t, params["b"].qtype, ID)
+	assert.Eq(t, params["b"].val, 12345)
+	assert.Eq(t, params["x"].qtype, VARIABLE)
+	assert.Eq(t, params["x"].val, "val")
+	assert.Eq(t, params["y"].qtype, BOOLEAN)
+	assert.Eq(t, params["y"].val, true)
+	assert.Eq(t, params["z"].qtype, NUMBER)
+	assert.Eq(t, params["z"].val, -12.34e56)
 }
 
 func TestParseParamBool(t *testing.T) {
