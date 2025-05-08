@@ -77,62 +77,64 @@ func TestParseParams(t *testing.T) {
 	assert.Eq(t, match.line, "")
 	assert.Eq(t, len(params), 0) //i.e. no parameters
 
-	match = Input{line: "(x=true)"}
+	match = Input{line: "(x!true)"}
 	params = getParams(&match)
 	assert.Eq(t, match.err, nil)
 	assert.Eq(t, match.line, "")
 	assert.Eq(t, len(params), 1)
-	assert.Eq(t, params["x"], true)
+	assert.Eq(t, params["x"].val, true)
 
-	match = Input{line: "(y=false,z=true)"}
+	match = Input{line: "(y!false,z!true)"}
 	params = getParams(&match)
 	assert.Eq(t, match.err, nil)
 	assert.Eq(t, match.line, "")
 	assert.Eq(t, len(params), 2)
-	assert.Eq(t, params["y"], false)
-	assert.Eq(t, params["z"], true)
+	assert.Eq(t, params["y"].val, false)
+	assert.Eq(t, params["z"].val, true)
 }
 
 func TestParseParamBool(t *testing.T) {
 	match := Input{line: ""}
-	key, val := getParam(&match)
+	key, param := getParam(&match)
 	assert.Eq(t, key, "")
 	assert.Eq(t, match.line, "")
-	assert.Eq(t, val, false)
+	assert.Eq(t, param.qtype, UNKNOWN)
 	assert.Neq(t, match.err, nil)
 
 	match = Input{line: `)`} // closing ) ends parameters, no error
-	key, val = getParam(&match)
+	key, param = getParam(&match)
 	assert.Eq(t, key, "")
 	assert.Eq(t, match.line, ")")
-	assert.Eq(t, val, false)
+	assert.Eq(t, param.qtype, UNKNOWN)
 	assert.Eq(t, match.err, nil)
 
-	match = Input{line: "=a"}
-	key, val = getParam(&match)
+	match = Input{line: "!a"}
+	key, param = getParam(&match)
 	assert.Eq(t, key, "")
-	assert.Eq(t, match.line, "=a")
-	assert.Eq(t, val, false)
+	assert.Eq(t, match.line, "!a")
+	assert.Eq(t, param.qtype, UNKNOWN)
 	assert.Neq(t, match.err, nil)
 
-	match = Input{line: "a="}
-	key, val = getParam(&match)
+	match = Input{line: "a!"}
+	key, param = getParam(&match)
 	assert.Neq(t, match.err, nil)
-	assert.Eq(t, match.line, "a=")
+	assert.Eq(t, match.line, "a!")
 	assert.Eq(t, key, "")
-	assert.Eq(t, val, false)
+	assert.Eq(t, param.qtype, UNKNOWN)
 
-	match = Input{line: "x=true"}
-	key, val = getParam(&match)
+	match = Input{line: "x!true"}
+	key, param = getParam(&match)
 	assert.Eq(t, match.err, nil)
 	assert.Eq(t, match.line, "")
 	assert.Eq(t, key, "x")
-	assert.Eq(t, val, true)
+	assert.Eq(t, param.qtype, BOOLEAN)
+	assert.Eq(t, param.val, true)
 
-	match = Input{line: "y=false,z=true"}
-	key, val = getParam(&match)
+	match = Input{line: "y!false,z!true"}
+	key, param = getParam(&match)
 	assert.Eq(t, match.err, nil)
-	assert.Eq(t, match.line, ",z=true")
+	assert.Eq(t, match.line, ",z!true")
 	assert.Eq(t, key, "y")
-	assert.Eq(t, val, false)
+	assert.Eq(t, param.qtype, BOOLEAN)
+	assert.Eq(t, param.val, false)
 }

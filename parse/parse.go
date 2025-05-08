@@ -14,6 +14,20 @@ type Input struct {
 	err  error
 }
 
+const (
+	UNKNOWN int = iota
+	VARIABLE
+	BOOLEAN
+	STRING
+	NUMBER // may need range and integer
+	ID
+)
+
+type Param struct {
+	val   any
+	qtype int
+}
+
 func (input *Input) matchStart(rxp string, lookfor string) (found string) {
 	arr := regexp.MustCompile("^" + rxp).FindStringIndex(input.line)
 	if len(arr) != 2 {
@@ -26,7 +40,7 @@ func (input *Input) matchStart(rxp string, lookfor string) (found string) {
 	return
 }
 
-type Params map[string]any
+type Params map[string]Param
 
 func Line(line string) (fn op.Op, err error) {
 	input := Input{line: line}
@@ -67,14 +81,14 @@ func getParams(input *Input) (params Params) {
 	}
 	params = make(Params)
 	for {
-		key, val := getParam(input)
+		key, param := getParam(input)
 		if key == "" { // no key
 			break
 		}
 		if input.err != nil {
 			return
 		}
-		params[key] = val
+		params[key] = param
 		found = input.matchStart(`,`, "")
 		if found != "," {
 			input.err = nil // clear out err and drop out of loop
@@ -86,28 +100,30 @@ func getParams(input *Input) (params Params) {
 }
 
 // key returns "" when none found
-func getParam(input *Input) (key string, val bool) {
+func getParam(input *Input) (key string, param Param) {
 	restore := input.line
 	// Check for ) and return without error or change to input if found
 	found := input.matchStart(`\)`, "")
 	input.err = nil   // supress error
-	if found == `)` { // found ) so return straight away, key and val == ""
+	if found == `)` { // found ) so reset
 		input.line = restore
+		input.err = nil
 		return
 	}
-	key = input.matchStart(`[a-zA-Z][a-zA-Z0-9_.]*=`, "word starting a-z or A-Z")
+	key = input.matchStart(`[a-zA-Z][a-zA-Z0-9_.]*`, "word starting a-z or A-Z")
 	if key == "" {
 		return
 	}
-	key = key[:len(key)-1] // removes = at end
-	found = input.matchStart("(true|false)", "")
-	if found == "" {
-		key = "" // have to reset since already stored
-		input.line = restore
+	// check for boolean
+	found = input.matchStart("!(true|false)", "")
+	if found != "" {
+		param.val = (found == "!true")
+		param.qtype = BOOLEAN
 		return
 	}
-	if found == "true" {
-		val = true
-	}
+	// not found, so reset input
+	key = "" // have to reset since already stored
+	input.line = restore
+	param.qtype = UNKNOWN
 	return
 }
