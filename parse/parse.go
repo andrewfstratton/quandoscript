@@ -121,6 +121,21 @@ func (input *Input) getString() (str string) {
 	return str
 }
 
+// removes and returns a decimal floating point number at start of input.line, or err if missing.
+func (input *Input) getFloat() (f float64) {
+	found := input.matchStart("[+-]?[0-9]+[.]?[0-9]*([eE][+-]?[0-9]+)?", "floating point number")
+	if found == "" {
+		return
+	}
+	var err error
+	f, err = strconv.ParseFloat(found, 64) // error must be nil
+	if err != nil {
+		fmt.Println("CODING ERROR IN parse:getFloat()")
+		os.Exit(99)
+	}
+	return
+}
+
 // returns parameters as nil if just (), or Param parameters, err if not starting with ( or not terminated correctly with ).
 // remaining is the rest of the string
 func getParams(input *Input) (params Params) {
@@ -164,7 +179,7 @@ func getParam(input *Input) (key string, param Param) {
 		return
 	}
 	// check for valid prefix
-	prefix := input.matchStart(`[!:="]`, "type prefix/assignment missing ")
+	prefix := input.matchStart(`[!:="#]`, "type prefix/assignment missing ")
 	switch prefix {
 	case "":
 		param.qtype = UNKNOWN
@@ -194,6 +209,13 @@ func getParam(input *Input) (key string, param Param) {
 		if input.err == nil {
 			param.val = str
 			param.qtype = STRING
+			return
+		}
+	case "#": // check for float
+		num := input.getFloat()
+		if input.err == nil {
+			param.val = num
+			param.qtype = NUMBER
 			return
 		}
 	}
