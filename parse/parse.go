@@ -77,7 +77,7 @@ func stripSpacer(input *Input) {
 
 // removes and returns a word at start of input.line, or err if missing.
 // word starts with a letter, then may also include digits . or _
-func (input *Input) getWord() (word string) {
+func (input *Input) getWord() string {
 	return input.matchStart("[a-zA-Z][a-zA-Z0-9_.]*", "word starting a-z or A-Z")
 }
 
@@ -124,7 +124,7 @@ func getParam(input *Input) (key string, param Param) {
 		return
 	}
 	// check for valid prefix
-	prefix := input.matchStart("(!|:|=)", "type prefix/assignment missing ")
+	prefix := input.matchStart(`[!:="]`, "type prefix/assignment missing ")
 	switch prefix {
 	case "":
 		param.qtype = UNKNOWN
@@ -143,9 +143,9 @@ func getParam(input *Input) (key string, param Param) {
 			return
 		}
 	case "=": // check for variable
-		variable := input.getWord()
+		name := input.getWord()
 		if input.err == nil {
-			param.val = variable
+			param.val = name
 			param.qtype = VARIABLE
 			return
 		}
