@@ -45,7 +45,7 @@ type Params map[string]Param
 
 func Line(line string) (fn op.Op, err error) {
 	input := Input{line: line}
-	id := getId(&input)
+	id := input.getId()
 	if input.err != nil {
 		err = input.err
 		return
@@ -56,7 +56,7 @@ func Line(line string) (fn op.Op, err error) {
 }
 
 // removes and returns a [0..9] integer from start of input.line, or input.err.
-func getId(input *Input) (id int) {
+func (input *Input) getId() (id int) {
 	found := input.matchStart("([0-9])+", "Id")
 	if found == "" {
 		return
@@ -77,7 +77,7 @@ func stripSpacer(input *Input) {
 
 // removes and returns a word at start of input.line, or err if missing.
 // word starts with a letter, then may also include digits . or _
-func getWord(input *Input) (word string) {
+func (input *Input) getWord() (word string) {
 	return input.matchStart("[a-zA-Z][a-zA-Z0-9_.]*", "word starting a-z or A-Z")
 }
 
@@ -119,7 +119,7 @@ func getParam(input *Input) (key string, param Param) {
 		input.err = nil
 		return
 	}
-	key = input.matchStart(`[a-zA-Z][a-zA-Z0-9_.]*`, "word starting a-z or A-Z")
+	key = input.getWord()
 	if key == "" {
 		return
 	}
@@ -137,10 +137,17 @@ func getParam(input *Input) (key string, param Param) {
 			return
 		}
 	case ":": // check for id
-		id := getId(input)
+		id := input.getId()
 		if input.err == nil {
 			param.val = id
 			param.qtype = ID
+			return
+		}
+	case "=": // check for variable
+		variable := input.getWord()
+		if input.err == nil {
+			param.val = variable
+			param.qtype = VARIABLE
 			return
 		}
 	}

@@ -8,19 +8,19 @@ import (
 
 func TestParseId(t *testing.T) {
 	match := Input{line: ""}
-	id := getId(&match)
+	id := match.getId()
 	assert.Eq(t, id, 0) // id must be 1+
 	assert.Neq(t, match.err, nil)
 	assert.Eq(t, match.line, "")
 
 	match = Input{line: ",key=false)"}
-	id = getId(&match)
+	id = match.getId()
 	assert.Eq(t, id, 0) // id must be 1+
 	assert.Neq(t, match.err, nil)
 	assert.Eq(t, match.line, ",key=false)")
 
 	match = Input{line: "90 ignore"}
-	id = getId(&match)
+	id = match.getId()
 	assert.Eq(t, id, 90)
 	assert.Eq(t, match.err, nil)
 	assert.Eq(t, match.line, " ignore")
@@ -46,19 +46,19 @@ func TestParseSpacer(t *testing.T) {
 
 func TestParseWord(t *testing.T) {
 	match := Input{line: ""}
-	word := getWord(&match)
+	word := match.getWord()
 	assert.Neq(t, match.err, nil)
 	assert.Eq(t, match.line, "")
 	assert.Eq(t, word, "")
 
 	match = Input{line: "w"}
-	word = getWord(&match)
+	word = match.getWord()
 	assert.Eq(t, match.err, nil)
 	assert.Eq(t, match.line, "")
 	assert.Eq(t, word, "w")
 
 	match = Input{line: "word.word()"}
-	word = getWord(&match)
+	word = match.getWord()
 	assert.Eq(t, match.err, nil)
 	assert.Eq(t, match.line, "()")
 	assert.Eq(t, word, "word.word")
