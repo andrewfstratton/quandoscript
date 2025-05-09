@@ -28,17 +28,17 @@ func TestParseId(t *testing.T) {
 
 func TestParseSpacer(t *testing.T) {
 	match := Input{line: ""}
-	stripSpacer(&match)
+	match.stripSpacer()
 	assert.Neq(t, match.err, nil)
 	assert.Eq(t, match.line, "")
 
 	match = Input{line: "word.word"}
-	stripSpacer(&match)
+	match.stripSpacer()
 	assert.Neq(t, match.err, nil)
 	assert.Eq(t, match.line, "word.word")
 
 	match = Input{line: " \t  w"}
-	stripSpacer(&match)
+	match.stripSpacer()
 	assert.Eq(t, match.err, nil)
 	assert.Eq(t, match.line, "w")
 
@@ -66,26 +66,26 @@ func TestParseWord(t *testing.T) {
 
 func TestParseParams(t *testing.T) {
 	match := Input{line: ""}
-	params := getParams(&match)
+	params := match.getParams()
 	assert.Neq(t, match.err, nil)
 	assert.Eq(t, match.line, "")
 	assert.True(t, params == nil)
 
 	match = Input{line: "()"}
-	params = getParams(&match)
+	params = match.getParams()
 	assert.Eq(t, match.err, nil)
 	assert.Eq(t, match.line, "")
 	assert.Eq(t, len(params), 0) //i.e. no parameters
 
 	match = Input{line: "(x!true)"}
-	params = getParams(&match)
+	params = match.getParams()
 	assert.Eq(t, match.err, nil)
 	assert.Eq(t, match.line, "")
 	assert.Eq(t, len(params), 1)
 	assert.Eq(t, params["x"].Val, true)
 
 	match = Input{line: `(a"hello!",b:12345,x=val,y!true,z#-12.34e56)`}
-	params = getParams(&match)
+	params = match.getParams()
 	assert.Eq(t, match.err, nil)
 	assert.Eq(t, match.line, "")
 	assert.Eq(t, len(params), 5)

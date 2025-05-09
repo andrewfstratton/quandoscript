@@ -71,7 +71,7 @@ func (input *Input) getId() (id int) {
 }
 
 // strips space/tab from start of input.line, or input.err if missing
-func stripSpacer(input *Input) {
+func (input *Input) stripSpacer() {
 	_ = input.matchStart("[( )\t]+", "space/tab")
 }
 
@@ -138,7 +138,7 @@ func (input *Input) getFloat() (f float64) {
 
 // returns parameters as nil if just (), or Param parameters, err if not starting with ( or not terminated correctly with ).
 // remaining is the rest of the string
-func getParams(input *Input) (params Params) {
+func (input *Input) getParams() (params Params) {
 	found := input.matchStart(`\(`, "(")
 	if found == "" {
 		return
