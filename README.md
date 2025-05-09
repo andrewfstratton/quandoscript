@@ -5,42 +5,41 @@ Here is the (growing) script definition, where _xxx:: is the definition of xxx_
 
 ```mermaid
 graph LR
-    stop([ ])
-    start-->stop
-    start([o])-->sequence-->nl["↵"]-->sequence--> stop
+    stop((( )))
+    start((( )))--> sequence --> stop
+    sequence --> nl["↵"] --> sequence
 ```
-_Note: a sequence ends with end of file or a blank line_
 
 ```mermaid
 graph LR
-    stop([ ])
+    stop((( )))
     sequence::---line-->nl["↵"]--> stop
     nl-->line
 ```
 
 ```mermaid
 graph LR
-    stop([ ])
+    stop((( )))
     id-->stop
     line::---id-->spacer-->action-->stop
 ```
 
 ```mermaid
 graph LR
-    stop([ ])
+    stop((( )))
     id::---digit-->s( )-->stop
     s-->digit
 ```
 
 ```mermaid
 graph LR
-    stop([ ])
+    stop((( )))
     digit::--- 0..9--> stop
 ```
 
 ```mermaid
 graph LR
-    stop([ ])
+    stop((( )))
     spacer::---l[ ]-->s["#quot; #quot;"]-->r[ ]-->stop
     l-->tab-->r
     r-->l
@@ -48,13 +47,13 @@ graph LR
 
 ```mermaid
 graph LR
-    stop([ ])
+    stop((( )))
     action::--- word--> params --> stop
 ```
 
 ```mermaid
 graph LR
-    stop([ ])
+    stop((( )))
     word:: --- letter-->stop
     letter-->l( )-->rl["letter"]-->r( )-->stop
     r-->l
@@ -65,14 +64,14 @@ graph LR
 
 ```mermaid
 graph LR
-    stop([ ])
+    stop((( )))
     letter::---l( )--> a..z--> stop
     l--> A..Z--> stop
 ```
 
 ```mermaid
 graph LR
-    stop([ ])
+    stop((( )))
     params:: --- l["("] --> r[")"]-->stop
     l--> param--> r
     param-->c[","]-->param
@@ -80,20 +79,20 @@ graph LR
 
 ```mermaid
 graph LR
-    stop([ ])
+    stop((( )))
     param:: --- word --> value-->stop
     word --> variable --> stop
 ```
 
 ```mermaid
 graph LR
-    stop([ ])
+    stop((( )))
     variable:: ---l["="] --> word --> stop
 ```
 
 ```mermaid
 graph LR
-    stop([ ])
+    stop((( )))
     value:: --- l[ ]
     l--> b[!]--> boolean -->stop
     l--> q[#quot;] -->characters --> qr[#quot;] -->stop
@@ -103,14 +102,14 @@ graph LR
 
 ```mermaid
 graph LR
-    stop([ ])
+    stop((( )))
     boolean::---l( )--> true --> stop
     l-->false --> stop
 ```
 
 ```mermaid
 graph LR
-    stop([ ])
+    stop((( )))
     characters::---l[ ]--> UNICODE-->r[ ]--> stop
     l-->prefix_character -->r
     r-->l
@@ -118,9 +117,20 @@ graph LR
 
 ```mermaid
 graph LR
-    stop([ ])
+    stop((( )))
     prefix_character::--- l["\"]-->slash["\"]--> stop
     l-->q[#quot;]-->stop
     l-->n-->stop
     l-->t-->stop
 ```
+
+Optional
+
+- Range
+    - % full (0..1)
+    - / half (0.5..1)
+    - ~ plus_minus (0.5 +/- 0.5)
+    - **or should I now switch to -1 to +1**
+- true/false/either, e.g. for press/release/either
+  - see also temporal logic
+  - the difference here is between the press/release change of state and the actual press**ed**/releas**ed** state
