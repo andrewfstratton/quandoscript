@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/andrewfstratton/quandoscript/op"
@@ -21,20 +20,15 @@ func init() {
 	op.Add("log", log("Log"))
 }
 
-func parseLine(line string) (fn op.Op, err error) {
-	for _, word := range strings.Fields(line) {
-		fn, err = op.Get(word)
-		if err != nil {
-			break // i.e. bail out early
-		}
-	}
-	return fn, err
+func parseLine(line string) (id int, word string, params parse.Params, err error) {
+	id, word, params, err = parse.Line(line)
+	return
 }
 
 func main() {
-	fn, err := parse.Line("1 bob nl jill nl")
+	id, word, params, err := parse.Line("1 bob nl jill nl")
 	if err != nil {
 		fmt.Println("ERR:", err)
 	}
-	fmt.Println(fn)
+	fmt.Println(id, word, params)
 }

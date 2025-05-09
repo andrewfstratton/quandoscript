@@ -6,8 +6,6 @@ import (
 	"os"
 	"regexp"
 	"strconv"
-
-	"github.com/andrewfstratton/quandoscript/op"
 )
 
 type Input struct {
@@ -43,15 +41,32 @@ func (input *Input) matchStart(rxp string, lookfor string) (found string) {
 
 type Params map[string]Param
 
-func Line(line string) (fn op.Op, err error) {
+func Line(line string) (id int, word string, params Params, err error) {
+	if line == "" { // fn and err are nil for a blank line
+		return
+	}
 	input := Input{line: line}
-	id := input.getId()
+	id = input.getId()
 	if input.err != nil {
 		err = input.err
 		return
 	}
-	fmt.Printf("Found id :%v\n leaving :'%v'\n", id, line)
-	fn = nil
+	input.stripSpacer()
+	if input.err != nil {
+		err = input.err
+		return
+	}
+	word = input.getWord()
+	if input.err != nil {
+		err = input.err
+		return
+	}
+	params = input.getParams()
+	if input.err != nil {
+		err = input.err
+		return
+	}
+	// fmt.Printf("Found id :%v, word :%v, params : %v\n leaving :'%v'\n", id, word, params, line)
 	return
 }
 
