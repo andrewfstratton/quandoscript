@@ -82,23 +82,23 @@ func TestParseParams(t *testing.T) {
 	assert.Eq(t, match.err, nil)
 	assert.Eq(t, match.line, "")
 	assert.Eq(t, len(params), 1)
-	assert.Eq(t, params["x"].val, true)
+	assert.Eq(t, params["x"].Val, true)
 
 	match = Input{line: `(a"hello!",b:12345,x=val,y!true,z#-12.34e56)`}
 	params = getParams(&match)
 	assert.Eq(t, match.err, nil)
 	assert.Eq(t, match.line, "")
 	assert.Eq(t, len(params), 5)
-	assert.Eq(t, params["a"].qtype, STRING)
-	assert.Eq(t, params["a"].val, "hello!")
-	assert.Eq(t, params["b"].qtype, ID)
-	assert.Eq(t, params["b"].val, 12345)
-	assert.Eq(t, params["x"].qtype, VARIABLE)
-	assert.Eq(t, params["x"].val, "val")
-	assert.Eq(t, params["y"].qtype, BOOLEAN)
-	assert.Eq(t, params["y"].val, true)
-	assert.Eq(t, params["z"].qtype, NUMBER)
-	assert.Eq(t, params["z"].val, -12.34e56)
+	assert.Eq(t, params["a"].Qtype, STRING)
+	assert.Eq(t, params["a"].Val, "hello!")
+	assert.Eq(t, params["b"].Qtype, ID)
+	assert.Eq(t, params["b"].Val, 12345)
+	assert.Eq(t, params["x"].Qtype, VARIABLE)
+	assert.Eq(t, params["x"].Val, "val")
+	assert.Eq(t, params["y"].Qtype, BOOLEAN)
+	assert.Eq(t, params["y"].Val, true)
+	assert.Eq(t, params["z"].Qtype, NUMBER)
+	assert.Eq(t, params["z"].Val, -12.34e56)
 }
 
 func TestParseParamBool(t *testing.T) {
@@ -106,21 +106,21 @@ func TestParseParamBool(t *testing.T) {
 	key, param := getParam(&match)
 	assert.Eq(t, key, "")
 	assert.Eq(t, match.line, "")
-	assert.Eq(t, param.qtype, UNKNOWN)
+	assert.Eq(t, param.Qtype, UNKNOWN)
 	assert.Neq(t, match.err, nil)
 
 	match = Input{line: `)`} // closing ) ends parameters, no error
 	key, param = getParam(&match)
 	assert.Eq(t, key, "")
 	assert.Eq(t, match.line, ")")
-	assert.Eq(t, param.qtype, UNKNOWN)
+	assert.Eq(t, param.Qtype, UNKNOWN)
 	assert.Eq(t, match.err, nil)
 
 	match = Input{line: "!a"}
 	key, param = getParam(&match)
 	assert.Eq(t, key, "")
 	assert.Eq(t, match.line, "!a")
-	assert.Eq(t, param.qtype, UNKNOWN)
+	assert.Eq(t, param.Qtype, UNKNOWN)
 	assert.Neq(t, match.err, nil)
 
 	match = Input{line: "a!"}
@@ -128,23 +128,23 @@ func TestParseParamBool(t *testing.T) {
 	assert.Neq(t, match.err, nil)
 	assert.Eq(t, match.line, "a!")
 	assert.Eq(t, key, "")
-	assert.Eq(t, param.qtype, UNKNOWN)
+	assert.Eq(t, param.Qtype, UNKNOWN)
 
 	match = Input{line: "x!true"}
 	key, param = getParam(&match)
 	assert.Eq(t, match.err, nil)
 	assert.Eq(t, match.line, "")
 	assert.Eq(t, key, "x")
-	assert.Eq(t, param.qtype, BOOLEAN)
-	assert.Eq(t, param.val, true)
+	assert.Eq(t, param.Qtype, BOOLEAN)
+	assert.Eq(t, param.Val, true)
 
 	match = Input{line: "y!false,z!true"}
 	key, param = getParam(&match)
 	assert.Eq(t, match.err, nil)
 	assert.Eq(t, match.line, ",z!true")
 	assert.Eq(t, key, "y")
-	assert.Eq(t, param.qtype, BOOLEAN)
-	assert.Eq(t, param.val, false)
+	assert.Eq(t, param.Qtype, BOOLEAN)
+	assert.Eq(t, param.Val, false)
 }
 
 func TestParseParamId(t *testing.T) {
@@ -152,31 +152,31 @@ func TestParseParamId(t *testing.T) {
 	key, param := getParam(&match)
 	assert.Eq(t, key, "")
 	assert.Eq(t, match.line, "a:")
-	assert.Eq(t, param.qtype, UNKNOWN)
+	assert.Eq(t, param.Qtype, UNKNOWN)
 	assert.Neq(t, match.err, nil)
 
 	match = Input{line: ":a"}
 	key, param = getParam(&match)
 	assert.Eq(t, key, "")
 	assert.Eq(t, match.line, ":a")
-	assert.Eq(t, param.qtype, UNKNOWN)
+	assert.Eq(t, param.Qtype, UNKNOWN)
 	assert.Neq(t, match.err, nil)
 
 	match = Input{line: "x:1"}
 	key, param = getParam(&match)
 	assert.Eq(t, key, "x")
 	assert.Eq(t, match.line, "")
-	assert.Eq(t, param.qtype, ID)
+	assert.Eq(t, param.Qtype, ID)
 	assert.Eq(t, match.err, nil)
-	assert.Eq(t, param.val, 1)
+	assert.Eq(t, param.Val, 1)
 
 	match = Input{line: "y:99,x:12"}
 	key, param = getParam(&match)
 	assert.Eq(t, key, "y")
 	assert.Eq(t, match.line, ",x:12")
-	assert.Eq(t, param.qtype, ID)
+	assert.Eq(t, param.Qtype, ID)
 	assert.Eq(t, match.err, nil)
-	assert.Eq(t, param.val, 99)
+	assert.Eq(t, param.Val, 99)
 }
 
 func TestParseParamVariable(t *testing.T) {
@@ -184,31 +184,31 @@ func TestParseParamVariable(t *testing.T) {
 	key, param := getParam(&match)
 	assert.Eq(t, key, "")
 	assert.Eq(t, match.line, "a=")
-	assert.Eq(t, param.qtype, UNKNOWN)
+	assert.Eq(t, param.Qtype, UNKNOWN)
 	assert.Neq(t, match.err, nil)
 
 	match = Input{line: "=a"}
 	key, param = getParam(&match)
 	assert.Eq(t, key, "")
 	assert.Eq(t, match.line, "=a")
-	assert.Eq(t, param.qtype, UNKNOWN)
+	assert.Eq(t, param.Qtype, UNKNOWN)
 	assert.Neq(t, match.err, nil)
 
 	match = Input{line: "x=y"}
 	key, param = getParam(&match)
 	assert.Eq(t, key, "x")
 	assert.Eq(t, match.line, "")
-	assert.Eq(t, param.qtype, VARIABLE)
+	assert.Eq(t, param.Qtype, VARIABLE)
 	assert.Eq(t, match.err, nil)
-	assert.Eq(t, param.val, "y")
+	assert.Eq(t, param.Val, "y")
 
 	match = Input{line: "y=V_a9,x=txt"}
 	key, param = getParam(&match)
 	assert.Eq(t, key, "y")
 	assert.Eq(t, match.line, ",x=txt")
-	assert.Eq(t, param.qtype, VARIABLE)
+	assert.Eq(t, param.Qtype, VARIABLE)
 	assert.Eq(t, match.err, nil)
-	assert.Eq(t, param.val, "V_a9")
+	assert.Eq(t, param.Val, "V_a9")
 }
 
 func TestParseParamString(t *testing.T) {
@@ -216,31 +216,31 @@ func TestParseParamString(t *testing.T) {
 	key, param := getParam(&match)
 	assert.Eq(t, key, "")
 	assert.Eq(t, match.line, `a"`)
-	assert.Eq(t, param.qtype, UNKNOWN)
+	assert.Eq(t, param.Qtype, UNKNOWN)
 	assert.Neq(t, match.err, nil)
 
 	match = Input{line: `"a`}
 	key, param = getParam(&match)
 	assert.Eq(t, key, "")
 	assert.Eq(t, match.line, `"a`)
-	assert.Eq(t, param.qtype, UNKNOWN)
+	assert.Eq(t, param.Qtype, UNKNOWN)
 	assert.Neq(t, match.err, nil)
 
 	match = Input{line: `x"y"`}
 	key, param = getParam(&match)
 	assert.Eq(t, key, "x")
 	assert.Eq(t, match.line, "")
-	assert.Eq(t, param.qtype, STRING)
+	assert.Eq(t, param.Qtype, STRING)
 	assert.Eq(t, match.err, nil)
-	assert.Eq(t, param.val, "y")
+	assert.Eq(t, param.Val, "y")
 
 	match = Input{line: `y"\\S\tt\nr\"",x"txt"`}
 	key, param = getParam(&match)
 	assert.Eq(t, key, "y")
 	assert.Eq(t, match.line, `,x"txt"`)
-	assert.Eq(t, param.qtype, STRING)
+	assert.Eq(t, param.Qtype, STRING)
 	assert.Eq(t, match.err, nil)
-	assert.Eq(t, param.val, "\\S\tt\nr"+`"`)
+	assert.Eq(t, param.Val, "\\S\tt\nr"+`"`)
 }
 
 func TestParseParamNumber(t *testing.T) {
@@ -248,29 +248,29 @@ func TestParseParamNumber(t *testing.T) {
 	key, param := getParam(&match)
 	assert.Eq(t, key, "")
 	assert.Eq(t, match.line, "a#")
-	assert.Eq(t, param.qtype, UNKNOWN)
+	assert.Eq(t, param.Qtype, UNKNOWN)
 	assert.Neq(t, match.err, nil)
 
 	match = Input{line: "#a"}
 	key, param = getParam(&match)
 	assert.Eq(t, key, "")
 	assert.Eq(t, match.line, "#a")
-	assert.Eq(t, param.qtype, UNKNOWN)
+	assert.Eq(t, param.Qtype, UNKNOWN)
 	assert.Neq(t, match.err, nil)
 
 	match = Input{line: "x#1"}
 	key, param = getParam(&match)
 	assert.Eq(t, key, "x")
 	assert.Eq(t, match.line, "")
-	assert.Eq(t, param.qtype, NUMBER)
+	assert.Eq(t, param.Qtype, NUMBER)
 	assert.Eq(t, match.err, nil)
-	assert.Eq(t, param.val, 1.0)
+	assert.Eq(t, param.Val, 1.0)
 
 	match = Input{line: "y#-0.99,x#12"}
 	key, param = getParam(&match)
 	assert.Eq(t, key, "y")
 	assert.Eq(t, match.line, ",x#12")
-	assert.Eq(t, param.qtype, NUMBER)
+	assert.Eq(t, param.Qtype, NUMBER)
 	assert.Eq(t, match.err, nil)
-	assert.Eq(t, param.val, -0.99)
+	assert.Eq(t, param.Val, -0.99)
 }

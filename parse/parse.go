@@ -25,8 +25,8 @@ const (
 )
 
 type Param struct {
-	val   any
-	qtype int
+	Val   any
+	Qtype int
 }
 
 func (input *Input) matchStart(rxp string, lookfor string) (found string) {
@@ -182,40 +182,40 @@ func getParam(input *Input) (key string, param Param) {
 	prefix := input.matchStart(`[!:="#]`, "type prefix/assignment missing ")
 	switch prefix {
 	case "":
-		param.qtype = UNKNOWN
+		param.Qtype = UNKNOWN
 	case "!": // check for boolean
 		found = input.matchStart("(true|false)", "")
 		if found != "" { // i.e. if found
-			param.qtype = BOOLEAN
-			param.val = (found == "true")
+			param.Qtype = BOOLEAN
+			param.Val = (found == "true")
 			return
 		}
 	case ":": // check for id
 		id := input.getId()
 		if input.err == nil {
-			param.val = id
-			param.qtype = ID
+			param.Val = id
+			param.Qtype = ID
 			return
 		}
 	case "=": // check for variable
 		name := input.getWord()
 		if input.err == nil {
-			param.val = name
-			param.qtype = VARIABLE
+			param.Val = name
+			param.Qtype = VARIABLE
 			return
 		}
 	case `"`: // check for string
 		str := input.getString()
 		if input.err == nil {
-			param.val = str
-			param.qtype = STRING
+			param.Val = str
+			param.Qtype = STRING
 			return
 		}
 	case "#": // check for float
 		num := input.getFloat()
 		if input.err == nil {
-			param.val = num
-			param.qtype = NUMBER
+			param.Val = num
+			param.Qtype = NUMBER
 			return
 		}
 	}
