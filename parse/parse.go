@@ -6,6 +6,8 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+
+	"github.com/andrewfstratton/quandoscript/run/param"
 )
 
 type Input struct {
@@ -22,11 +24,6 @@ const (
 	ID
 )
 
-type Param struct {
-	Val   any
-	Qtype int
-}
-
 func (input *Input) matchStart(rxp string, lookfor string) (found string) {
 	arr := regexp.MustCompile("^" + rxp).FindStringIndex(input.line)
 	if len(arr) != 2 {
@@ -39,9 +36,7 @@ func (input *Input) matchStart(rxp string, lookfor string) (found string) {
 	return
 }
 
-type Params map[string]Param
-
-func Line(line string) (id int, word string, params Params, err error) {
+func Line(line string) (id int, word string, params param.Params, err error) {
 	if line == "" { // fn and err are nil for a blank line
 		return
 	}
@@ -153,12 +148,12 @@ func (input *Input) getFloat() (f float64) {
 
 // returns parameters as nil if just (), or Param parameters, err if not starting with ( or not terminated correctly with ).
 // remaining is the rest of the string
-func (input *Input) getParams() (params Params) {
+func (input *Input) getParams() (params param.Params) {
 	found := input.matchStart(`\(`, "(")
 	if found == "" {
 		return
 	}
-	params = make(Params)
+	params = make(param.Params)
 	for {
 		key, param := getParam(input)
 		if key == "" { // no key
@@ -179,7 +174,7 @@ func (input *Input) getParams() (params Params) {
 }
 
 // key returns "" when none found
-func getParam(input *Input) (key string, param Param) {
+func getParam(input *Input) (key string, param param.Param) {
 	restore := input.line
 	// Check for ) and return without error or change to input if found
 	found := input.matchStart(`\)`, "")

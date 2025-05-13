@@ -6,6 +6,7 @@ import (
 
 	"github.com/andrewfstratton/quandoscript/op"
 	"github.com/andrewfstratton/quandoscript/parse"
+	"github.com/andrewfstratton/quandoscript/run/param"
 )
 
 func log(prefix string) op.Op {
@@ -20,7 +21,7 @@ func init() {
 	op.Add("log", log("Log"))
 }
 
-func parseLine(line string) (id int, word string, params parse.Params, err error) {
+func parseLine(line string) (id int, word string, params param.Params, err error) {
 	id, word, params, err = parse.Line(line)
 	return
 }
