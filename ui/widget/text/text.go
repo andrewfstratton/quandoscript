@@ -23,6 +23,9 @@ func (t *Text) String() (txt string) {
 	if t.Style.Bold {
 		txt = Tag(txt, "b")
 	}
+	if t.Style.Iconify {
+		txt = fmt.Sprintf("<%v>%v</%v>", `span class="iconify"`, txt, "span")
+	}
 	return
 }
 
