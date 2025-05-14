@@ -20,7 +20,7 @@ func (t *TextField) Html() (txt string) {
 	if t.empty != "" {
 		txt = txt + " placeholder='" + t.empty + "'"
 	}
-	txt = txt + ` data-quando-encode='normal'/>`
+	txt = txt + `/>`
 	return
 }
 
