@@ -11,16 +11,14 @@ func New(name string) *StringInput {
 }
 
 func (si *StringInput) Html() (txt string) {
-	// txt = `<input data-quando-name='name' type='text' value='initial' placeholder='empty'
-	//  data-quando-encode='normal'/>
-	txt = `<input data-quando-name='` + si.name + `' type='text'`
+	txt = `&quot;<input data-quando-name='` + si.name + `' type='text'`
 	if si.default_ != "" {
 		txt = txt + " value='" + si.default_ + "'"
 	}
 	if si.empty != "" {
 		txt = txt + " placeholder='" + si.empty + "'"
 	}
-	txt = txt + `/>`
+	txt = txt + `/>&quot;`
 	return
 }
 
