@@ -2,31 +2,46 @@ package text
 
 import (
 	"fmt"
-
-	"github.com/andrewfstratton/quandoscript/block/widget"
 )
 
 type Text struct {
-	widget.TextWidget
-	txt string
+	italic  bool
+	bold    bool
+	iconify bool
+	txt     string
 }
 
 func New(t string) *Text {
 	return &Text{txt: t}
 }
 
-func (t *Text) String() (txt string) {
+func (t *Text) Html() (txt string) {
 	txt = t.txt
-	if t.Style.Italic {
+	if t.italic {
 		txt = Tag(txt, "i")
 	}
-	if t.Style.Bold {
+	if t.bold {
 		txt = Tag(txt, "b")
 	}
-	if t.Style.Iconify {
+	if t.iconify {
 		txt = fmt.Sprintf("<%v>%v</%v>", `span class="iconify"`, txt, "span")
 	}
 	return
+}
+
+func (t *Text) Italic() *Text {
+	t.italic = true
+	return t
+}
+
+func (t *Text) Bold() *Text {
+	t.bold = true
+	return t
+}
+
+func (t *Text) Iconify() *Text {
+	t.iconify = true
+	return t
 }
 
 func Tag(txt string, tag string) string {
