@@ -1,4 +1,4 @@
-package textfield
+package stringinput
 
 import (
 	"testing"
