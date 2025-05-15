@@ -19,6 +19,8 @@ func log(prefix string) op.Op {
 
 func init() {
 	op.Add("log", log("Log"))
+	// block := block.New("")
+	// fmt.Println(block.Html())
 }
 
 func parseLine(line string) (id int, word string, params param.Params, err error) {
