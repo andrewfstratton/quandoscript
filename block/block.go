@@ -29,3 +29,12 @@ func New(lookup string) *Block {
 func (block *Block) Add(widget widget.Widget) {
 	block.widgets = append(block.widgets, widget)
 }
+
+// func (block *Block) Html() string {
+// 	// incomplete for now
+// 	result := ""
+// 	for _, widget := range block.widgets {
+// 		result += widget.Html()
+// 	}
+// 	return result
+// }
