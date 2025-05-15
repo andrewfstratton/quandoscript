@@ -30,11 +30,10 @@ func (block *Block) Add(widget widget.Widget) {
 	block.widgets = append(block.widgets, widget)
 }
 
-// func (block *Block) Html() string {
-// 	// incomplete for now
-// 	result := ""
-// 	for _, widget := range block.widgets {
-// 		result += widget.Html()
-// 	}
-// 	return result
-// }
+func (block *Block) html() string { // incomplete for now so not available externally
+	result := ""
+	for _, widget := range block.widgets {
+		result += widget.Html()
+	}
+	return result
+}
