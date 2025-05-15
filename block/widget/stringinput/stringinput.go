@@ -13,12 +13,12 @@ func New(name string) *StringInput {
 func (si *StringInput) Html() (txt string) {
 	txt = `&quot;<input data-quando-name='` + si.name + `' type='text'`
 	if si.default_ != "" {
-		txt = txt + " value='" + si.default_ + "'"
+		txt += " value='" + si.default_ + "'"
 	}
 	if si.empty != "" {
-		txt = txt + " placeholder='" + si.empty + "'"
+		txt += " placeholder='" + si.empty + "'"
 	}
-	txt = txt + `/>&quot;`
+	txt += `/>&quot;`
 	return
 }
 
