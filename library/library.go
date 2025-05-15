@@ -1,15 +1,23 @@
 package library
 
 import (
+	"fmt"
+	"os"
+	"runtime/debug"
+
 	"github.com/andrewfstratton/quandoscript/block"
-	"github.com/andrewfstratton/quandoscript/block/widget/text"
 )
 
 var blocks map[string]block.Block
 
-func init() {
-	block := block.New("system.log")
-	log := text.New("Log").Bold()
-	block.Add(log)
-	blocks[block.Lookup] = block
+func NewBlock(lookup string) block.Block {
+	_, inuse := blocks[lookup]
+	if inuse {
+		fmt.Println(`BLOCK "` + lookup + `" ALREADY EXISTS`)
+		debug.PrintStack()
+		os.Exit(99)
+	}
+	b := block.New(lookup)
+	blocks[lookup] = b
+	return b
 }

@@ -1,6 +1,12 @@
 package block
 
-import "github.com/andrewfstratton/quandoscript/block/widget"
+import (
+	"fmt"
+	"os"
+	"runtime/debug"
+
+	"github.com/andrewfstratton/quandoscript/block/widget"
+)
 
 type Block struct {
 	Lookup  string
@@ -8,6 +14,11 @@ type Block struct {
 }
 
 func New(lookup string) Block {
+	if lookup == "" {
+		fmt.Println(`ATTEMPT TO CREATE BLOCK WITH ""`)
+		debug.PrintStack()
+		os.Exit(99)
+	}
 	return Block{Lookup: lookup}
 }
 
