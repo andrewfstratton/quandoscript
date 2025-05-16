@@ -1,5 +1,7 @@
 package stringinput
 
+import "fmt"
+
 type StringInput struct {
 	name     string
 	default_ string
@@ -20,6 +22,10 @@ func (si *StringInput) Html() (txt string) {
 	}
 	txt += `/>&quot;`
 	return
+}
+
+func (si *StringInput) Generate() string {
+	return fmt.Sprintf(`%v"${%v}"`, si.name, si.name)
 }
 
 func (si *StringInput) Default(s string) *StringInput {

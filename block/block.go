@@ -6,6 +6,7 @@ import (
 	"runtime/debug"
 	"testing"
 
+	"github.com/andrewfstratton/quandoscript/block/quandoscript"
 	"github.com/andrewfstratton/quandoscript/block/widget"
 )
 
@@ -16,10 +17,10 @@ type Block struct {
 
 func New(lookup string) *Block {
 	if lookup == "" {
+		fmt.Println(`ATTEMPT TO CREATE BLOCK WITH "" LOOKUP`)
 		if testing.Testing() {
 			return nil
 		}
-		fmt.Println(`ATTEMPT TO CREATE BLOCK WITH ""`)
 		debug.PrintStack()
 		os.Exit(99)
 	}
@@ -34,6 +35,20 @@ func (block *Block) html() string { // incomplete for now so not available exter
 	result := ""
 	for _, widget := range block.widgets {
 		result += widget.Html()
+	}
+	return result
+}
+
+func (block *Block) script() string { // incomplete for now so not available externally
+	result := ""
+	for _, widget := range block.widgets {
+		qs, ok := widget.(quandoscript.QuandoScript)
+		if ok {
+			if result != "" {
+				result += ","
+			}
+			result += qs.Generate()
+		}
 	}
 	return result
 }
