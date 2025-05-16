@@ -1,6 +1,7 @@
 package block
 
 import (
+	"github.com/andrewfstratton/quandoscript/block/widget/numberinput"
 	"testing"
 
 	"github.com/andrewfstratton/quandoscript/assert"
@@ -19,6 +20,6 @@ func TestNew(t *testing.T) {
 	block.Add(stringinput.New("name").Empty("message"))
 	assert.Neq(t, block.html(), "")
 	assert.Eq(t, block.script(), `name"${name}"`)
-	block.Add(stringinput.New("txt"))
-	assert.Eq(t, block.script(), `name"${name}",txt"${txt}"`)
+	block.Add(numberinput.New("val"))
+	assert.Eq(t, block.script(), `name"${name}",val#${val}`)
 }

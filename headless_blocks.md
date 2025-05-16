@@ -104,15 +104,18 @@ To be rewritten (when needed) as Widgets
 3. Text --> Text, with Iconify().Bold().Italic()
 2. Fixed Space --> under Character.FIXED_SPACE
 15. Icon (inc direction) --> in Character
-
-
-## In progress
-
 4. Input --> StringInput(name) with Default().Empty()
     - always surrounds textfield with "
     - todo add to generator+api 
 
+## In progress
+
+4. Input --> NumberInput
+    - **TODO - similar to stringinput but has number width, min, max and possibly percent - or that might be PercentNumber**
+
 ## To Be done :
+
+0. Create generator for editor
 
 1. UI
     - part of the initial block definition?  inc. lookup/UI ID
@@ -121,9 +124,6 @@ To be rewritten (when needed) as Widgets
       - boxes are added differently...
       - block generator isn't included...yet
     - note that Block/line number is the Block Id
-
-4. Input --> NumberInput
-    - **TODO - similar to stringinput but has number width, min, max and possibly percent - or that might be PercentNumber**
 
 5. Menu
 6. Toggle --> likely automatic from menu, when only two options, with possible override either way
