@@ -6,7 +6,7 @@ import (
 	"runtime/debug"
 	"testing"
 
-	"github.com/andrewfstratton/quandoscript/block/quandoscript"
+	"github.com/andrewfstratton/quandoscript/block/script"
 	"github.com/andrewfstratton/quandoscript/block/widget"
 )
 
@@ -42,12 +42,12 @@ func (block *Block) html() string { // incomplete for now so not available exter
 func (block *Block) script() string { // incomplete for now so not available externally
 	result := ""
 	for _, widget := range block.widgets {
-		qs, ok := widget.(quandoscript.QuandoScript)
+		s, ok := widget.(script.Generator)
 		if ok {
 			if result != "" {
 				result += ","
 			}
-			result += qs.Generate()
+			result += s.Generate()
 		}
 	}
 	return result
