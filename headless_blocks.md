@@ -107,15 +107,12 @@ To be rewritten (when needed) as Widgets
 4. Input --> StringInput(name) with Default().Empty()
     - always surrounds textfield with "
     - todo add to generator+api 
-
-## In progress
-
 4. Input --> NumberInput
-    - **TODO - similar to stringinput but has number width, min, max and possibly percent - or that might be PercentNumber**
+    - similar to stringinput but has number width, min, max
+4. Input --> Percent
+    - adds a percent sign to output and min and max are preset
 
 ## To Be done :
-
-0. Create generator for editor
 
 1. UI
     - part of the initial block definition?  inc. lookup/UI ID
@@ -124,6 +121,11 @@ To be rewritten (when needed) as Widgets
       - boxes are added differently...
       - block generator isn't included...yet
     - note that Block/line number is the Block Id
+
+## In progress
+
+
+0. Create generator for editor
 
 5. Menu
 6. Toggle --> likely automatic from menu, when only two options, with possible override either way

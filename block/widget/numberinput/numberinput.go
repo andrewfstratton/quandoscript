@@ -16,7 +16,7 @@ func New(name string) *NumberInput {
 }
 
 func (ni *NumberInput) Html() (txt string) {
-	txt = `<input data-quando-name='` + ni.name + `' type='number'`
+	txt = fmt.Sprintf("<input data-quando-name='%v' type='number'", ni.name)
 	if ni.default_ != nil {
 		txt += fmt.Sprintf(" value='%v'", *ni.default_)
 	}
@@ -26,7 +26,7 @@ func (ni *NumberInput) Html() (txt string) {
 	if ni.width != nil {
 		txt += fmt.Sprintf(" style='width:%dem'", *ni.width)
 	}
-	// may need '' around number?
+	// needs '' around number to avoid issues?!
 	if ni.min != nil {
 		txt += fmt.Sprintf(" min='%d'", *ni.min)
 	}
