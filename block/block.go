@@ -3,6 +3,7 @@ package block
 import (
 	"fmt"
 	"os"
+	"regexp"
 	"runtime/debug"
 	"testing"
 
@@ -51,4 +52,8 @@ func (block *Block) script() string { // incomplete for now so not available ext
 		}
 	}
 	return result
+}
+
+func (block *Block) Class() string {
+	return regexp.MustCompile("^[a-zA-Z][a-zA-Z0-9_]*").FindString(block.Lookup)
 }

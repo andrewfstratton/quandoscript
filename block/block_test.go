@@ -1,8 +1,9 @@
 package block
 
 import (
-	"github.com/andrewfstratton/quandoscript/block/widget/numberinput"
 	"testing"
+
+	"github.com/andrewfstratton/quandoscript/block/widget/numberinput"
 
 	"github.com/andrewfstratton/quandoscript/assert"
 	"github.com/andrewfstratton/quandoscript/block/widget/character"
@@ -10,11 +11,18 @@ import (
 	"github.com/andrewfstratton/quandoscript/block/widget/text"
 )
 
-func TestNew(t *testing.T) {
+func TestEmpty(t *testing.T) {
 	block := New("")
 	assert.Eq(t, block, nil) // n.b. will panic when not testing
+}
 
-	block = New("system.log")
+func TestSimple(t *testing.T) {
+	block := New("system.log")
+	assert.Eq(t, block.Class(), "system")
+}
+
+func TestNew(t *testing.T) {
+	block := New("system.log")
 	block.Add(text.New("Log").Bold())
 	block.Add(character.New(character.FIXED_SPACE))
 	block.Add(stringinput.New("name").Empty("message"))
