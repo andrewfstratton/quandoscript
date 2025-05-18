@@ -12,7 +12,8 @@ import (
 )
 
 type Block struct {
-	Lookup  string
+	lookup  string
+	class   string
 	widgets []widget.Widget
 }
 
@@ -25,7 +26,10 @@ func New(lookup string) *Block {
 		debug.PrintStack()
 		os.Exit(99)
 	}
-	return &Block{Lookup: lookup}
+	return &Block{
+		lookup: lookup,
+		class:  regexp.MustCompile("^[a-zA-Z][a-zA-Z0-9_]*").FindString(lookup),
+	}
 }
 
 func (block *Block) Add(widget widget.Widget) {
@@ -55,5 +59,5 @@ func (block *Block) script() string { // incomplete for now so not available ext
 }
 
 func (block *Block) Class() string {
-	return regexp.MustCompile("^[a-zA-Z][a-zA-Z0-9_]*").FindString(block.Lookup)
+	return block.class
 }
