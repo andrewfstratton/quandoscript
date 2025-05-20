@@ -3,7 +3,6 @@ package block
 import (
 	"fmt"
 	"os"
-	"regexp"
 	"runtime/debug"
 	"testing"
 
@@ -12,14 +11,14 @@ import (
 )
 
 type Block struct {
-	lookup  string
+	qid     string
 	class   string
 	widgets []widget.Widget
 }
 
-func New(lookup string) *Block {
-	if lookup == "" {
-		fmt.Println(`ATTEMPT TO CREATE BLOCK WITH "" LOOKUP`)
+func New(qid string, class string) *Block {
+	if qid == "" {
+		fmt.Println(`ATTEMPT TO CREATE BLOCK WITH "" QUANDO ID`)
 		if testing.Testing() {
 			return nil
 		}
@@ -27,8 +26,8 @@ func New(lookup string) *Block {
 		os.Exit(99)
 	}
 	return &Block{
-		lookup: lookup,
-		class:  regexp.MustCompile("^[a-zA-Z][a-zA-Z0-9_]*").FindString(lookup),
+		qid:   qid,
+		class: class,
 	}
 }
 
@@ -36,28 +35,36 @@ func (block *Block) Add(widget widget.Widget) {
 	block.widgets = append(block.widgets, widget)
 }
 
-func (block *Block) html() string { // incomplete for now so not available externally
-	result := ""
-	for _, widget := range block.widgets {
-		result += widget.Html()
+func (block *Block) ReplaceHtml() string { // incomplete for now
+	result := `<div data-quando-block-type="` +
+		block.qid +
+		`" class="quando-block"` +
+		//` data-quando-id="true"` + // Removed since always used now
+		// Note that quandoscript needs unique block id (data-quando-id) at start of line + space when generating quandoscript call
+		` data-quando-quandoscript='` + // single quote to allow quandoscript double quote string embedding
+		block.qid + `(` +
+		block.params() +
+		`)'>` +
+		`<div class="quando-left quando-` + block.class + `"></div>` +
+		`<div class="quando-right">` +
+		`<div class="quando-row quando-` + block.class + `">`
+	for _, w := range block.widgets {
+		result += w.Html()
 	}
+	result += `</div></div></div>`
 	return result
 }
 
-func (block *Block) script() string { // incomplete for now so not available externally
+func (block *Block) params() string {
 	result := ""
-	for _, widget := range block.widgets {
-		s, ok := widget.(script.Generator)
+	for _, w := range block.widgets {
+		s, ok := w.(script.Generator)
 		if ok {
-			if result != "" {
+			if result != "" { // separate parameters with comma
 				result += ","
 			}
 			result += s.Generate()
 		}
 	}
 	return result
-}
-
-func (block *Block) Class() string {
-	return block.class
 }
