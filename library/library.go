@@ -6,9 +6,8 @@ import (
 	"runtime/debug"
 	"testing"
 
-	"github.com/andrewfstratton/quandoscript/blocklist"
-
 	"github.com/andrewfstratton/quandoscript/block"
+	"github.com/andrewfstratton/quandoscript/blocklist"
 )
 
 var blocks map[string]*block.Block             // lookup for all blocks on qid
@@ -38,6 +37,14 @@ func NewBlock(qid string, class string) (b *block.Block) {
 func Block(qid string) (block *block.Block, found bool) {
 	block, found = blocks[qid]
 	return
+}
+
+func Classes() []string {
+	result := make([]string, 0, len(blocklists))
+	for key := range blocklists {
+		result = append(result, key)
+	}
+	return result
 }
 
 func init() {

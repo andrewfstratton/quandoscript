@@ -30,3 +30,10 @@ func TestFind(t *testing.T) {
 	assert.Eq(t, found, true)
 
 }
+
+func TestClasses(t *testing.T) {
+	_ = NewBlock("system.log", "system")
+	_ = NewBlock("display.show", "display")
+	_ = NewBlock("debug", "")
+	assert.Eq(t, len(Classes()), 3)
+}
