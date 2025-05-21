@@ -11,17 +11,17 @@ import (
 	"github.com/andrewfstratton/quandoscript/block"
 )
 
-var blocks map[string]*block.Block
-var blocklists map[string]*blocklist.BlockList
+var blocks map[string]*block.Block             // lookup for all blocks on qid
+var blocklists map[string]*blocklist.BlockList // groups of blocks by 'class' for menu
 
 func NewBlock(qid string, class string) (b *block.Block) {
 	_, inuse := blocks[qid]
 	if inuse {
 		fmt.Println(`BLOCK "` + qid + `" ALREADY EXISTS`)
-		debug.PrintStack()
 		if testing.Testing() {
 			return
 		}
+		debug.PrintStack()
 		os.Exit(99)
 	}
 	b = block.New(qid, class)
@@ -35,8 +35,12 @@ func NewBlock(qid string, class string) (b *block.Block) {
 	return
 }
 
+func Block(qid string) (block *block.Block, found bool) {
+	block, found = blocks[qid]
+	return
+}
+
 func init() {
 	blocks = make(map[string]*block.Block)
 	blocklists = make(map[string]*blocklist.BlockList)
-
 }
