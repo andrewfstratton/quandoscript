@@ -35,3 +35,21 @@ func main() {
 	}
 	fmt.Println(id, word, params)
 }
+
+// result := `<div data-quando-block-type="` +
+// 	block.qid +
+// 	`" class="quando-block"` +
+// 	//` data-quando-id="true"` + // Removed since always used now
+// 	// Note that quandoscript needs unique block id (data-quando-id) at start of line + space when generating quandoscript call
+// 	` data-quando-quandoscript='` + // single quote to allow quandoscript double quote string embedding
+// 	block.qid + `(` +
+// 	block.params() +
+// 	`)'>` +
+// 	`<div class="quando-left quando-` + block.class + `"></div>` +
+// 	`<div class="quando-right">` +
+// 	`<div class="quando-row quando-` + block.class + `">`
+// for _, w := range block.widgets {
+// 	result += w.Html()
+// }
+// result += `</div></div></div>`
+// return result
