@@ -1,10 +1,12 @@
 package block
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"runtime/debug"
 	"testing"
+	"text/template"
 
 	"github.com/andrewfstratton/quandoscript/block/script"
 	"github.com/andrewfstratton/quandoscript/block/widget"
@@ -16,11 +18,11 @@ type Block struct {
 	widgets []widget.Widget
 }
 
-type BlockOutput struct {
-	qid        string
-	class      string
-	params     string
-	widgetHtml string
+type BlockExpanded struct {
+	QID     string
+	Class   string
+	Widgets string
+	Params  string
 }
 
 func New(qid string, class string) *Block {
@@ -42,20 +44,39 @@ func (block *Block) Add(widget widget.Widget) {
 	block.widgets = append(block.widgets, widget)
 }
 
-func (block *Block) Output() BlockOutput {
-	wHtml := ""
-	for _, w := range block.widgets {
-		wHtml += w.Html()
-	}
-	return BlockOutput{
-		qid:        block.qid,
-		class:      block.class,
-		params:     block.params(),
-		widgetHtml: wHtml,
+func (block *Block) Expand() BlockExpanded {
+	return BlockExpanded{
+		QID:     block.qid,
+		Class:   block.class,
+		Widgets: block.WidgetsHtml(),
+		Params:  block.Params(),
 	}
 }
 
-func (block *Block) params() string {
+func (blockExpanded *BlockExpanded) Replace(original string) string {
+	var by bytes.Buffer
+	t, err := template.New("tmp").Parse(original)
+	if err != nil {
+		fmt.Println(`TEMPLATE PARSING ERROR`)
+		if testing.Testing() {
+			return ""
+		}
+		debug.PrintStack()
+		os.Exit(99)
+	}
+	t.Execute(&by, blockExpanded)
+	return by.String()
+}
+
+func (block *Block) WidgetsHtml() string {
+	wh := ""
+	for _, w := range block.widgets {
+		wh += w.Html()
+	}
+	return wh
+}
+
+func (block *Block) Params() string {
 	result := ""
 	for _, w := range block.widgets {
 		s, ok := w.(script.Generator)

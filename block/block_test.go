@@ -16,51 +16,52 @@ func TestEmpty(t *testing.T) {
 	assert.Eq(t, block, nil) // n.b. will panic when not testing
 }
 
-func TestSimple(t *testing.T) {
-	block := New("system.log", "")
-	assert.Eq(t, block.class, "system")
+func TestNewSimple(t *testing.T) {
+	block := New("log", "")
+	assert.Eq(t, block.class, "")
+	assert.Eq(t, block.qid, "log")
+
+	block = New("system.log", "sys")
+	assert.Eq(t, block.class, "sys")
+	assert.Eq(t, block.qid, "system.log")
 }
 
 func TestNew(t *testing.T) {
-	block := New("system.log", "")
+	block := New("system.log", "system")
 	block.Add(text.New("Log"))
 	block.Add(character.New(character.FIXED_SPACE))
-	out := block.Output()
-	assert.Eq(t, out.qid, "system.log")
-	assert.Eq(t, out.class, "")
-	assert.Eq(t, out.params, "")
-	assert.Eq(t, out.widgetHtml, "Log&nbsp;")
+	be := block.Expand()
+	assert.Eq(t, be.Replace("{{ .Class }}"), "system")
+	assert.Eq(t, be.Replace("{{ .QID }}"), "system.log")
+	assert.Eq(t, be.Replace("{{ .Widgets }}"), "Log&nbsp;")
+	assert.Eq(t, be.Replace("{{ .Params }}"), "")
 }
 
 func TestNewStringInput(t *testing.T) {
 	block := New("system.log", "system")
 	block.Add(text.New("Log ").Bold())
 	block.Add(stringinput.New("name").Default("!").Empty("message"))
-	out := block.Output()
-	assert.Eq(t, out.qid, "system.log")
-	assert.Eq(t, out.class, "system")
-	assert.Eq(t, out.params, `name"${name}"`)
-	assert.Eq(t, out.widgetHtml, `<b>Log </b>&quot;<input data-quando-name='name' type='text' value='!' placeholder='message'/>&quot;`)
+	be := block.Expand()
+	assert.Eq(t, be.Replace("{{ .Params }}"), `name"${name}"`)
 }
 
 func TestNewNumberInput(t *testing.T) {
 	block := New("system.log", "system")
 	block.Add(text.New("Log "))
-	block.Add(numberinput.New("name").Empty("message").Default(0.5).Min(0).Max(1).Width(4))
-	out := block.Output()
-	assert.Eq(t, out.qid, "system.log")
-	assert.Eq(t, out.class, "system")
-	assert.Eq(t, out.params, `name#${name}`)
-	assert.Eq(t, out.widgetHtml, `Log <input data-quando-name='name' type='number' value='0.5' placeholder='message' style='width:4em' min='0' max='1'/>`)
+	block.Add(numberinput.New("num").Empty("message").Default(0.5).Min(0).Max(1).Width(4))
+	be := block.Expand()
+	assert.Eq(t, be.Replace("{{ .Params }}"), `num#${num}`)
+	assert.Eq(t, be.Replace("{{ .Widgets }}"),
+		`Log <input data-quando-name='num' type='number' value='0.5' placeholder='message' style='width:4em' min='0' max='1'/>`)
 }
 
 func TestNewPercentInput(t *testing.T) {
 	block := New("display.width", "display")
 	block.Add(text.New("Width "))
 	block.Add(percentinput.New("width").Empty("0-100").Default(50))
-	out := block.Output()
-	assert.Eq(t, out.qid, "display.width")
-	assert.Eq(t, out.class, "display")
-	assert.Eq(t, out.params, `width#${width}`)
-	assert.Eq(t, out.widgetHtml, `Width <input data-quando-name='width' type='number' value='50' placeholder='0-100' min='0' max='100'/>%`)
+	be := block.Expand()
+	assert.Eq(t, be.Replace("{{ .Class }}"), "display")
+	assert.Eq(t, be.Replace("{{ .QID }}"), "display.width")
+	assert.Eq(t, be.Replace("{{ .Widgets }}"), `Width <input data-quando-name='width' type='number' value='50' placeholder='0-100' min='0' max='100'/>%`)
+	assert.Eq(t, be.Replace("{{ .Params }}"), "width#${width}")
 }

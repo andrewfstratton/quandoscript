@@ -20,12 +20,12 @@ func TestFind(t *testing.T) {
 	assert.True(t, b == nil)
 	assert.Eq(t, found, false)
 
-	b, found = Block("system.log")
+	b, found = Block("display.log")
 	assert.True(t, b == nil)
 	assert.Eq(t, found, false)
 
-	_ = NewBlock("system.log", "system")
-	b, found = Block("system.log")
+	_ = NewBlock("display.log", "display")
+	b, found = Block("display.log")
 	assert.True(t, b != nil)
 	assert.Eq(t, found, true)
 
