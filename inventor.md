@@ -14,21 +14,19 @@ Blocks to be rewritten (when needed) as Widgets
     - similar to stringinput but has number width, min, max
 4. Input --> Percent
     - adds a percent sign to output and min and max are preset
-
-## To Be done :
-
-1. UI
-    - part of the initial block definition?  inc. lookup/UI ID
+1. Create generator for editor
       - lookup includes the class at the start - before the '.'  Syntax should be updated to reflect this
-      - api library is class and first part of id/lookup
+      - api library held in class as well as qid (lookup)
+
+## In progress
+
+1. Create generator for editor
+    - part of the initial block definition?  inc. lookup/UI ID
       - boxes are added differently...
       - block generator isn't included...yet
     - note that Block/line number is the Block Id
 
-## In progress
-
-
-0. Create generator for editor
+## To Be done :
 
 5. Menu
 6. Toggle --> likely automatic from menu, when only two options, with possible override either way
