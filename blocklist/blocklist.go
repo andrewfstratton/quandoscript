@@ -4,23 +4,26 @@ import (
 	"github.com/andrewfstratton/quandoscript/block"
 )
 
-type List struct {
+const (
+	UNKNOWN_CLASS = "unknown"
+)
+
+type BlockList struct {
 	class  string
 	blocks []block.Block
 }
 
-func New(class string) (list List) {
-	return List{class: class}
+func New(class string) *BlockList {
+	return &BlockList{class: class}
 }
 
-func (list *List) Add(block *block.Block) {
-	list.blocks = append(list.blocks, *block)
+func (blocklist *BlockList) Add(block *block.Block) {
+	blocklist.blocks = append(blocklist.blocks, *block)
 }
 
-func (list *List) Class() (css_class string) {
-	css_class = "quando"
-	if list.class != "" {
-		css_class += "-" + list.class
+func (blocklist *BlockList) CSSClass(prefix string) string {
+	if blocklist.class == "" {
+		return prefix + UNKNOWN_CLASS
 	}
-	return
+	return prefix + blocklist.class
 }
