@@ -19,11 +19,11 @@ func TestEmpty(t *testing.T) {
 func TestNewSimple(t *testing.T) {
 	block := New("log", "")
 	assert.Eq(t, block.class, "")
-	assert.Eq(t, block.qid, "log")
+	assert.Eq(t, block.typeName, "log")
 
 	block = New("system.log", "sys")
 	assert.Eq(t, block.class, "sys")
-	assert.Eq(t, block.qid, "system.log")
+	assert.Eq(t, block.typeName, "system.log")
 }
 
 func TestNew(t *testing.T) {
@@ -32,7 +32,7 @@ func TestNew(t *testing.T) {
 	block.Add(character.New(character.FIXED_SPACE))
 	be := block.Expand()
 	assert.Eq(t, be.Replace("{{ .Class }}"), "system")
-	assert.Eq(t, be.Replace("{{ .QID }}"), "system.log")
+	assert.Eq(t, be.Replace("{{ .TypeName }}"), "system.log")
 	assert.Eq(t, be.Replace("{{ .Widgets }}"), "Log&nbsp;")
 	assert.Eq(t, be.Replace("{{ .Params }}"), "")
 }
@@ -61,7 +61,7 @@ func TestNewPercentInput(t *testing.T) {
 	block.Add(percentinput.New("width").Empty("0-100").Default(50))
 	be := block.Expand()
 	assert.Eq(t, be.Replace("{{ .Class }}"), "display")
-	assert.Eq(t, be.Replace("{{ .QID }}"), "display.width")
+	assert.Eq(t, be.Replace("{{ .TypeName }}"), "display.width")
 	assert.Eq(t, be.Replace("{{ .Widgets }}"), `Width <input data-quando-name='width' type='number' value='50' placeholder='0-100' min='0' max='100'/>%`)
 	assert.Eq(t, be.Replace("{{ .Params }}"), "width#${width}")
 }

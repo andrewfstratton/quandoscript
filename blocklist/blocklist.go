@@ -10,14 +10,14 @@ const (
 
 type BlockList struct {
 	class  string
-	blocks []block.Block
+	blocks []block.BlockType
 }
 
 func New(class string) *BlockList {
 	return &BlockList{class: class}
 }
 
-func (blocklist *BlockList) Add(block *block.Block) {
+func (blocklist *BlockList) Add(block *block.BlockType) {
 	blocklist.blocks = append(blocklist.blocks, *block)
 }
 

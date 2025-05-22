@@ -12,44 +12,44 @@ import (
 	"github.com/andrewfstratton/quandoscript/block/widget"
 )
 
-type Block struct {
-	qid     string
-	class   string
-	widgets []widget.Widget
+type BlockType struct {
+	typeName string
+	class    string
+	widgets  []widget.Widget
 }
 
 type BlockExpanded struct {
-	QID     string
-	Class   string
-	Widgets string
-	Params  string
+	TypeName string
+	Class    string
+	Widgets  string
+	Params   string
 }
 
-func New(qid string, class string) *Block {
-	if qid == "" {
-		fmt.Println(`ATTEMPT TO CREATE BLOCK WITH "" QUANDO ID`)
+func New(typeName string, class string) *BlockType {
+	if typeName == "" {
+		fmt.Println(`ATTEMPT TO CREATE BLOCK WITH "" BLOCK TYPE`)
 		if testing.Testing() {
 			return nil
 		}
 		debug.PrintStack()
 		os.Exit(99)
 	}
-	return &Block{
-		qid:   qid,
-		class: class,
+	return &BlockType{
+		typeName: typeName,
+		class:    class,
 	}
 }
 
-func (block *Block) Add(widget widget.Widget) {
+func (block *BlockType) Add(widget widget.Widget) {
 	block.widgets = append(block.widgets, widget)
 }
 
-func (block *Block) Expand() BlockExpanded {
+func (block *BlockType) Expand() BlockExpanded {
 	return BlockExpanded{
-		QID:     block.qid,
-		Class:   block.class,
-		Widgets: block.WidgetsHtml(),
-		Params:  block.Params(),
+		TypeName: block.typeName,
+		Class:    block.class,
+		Widgets:  block.WidgetsHtml(),
+		Params:   block.Params(),
 	}
 }
 
@@ -68,7 +68,7 @@ func (blockExpanded *BlockExpanded) Replace(original string) string {
 	return by.String()
 }
 
-func (block *Block) WidgetsHtml() string {
+func (block *BlockType) WidgetsHtml() string {
 	wh := ""
 	for _, w := range block.widgets {
 		wh += w.Html()
@@ -76,7 +76,7 @@ func (block *Block) WidgetsHtml() string {
 	return wh
 }
 
-func (block *Block) Params() string {
+func (block *BlockType) Params() string {
 	result := ""
 	for _, w := range block.widgets {
 		s, ok := w.(script.Generator)
