@@ -12,6 +12,7 @@ import (
 
 var blocks map[string]*block.Block             // lookup for all blocks on qid
 var blocklists map[string]*blocklist.BlockList // groups of blocks by 'class' for menu
+var classes []string
 
 func NewBlock(qid string, class string) (b *block.Block) {
 	_, inuse := blocks[qid]
@@ -29,6 +30,7 @@ func NewBlock(qid string, class string) (b *block.Block) {
 	if !ok {
 		bl = blocklist.New(class)
 		blocklists[class] = bl
+		classes = append(classes, class)
 	}
 	bl.Add(b)
 	return
@@ -40,11 +42,7 @@ func Block(qid string) (block *block.Block, found bool) {
 }
 
 func Classes() []string {
-	result := make([]string, 0, len(blocklists))
-	for key := range blocklists {
-		result = append(result, key)
-	}
-	return result
+	return classes
 }
 
 func init() {
