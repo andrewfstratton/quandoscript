@@ -91,7 +91,7 @@ func TestParseParams(t *testing.T) {
 	assert.Eq(t, len(params), 5)
 	assert.Eq(t, params["a"].Qtype, STRING)
 	assert.Eq(t, params["a"].Val, "hello!")
-	assert.Eq(t, params["b"].Qtype, ID)
+	assert.Eq(t, params["b"].Qtype, LINEID)
 	assert.Eq(t, params["b"].Val, 12345)
 	assert.Eq(t, params["x"].Qtype, VARIABLE)
 	assert.Eq(t, params["x"].Val, "val")
@@ -166,7 +166,7 @@ func TestParseParamId(t *testing.T) {
 	key, param = getParam(&match)
 	assert.Eq(t, key, "x")
 	assert.Eq(t, match.line, "")
-	assert.Eq(t, param.Qtype, ID)
+	assert.Eq(t, param.Qtype, LINEID)
 	assert.Eq(t, match.err, nil)
 	assert.Eq(t, param.Val, 1)
 
@@ -174,7 +174,7 @@ func TestParseParamId(t *testing.T) {
 	key, param = getParam(&match)
 	assert.Eq(t, key, "y")
 	assert.Eq(t, match.line, ",x:12")
-	assert.Eq(t, param.Qtype, ID)
+	assert.Eq(t, param.Qtype, LINEID)
 	assert.Eq(t, match.err, nil)
 	assert.Eq(t, param.Val, 99)
 }

@@ -21,7 +21,7 @@ const (
 	BOOLEAN
 	STRING
 	NUMBER // may need range and integer
-	ID
+	LINEID
 )
 
 func (input *Input) matchStart(rxp string, lookfor string) (found string) {
@@ -36,12 +36,12 @@ func (input *Input) matchStart(rxp string, lookfor string) (found string) {
 	return
 }
 
-func Line(line string) (id int, word string, params param.Params, err error) {
+func Line(line string) (lineid int, word string, params param.Params, err error) {
 	if line == "" { // fn and err are nil for a blank line
 		return
 	}
 	input := Input{line: line}
-	id = input.getId()
+	lineid = input.getId()
 	if input.err != nil {
 		err = input.err
 		return
@@ -61,7 +61,6 @@ func Line(line string) (id int, word string, params param.Params, err error) {
 		err = input.err
 		return
 	}
-	// fmt.Printf("Found id :%v, word :%v, params : %v\n leaving :'%v'\n", id, word, params, line)
 	return
 }
 
@@ -200,11 +199,11 @@ func getParam(input *Input) (key string, param param.Param) {
 			param.Val = (found == "true")
 			return
 		}
-	case ":": // check for id
-		id := input.getId()
+	case ":": // check for lineid
+		lineid := input.getId()
 		if input.err == nil {
-			param.Val = id
-			param.Qtype = ID
+			param.Val = lineid
+			param.Qtype = LINEID
 			return
 		}
 	case "=": // check for variable
