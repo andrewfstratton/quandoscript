@@ -16,16 +16,16 @@ func TestNew(t *testing.T) {
 }
 
 func TestFind(t *testing.T) {
-	b, found := Block("")
+	b, found := FindBlock("")
 	assert.True(t, b == nil)
 	assert.Eq(t, found, false)
 
-	b, found = Block("display.log")
+	b, found = FindBlock("display.log")
 	assert.True(t, b == nil)
 	assert.Eq(t, found, false)
 
 	_ = NewBlock("display.log", "display")
-	b, found = Block("display.log")
+	b, found = FindBlock("display.log")
 	assert.True(t, b != nil)
 	assert.Eq(t, found, true)
 

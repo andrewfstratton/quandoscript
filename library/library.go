@@ -36,7 +36,7 @@ func NewBlock(qid string, class string) (b *block.Block) {
 	return
 }
 
-func Block(qid string) (block *block.Block, found bool) {
+func FindBlock(qid string) (block *block.Block, found bool) {
 	block, found = blocks[qid]
 	return
 }
