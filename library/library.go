@@ -6,8 +6,13 @@ import (
 	"runtime/debug"
 	"testing"
 
-	"github.com/andrewfstratton/quandoscript/block"
-	"github.com/andrewfstratton/quandoscript/blocklist"
+	"quando/quandoscript/block"
+	"quando/quandoscript/blocklist"
+)
+
+const (
+	SERVER  = "server"
+	UNKNOWN = ""
 )
 
 var blocks map[string]*block.BlockType         // lookup for all block types

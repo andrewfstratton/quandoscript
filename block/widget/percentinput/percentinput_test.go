@@ -3,7 +3,7 @@ package percentinput
 import (
 	"testing"
 
-	"github.com/andrewfstratton/quandoscript/assert"
+	"quando/quandoscript/assert"
 )
 
 func TestNumberEmpty(t *testing.T) { // n.b. should never happen

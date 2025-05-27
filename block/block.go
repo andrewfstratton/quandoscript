@@ -8,8 +8,8 @@ import (
 	"testing"
 	"text/template"
 
-	"github.com/andrewfstratton/quandoscript/block/script"
-	"github.com/andrewfstratton/quandoscript/block/widget"
+	"quando/quandoscript/block/script"
+	"quando/quandoscript/block/widget"
 )
 
 type BlockType struct {
@@ -18,7 +18,7 @@ type BlockType struct {
 	widgets  []widget.Widget
 }
 
-type BlockExpanded struct {
+type blockExpanded struct {
 	TypeName string
 	Class    string
 	Widgets  string
@@ -44,16 +44,16 @@ func (block *BlockType) Add(widget widget.Widget) {
 	block.widgets = append(block.widgets, widget)
 }
 
-func (block *BlockType) Expand() BlockExpanded {
-	return BlockExpanded{
+func (block *BlockType) expand() blockExpanded {
+	return blockExpanded{
 		TypeName: block.typeName,
-		Class:    block.class,
+		Class:    "quando-" + block.class,
 		Widgets:  block.WidgetsHtml(),
 		Params:   block.Params(),
 	}
 }
 
-func (blockExpanded *BlockExpanded) Replace(original string) string {
+func (block *BlockType) Replace(original string) string {
 	var by bytes.Buffer
 	t, err := template.New("tmp").Parse(original)
 	if err != nil {
@@ -64,7 +64,8 @@ func (blockExpanded *BlockExpanded) Replace(original string) string {
 		debug.PrintStack()
 		os.Exit(99)
 	}
-	t.Execute(&by, blockExpanded)
+	be := block.expand()
+	t.Execute(&by, be)
 	return by.String()
 }
 

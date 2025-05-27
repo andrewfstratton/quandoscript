@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/andrewfstratton/quandoscript/run/param"
+	"quando/quandoscript/run/param"
 )
 
 type Input struct {
