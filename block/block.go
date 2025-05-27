@@ -8,8 +8,8 @@ import (
 	"testing"
 	"text/template"
 
-	"quando/quandoscript/block/script"
-	"quando/quandoscript/block/widget"
+	"github.com/andrewfstratton/quandoscript/block/script"
+	"github.com/andrewfstratton/quandoscript/block/widget"
 )
 
 type BlockType struct {

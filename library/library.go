@@ -6,8 +6,8 @@ import (
 	"runtime/debug"
 	"testing"
 
-	"quando/quandoscript/block"
-	"quando/quandoscript/blocklist"
+	"github.com/andrewfstratton/quandoscript/block"
+	"github.com/andrewfstratton/quandoscript/blocklist"
 )
 
 const (

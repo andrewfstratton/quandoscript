@@ -3,12 +3,12 @@ package block
 import (
 	"testing"
 
-	"quando/quandoscript/assert"
-	"quando/quandoscript/block/widget/character"
-	"quando/quandoscript/block/widget/numberinput"
-	"quando/quandoscript/block/widget/percentinput"
-	"quando/quandoscript/block/widget/stringinput"
-	"quando/quandoscript/block/widget/text"
+	"github.com/andrewfstratton/quandoscript/assert"
+	"github.com/andrewfstratton/quandoscript/block/widget/character"
+	"github.com/andrewfstratton/quandoscript/block/widget/numberinput"
+	"github.com/andrewfstratton/quandoscript/block/widget/percentinput"
+	"github.com/andrewfstratton/quandoscript/block/widget/stringinput"
+	"github.com/andrewfstratton/quandoscript/block/widget/text"
 )
 
 func TestEmpty(t *testing.T) {
@@ -30,7 +30,7 @@ func TestNew(t *testing.T) {
 	block := New("system.log", "system")
 	block.Add(text.New("Log"))
 	block.Add(character.New(character.FIXED_SPACE))
-	assert.Eq(t, block.Replace("{{ .Class }}"), "system")
+	assert.Eq(t, block.Replace("{{ .Class }}"), "quando-system")
 	assert.Eq(t, block.Replace("{{ .TypeName }}"), "system.log")
 	assert.Eq(t, block.Replace("{{ .Widgets }}"), "Log&nbsp;")
 	assert.Eq(t, block.Replace("{{ .Params }}"), "")
@@ -56,7 +56,7 @@ func TestNewPercentInput(t *testing.T) {
 	block := New("display.width", "display")
 	block.Add(text.New("Width "))
 	block.Add(percentinput.New("width").Empty("0-100").Default(50))
-	assert.Eq(t, block.Replace("{{ .Class }}"), "display")
+	assert.Eq(t, block.Replace("{{ .Class }}"), "quando-display")
 	assert.Eq(t, block.Replace("{{ .TypeName }}"), "display.width")
 	assert.Eq(t, block.Replace("{{ .Widgets }}"), `Width <input data-quando-name='width' type='number' value='50' placeholder='0-100' min='0' max='100'/>%`)
 	assert.Eq(t, block.Replace("{{ .Params }}"), "width#${width}")

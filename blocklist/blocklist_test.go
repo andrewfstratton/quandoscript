@@ -3,8 +3,8 @@ package blocklist
 import (
 	"testing"
 
-	"quando/quandoscript/assert"
-	"quando/quandoscript/block"
+	"github.com/andrewfstratton/quandoscript/assert"
+	"github.com/andrewfstratton/quandoscript/block"
 )
 
 func TestNew(t *testing.T) {

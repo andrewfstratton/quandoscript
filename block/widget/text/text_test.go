@@ -3,7 +3,7 @@ package text
 import (
 	"testing"
 
-	"quando/quandoscript/assert"
+	"github.com/andrewfstratton/quandoscript/assert"
 )
 
 func TestTextSimple(t *testing.T) {

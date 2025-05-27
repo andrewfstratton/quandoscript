@@ -3,7 +3,7 @@ package library
 import (
 	"testing"
 
-	"quando/quandoscript/assert"
+	"github.com/andrewfstratton/quandoscript/assert"
 )
 
 func TestNew(t *testing.T) {

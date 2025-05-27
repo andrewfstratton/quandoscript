@@ -3,7 +3,7 @@ package stringinput
 import (
 	"testing"
 
-	"quando/quandoscript/assert"
+	"github.com/andrewfstratton/quandoscript/assert"
 )
 
 func TestTextFieldEmpty(t *testing.T) { // n.b. should never happen

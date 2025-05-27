@@ -1,7 +1,7 @@
 package blocklist
 
 import (
-	"quando/quandoscript/block"
+	"github.com/andrewfstratton/quandoscript/block"
 )
 
 const (
