@@ -7,11 +7,11 @@ import (
 )
 
 func TestNew(t *testing.T) {
-	b := NewBlockType("system.log", "system")
+	b := NewBlockType("system.log", "system", nil)
 	assert.True(t, b != nil)
 	assert.True(t, blocklists != nil)
 	assert.True(t, blocks != nil)
-	b = NewBlockType("system.log", "system")
+	b = NewBlockType("system.log", "system", nil)
 	assert.True(t, b == nil)
 }
 
@@ -24,7 +24,7 @@ func TestFind(t *testing.T) {
 	assert.True(t, b == nil)
 	assert.Eq(t, found, false)
 
-	_ = NewBlockType("display.log", "display")
+	_ = NewBlockType("display.log", "display", nil)
 	b, found = FindBlockType("display.log")
 	assert.True(t, b != nil)
 	assert.Eq(t, found, true)
@@ -32,8 +32,8 @@ func TestFind(t *testing.T) {
 }
 
 func TestClasses(t *testing.T) {
-	_ = NewBlockType("system.log", "system")
-	_ = NewBlockType("display.show", "display")
-	_ = NewBlockType("debug", "")
+	_ = NewBlockType("system.log", "system", nil)
+	_ = NewBlockType("display.show", "display", nil)
+	_ = NewBlockType("debug", "", nil)
 	assert.Eq(t, len(Classes()), 3)
 }

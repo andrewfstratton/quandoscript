@@ -10,12 +10,14 @@ import (
 
 	"github.com/andrewfstratton/quandoscript/block/script"
 	"github.com/andrewfstratton/quandoscript/block/widget"
+	"github.com/andrewfstratton/quandoscript/run/param"
 )
 
 type BlockType struct {
 	typeName string
 	class    string
 	widgets  []widget.Widget
+	op       param.Op
 }
 
 type blockExpanded struct {
@@ -25,7 +27,7 @@ type blockExpanded struct {
 	Params   string
 }
 
-func New(typeName string, class string) *BlockType {
+func New(typeName string, class string, op param.Op) *BlockType {
 	if typeName == "" {
 		fmt.Println(`ATTEMPT TO CREATE BLOCK WITH "" BLOCK TYPE`)
 		if testing.Testing() {
@@ -37,6 +39,7 @@ func New(typeName string, class string) *BlockType {
 	return &BlockType{
 		typeName: typeName,
 		class:    class,
+		op:       op,
 	}
 }
 

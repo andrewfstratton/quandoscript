@@ -12,22 +12,22 @@ import (
 )
 
 func TestEmpty(t *testing.T) {
-	block := New("", "")     // test with empty class here
-	assert.Eq(t, block, nil) // n.b. will panic when not testing
+	block := New("", "", nil) // test with empty class here
+	assert.Eq(t, block, nil)  // n.b. will panic when not testing
 }
 
 func TestNewSimple(t *testing.T) {
-	block := New("log", "")
+	block := New("log", "", nil)
 	assert.Eq(t, block.class, "")
 	assert.Eq(t, block.typeName, "log")
 
-	block = New("system.log", "sys")
+	block = New("system.log", "sys", nil)
 	assert.Eq(t, block.class, "sys")
 	assert.Eq(t, block.typeName, "system.log")
 }
 
 func TestNew(t *testing.T) {
-	block := New("system.log", "system")
+	block := New("system.log", "system", nil)
 	block.Add(text.New("Log"))
 	block.Add(character.New(character.FIXED_SPACE))
 	assert.Eq(t, block.Replace("{{ .Class }}"), "quando-system")
@@ -37,14 +37,14 @@ func TestNew(t *testing.T) {
 }
 
 func TestNewStringInput(t *testing.T) {
-	block := New("system.log", "system")
+	block := New("system.log", "system", nil)
 	block.Add(text.New("Log ").Bold())
 	block.Add(stringinput.New("name").Default("!").Empty("message"))
 	assert.Eq(t, block.Replace("{{ .Params }}"), `name"${name}"`)
 }
 
 func TestNewNumberInput(t *testing.T) {
-	block := New("system.log", "system")
+	block := New("system.log", "system", nil)
 	block.Add(text.New("Log "))
 	block.Add(numberinput.New("num").Empty("message").Default(0.5).Min(0).Max(1).Width(4))
 	assert.Eq(t, block.Replace("{{ .Params }}"), `num#${num}`)
@@ -53,7 +53,7 @@ func TestNewNumberInput(t *testing.T) {
 }
 
 func TestNewPercentInput(t *testing.T) {
-	block := New("display.width", "display")
+	block := New("display.width", "display", nil)
 	block.Add(text.New("Width "))
 	block.Add(percentinput.New("width").Empty("0-100").Default(50))
 	assert.Eq(t, block.Replace("{{ .Class }}"), "quando-display")

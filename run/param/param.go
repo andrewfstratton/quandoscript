@@ -6,3 +6,4 @@ type Param struct {
 }
 
 type Params map[string]Param
+type Op func(Params) func(Params)

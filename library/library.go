@@ -8,6 +8,7 @@ import (
 
 	"github.com/andrewfstratton/quandoscript/block"
 	"github.com/andrewfstratton/quandoscript/blocklist"
+	"github.com/andrewfstratton/quandoscript/run/param"
 )
 
 const (
@@ -19,7 +20,7 @@ var blocks map[string]*block.BlockType         // lookup for all block types
 var blocklists map[string]*blocklist.BlockList // groups of blocks by 'class' for menu
 var classes []string
 
-func NewBlockType(block_type string, class string) (b *block.BlockType) {
+func NewBlockType(block_type string, class string, op param.Op) (b *block.BlockType) {
 	_, inuse := blocks[block_type]
 	if inuse {
 		fmt.Println(`BLOCK "` + block_type + `" ALREADY EXISTS`)
@@ -29,7 +30,7 @@ func NewBlockType(block_type string, class string) (b *block.BlockType) {
 		debug.PrintStack()
 		os.Exit(99)
 	}
-	b = block.New(block_type, class)
+	b = block.New(block_type, class, op)
 	blocks[block_type] = b
 	bl, ok := blocklists[class]
 	if !ok {

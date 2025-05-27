@@ -16,7 +16,7 @@ func TestNew(t *testing.T) {
 }
 
 func TestAddBlock(t *testing.T) {
-	b := block.New("quando.unique.id", "system")
+	b := block.New("quando.unique.id", "system", nil)
 	bl := New("system")
 	assert.Eq(t, len(bl.blocks), 0)
 	bl.Add(b)
