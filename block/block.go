@@ -17,7 +17,7 @@ type BlockType struct {
 	typeName string
 	class    string
 	widgets  []widget.Widget
-	op       param.Op
+	Op       param.Op
 }
 
 type blockExpanded struct {
@@ -39,7 +39,7 @@ func New(typeName string, class string, op param.Op) *BlockType {
 	return &BlockType{
 		typeName: typeName,
 		class:    class,
-		op:       op,
+		Op:       op,
 	}
 }
 
