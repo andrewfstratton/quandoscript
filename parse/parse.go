@@ -15,15 +15,6 @@ type Input struct {
 	err  error
 }
 
-const (
-	UNKNOWN int = iota
-	VARIABLE
-	BOOLEAN
-	STRING
-	NUMBER // may need range and integer
-	LINEID
-)
-
 func (input *Input) matchStart(rxp string, lookfor string) (found string) {
 	arr := regexp.MustCompile("^" + rxp).FindStringIndex(input.line)
 	if len(arr) != 2 {
@@ -173,7 +164,7 @@ func (input *Input) getParams() (params param.Params) {
 }
 
 // key returns "" when none found
-func getParam(input *Input) (key string, param param.Param) {
+func getParam(input *Input) (key string, p param.Param) {
 	restore := input.line
 	// Check for ) and return without error or change to input if found
 	found := input.matchStart(`\)`, "")
@@ -191,40 +182,40 @@ func getParam(input *Input) (key string, param param.Param) {
 	prefix := input.matchStart(`[!:="#]`, "type prefix/assignment missing ")
 	switch prefix {
 	case "":
-		param.Qtype = UNKNOWN
+		p.Qtype = param.UNKNOWN
 	case "!": // check for boolean
 		found = input.matchStart("(true|false)", "")
 		if found != "" { // i.e. if found
-			param.Qtype = BOOLEAN
-			param.Val = (found == "true")
+			p.Qtype = param.BOOLEAN
+			p.Val = (found == "true")
 			return
 		}
 	case ":": // check for lineid
 		lineid := input.getId()
 		if input.err == nil {
-			param.Val = lineid
-			param.Qtype = LINEID
+			p.Val = lineid
+			p.Qtype = param.LINEID
 			return
 		}
 	case "=": // check for variable
 		name := input.getWord()
 		if input.err == nil {
-			param.Val = name
-			param.Qtype = VARIABLE
+			p.Val = name
+			p.Qtype = param.VARIABLE
 			return
 		}
 	case `"`: // check for string
 		str := input.getString()
 		if input.err == nil {
-			param.Val = str
-			param.Qtype = STRING
+			p.Val = str
+			p.Qtype = param.STRING
 			return
 		}
 	case "#": // check for float
 		num := input.getFloat()
 		if input.err == nil {
-			param.Val = num
-			param.Qtype = NUMBER
+			p.Val = num
+			p.Qtype = param.NUMBER
 			return
 		}
 	}
