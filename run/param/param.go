@@ -21,12 +21,12 @@ const (
 type Params map[string]Param
 type Op func(Params) func(Params)
 
-func (params Params) getString(lookup *string) {
-	param, found := params[*lookup]
+func (params Params) String(lookup string, stringp *string) {
+	param, found := params[lookup]
 	if found {
 		if param.Qtype == STRING {
 			val := param.Val.(string)
-			lookup = &val
+			stringp = &val
 			return
 		}
 		// lookup variable here...

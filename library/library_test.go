@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/andrewfstratton/quandoscript/assert"
+	"github.com/andrewfstratton/quandoscript/run/param"
 )
 
 func TestNew(t *testing.T) {
@@ -28,7 +29,13 @@ func TestFind(t *testing.T) {
 	b, found = FindBlockType("display.log")
 	assert.True(t, b != nil)
 	assert.Eq(t, found, true)
+}
 
+func TestString(t *testing.T) {
+	params := param.Params{}
+	var none *string
+	params.String("txt", none)
+	assert.True(t, none == nil)
 }
 
 func TestClasses(t *testing.T) {
