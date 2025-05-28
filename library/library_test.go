@@ -33,9 +33,9 @@ func TestFind(t *testing.T) {
 
 func TestString(t *testing.T) {
 	params := param.Params{}
-	var none *string
-	params.String("txt", none)
-	assert.True(t, none == nil)
+	none := param.StringParam{Lookup: "", Val: ""}
+	none.Update(params)
+	assert.Eq(t, none.Val, "")
 }
 
 func TestClasses(t *testing.T) {

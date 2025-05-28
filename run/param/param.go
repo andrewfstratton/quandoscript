@@ -20,16 +20,19 @@ const (
 
 type Params map[string]Param
 type Op func(Params) func(Params)
+type StringParam struct {
+	Lookup string
+	Val    string
+}
 
-func (params Params) String(lookup string, stringp *string) {
-	param, found := params[lookup]
+func (param *StringParam) Update(params Params) {
+	p, found := params[param.Lookup]
 	if found {
-		if param.Qtype == STRING {
-			val := param.Val.(string)
-			stringp = &val
+		if p.Qtype == STRING {
+			param.Val = p.Val.(string)
 			return
 		}
 		// lookup variable here...
-		fmt.Println("Error : ", lookup, " incorrect type")
+		fmt.Println("Error : ", param.Lookup, " incorrect type")
 	}
 }
