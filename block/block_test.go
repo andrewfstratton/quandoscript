@@ -28,8 +28,9 @@ func TestNewSimple(t *testing.T) {
 
 func TestNew(t *testing.T) {
 	block := New("system.log", "system", nil)
-	block.Add(text.New("Log"))
-	block.Add(character.New(character.FIXED_SPACE))
+	block.Add(
+		text.New("Log"),
+		character.New(character.FIXED_SPACE))
 	assert.Eq(t, block.Replace("{{ .Class }}"), "quando-system")
 	assert.Eq(t, block.Replace("{{ .TypeName }}"), "system.log")
 	assert.Eq(t, block.Replace("{{ .Widgets }}"), "Log&nbsp;")
@@ -38,8 +39,9 @@ func TestNew(t *testing.T) {
 
 func TestNewStringInput(t *testing.T) {
 	block := New("system.log", "system", nil)
-	block.Add(text.New("Log ").Bold())
-	block.Add(stringinput.New("name").Default("!").Empty("message"))
+	block.Add(
+		text.New("Log ").Bold(),
+		stringinput.New("name").Default("!").Empty("message"))
 	assert.Eq(t, block.Replace("{{ .Params }}"), `name"${name}"`)
 }
 

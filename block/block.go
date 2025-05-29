@@ -43,8 +43,10 @@ func New(typeName string, class string, op param.Op) *BlockType {
 	}
 }
 
-func (block *BlockType) Add(widget widget.Widget) {
-	block.widgets = append(block.widgets, widget)
+func (block *BlockType) Add(widgets ...widget.Widget) {
+	// for _, widget := range widgets {
+	block.widgets = append(block.widgets, widgets...)
+	// }
 }
 
 func (block *BlockType) expand() blockExpanded {
