@@ -44,17 +44,15 @@ func New(typeName string, class string, op param.Op) *BlockType {
 }
 
 func (block *BlockType) Add(widgets ...widget.Widget) {
-	// for _, widget := range widgets {
 	block.widgets = append(block.widgets, widgets...)
-	// }
 }
 
 func (block *BlockType) expand() blockExpanded {
 	return blockExpanded{
 		TypeName: block.typeName,
 		Class:    "quando-" + block.class,
-		Widgets:  block.WidgetsHtml(),
-		Params:   block.Params(),
+		Widgets:  block.widgetsHtml(),
+		Params:   block.params(),
 	}
 }
 
@@ -74,7 +72,7 @@ func (block *BlockType) Replace(original string) string {
 	return by.String()
 }
 
-func (block *BlockType) WidgetsHtml() string {
+func (block *BlockType) widgetsHtml() string {
 	wh := ""
 	for _, w := range block.widgets {
 		wh += w.Html()
@@ -82,7 +80,7 @@ func (block *BlockType) WidgetsHtml() string {
 	return wh
 }
 
-func (block *BlockType) Params() string {
+func (block *BlockType) params() string {
 	result := ""
 	for _, w := range block.widgets {
 		s, ok := w.(script.Generator)
