@@ -36,6 +36,9 @@ func New(typeName string, class string, op param.Op) *BlockType {
 		debug.PrintStack()
 		os.Exit(99)
 	}
+	if op == nil {
+		fmt.Printf("Warning: block type '%s' has nil operation\n", typeName)
+	}
 	return &BlockType{
 		typeName: typeName,
 		class:    class,
@@ -44,6 +47,7 @@ func New(typeName string, class string, op param.Op) *BlockType {
 }
 
 func (block *BlockType) Add(widgets ...widget.Widget) {
+	// TODO: handle duplicate name
 	block.widgets = append(block.widgets, widgets...)
 }
 

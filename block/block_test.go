@@ -47,8 +47,8 @@ func TestNewStringInput(t *testing.T) {
 
 func TestNewNumberInput(t *testing.T) {
 	block := New("system.log", "system", nil)
-	block.Add(text.New("Log "))
-	block.Add(numberinput.New("num").Empty("message").Default(0.5).Min(0).Max(1).Width(4))
+	block.Add(text.New("Log "),
+		numberinput.New("num").Empty("message").Default(0.5).Min(0).Max(1).Width(4))
 	assert.Eq(t, block.Replace("{{ .Params }}"), `num#${num}`)
 	assert.Eq(t, block.Replace("{{ .Widgets }}"),
 		`Log <input data-quando-name='num' type='number' value='0.5' placeholder='message' style='width:4em' min='0' max='1'/>`)
