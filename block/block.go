@@ -20,7 +20,7 @@ type BlockType struct {
 	Op       param.Op
 }
 
-type blockExpanded struct {
+type blockInstance struct {
 	TypeName string
 	Class    string
 	Widgets  string
@@ -51,8 +51,8 @@ func (block *BlockType) Add(widgets ...widget.Widget) {
 	block.widgets = append(block.widgets, widgets...)
 }
 
-func (block *BlockType) expand() blockExpanded {
-	return blockExpanded{
+func (block *BlockType) instance() blockInstance {
+	return blockInstance{
 		TypeName: block.typeName,
 		Class:    "quando-" + block.class,
 		Widgets:  block.widgetsHtml(),
@@ -71,8 +71,8 @@ func (block *BlockType) Replace(original string) string {
 		debug.PrintStack()
 		os.Exit(99)
 	}
-	be := block.expand()
-	t.Execute(&by, be)
+	bi := block.instance()
+	t.Execute(&by, bi)
 	return by.String()
 }
 
