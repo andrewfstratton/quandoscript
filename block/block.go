@@ -14,17 +14,10 @@ import (
 )
 
 type BlockType struct {
-	typeName string
-	class    string
-	widgets  []widget.Widget
-	Op       op.OpOp
-}
-
-type blockInstance struct {
 	TypeName string
 	Class    string
-	Widgets  string
-	Params   string
+	widgets  []widget.Widget
+	Op       op.OpOp
 }
 
 func New(typeName string, class string, op op.OpOp) *BlockType {
@@ -39,9 +32,12 @@ func New(typeName string, class string, op op.OpOp) *BlockType {
 	if op == nil {
 		fmt.Printf("Warning: block type '%s' has nil operation\n", typeName)
 	}
+	if class != "" {
+		class = "quando-" + class
+	}
 	return &BlockType{
-		typeName: typeName,
-		class:    class,
+		TypeName: typeName,
+		Class:    class,
 		Op:       op,
 	}
 }
@@ -49,15 +45,6 @@ func New(typeName string, class string, op op.OpOp) *BlockType {
 func (block *BlockType) Add(widgets ...widget.Widget) {
 	// TODO: handle duplicate name
 	block.widgets = append(block.widgets, widgets...)
-}
-
-func (block *BlockType) instance() blockInstance {
-	return blockInstance{
-		TypeName: block.typeName,
-		Class:    "quando-" + block.class,
-		Widgets:  block.widgetsHtml(),
-		Params:   block.params(),
-	}
 }
 
 func (block *BlockType) Replace(original string) string {
@@ -71,12 +58,11 @@ func (block *BlockType) Replace(original string) string {
 		debug.PrintStack()
 		os.Exit(99)
 	}
-	bi := block.instance()
-	t.Execute(&by, bi)
+	t.Execute(&by, block)
 	return by.String()
 }
 
-func (block *BlockType) widgetsHtml() string {
+func (block *BlockType) Widgets() string {
 	wh := ""
 	for _, w := range block.widgets {
 		wh += w.Html()
@@ -84,7 +70,7 @@ func (block *BlockType) widgetsHtml() string {
 	return wh
 }
 
-func (block *BlockType) params() string {
+func (block *BlockType) Params() string {
 	result := ""
 	for _, w := range block.widgets {
 		s, ok := w.(script.Generator)

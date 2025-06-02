@@ -18,12 +18,12 @@ func TestEmpty(t *testing.T) {
 
 func TestNewSimple(t *testing.T) {
 	block := New("log", "", nil)
-	assert.Eq(t, block.class, "")
-	assert.Eq(t, block.typeName, "log")
+	assert.Eq(t, block.Class, "")
+	assert.Eq(t, block.TypeName, "log")
 
 	block = New("system.log", "sys", nil)
-	assert.Eq(t, block.class, "sys")
-	assert.Eq(t, block.typeName, "system.log")
+	assert.Eq(t, block.Class, "sys")
+	assert.Eq(t, block.TypeName, "system.log")
 }
 
 func TestNew(t *testing.T) {
