@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/andrewfstratton/quandoscript/action"
@@ -41,24 +43,32 @@ func init() {
 	init_log()
 }
 
-func main() {
-	lineid, word, params, err := parse.Line(`0 system.log(greeting"Hi",txt"Bob")`)
-	fmt.Println(lineid, word, params, err)
-	o := library.NewAction(word, params, nil)
-
-	action.Actions[lineid] = o
-
-	lineid, word, params, err = parse.Line(`1 system.log(greeting"Hello",txt"Jane")`)
-	fmt.Println(lineid, word, params, err)
-	o = library.NewAction(word, params, nil)
-
-	action.Actions[lineid] = o
-
-	for l, act := range action.Actions {
-		fmt.Println("<" + strconv.Itoa(l) + ">")
-		act.Exec()
+func parseLines(in string) {
+	scanner := bufio.NewScanner(strings.NewReader(in))
+	for scanner.Scan() {
+		lineid, word, params, err := parse.Line(scanner.Text())
+		fmt.Println(lineid, word, params, err)
+		o := library.NewAction(word, params, nil)
+		action.IdOrdered = append(action.IdOrdered, lineid)
+		action.Actions[lineid] = o
 	}
-	// bt, _ := library.FindBlockType("system.log")
-	// fmt.Println(bt)
-	// fmt.Println(bt.Replace("{{.Widgets}}"))
+}
+
+const (
+	TEST_LINES = `0 system.log(greeting"Hi",txt"Bob")
+1 system.log(greeting"Hello",txt"Jane")
+2 system.log(greeting"Hello",txt"Jane")
+3 system.log(greeting"Hello",txt"Jane")
+4 system.log(greeting"Hello",txt"Jane")
+5 system.log(greeting"Hello",txt"Jane")
+6 system.log(greeting"Hello",txt"Jane")
+7 system.log(greeting"Hello",txt"Jane")`
+)
+
+func main() {
+	parseLines(TEST_LINES)
+	for l := range action.IdOrdered {
+		fmt.Print(strconv.Itoa(l) + "-")
+		action.Actions[l].Exec()
+	}
 }

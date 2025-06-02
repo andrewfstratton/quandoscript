@@ -11,6 +11,7 @@ type Action struct {
 }
 
 var Actions map[int]*Action
+var IdOrdered []int
 
 type Op func(param.Params)
 type OpOp func(param.Params) func(param.Params)
