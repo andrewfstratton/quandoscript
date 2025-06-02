@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 
+	"github.com/andrewfstratton/quandoscript/action"
 	"github.com/andrewfstratton/quandoscript/action/param"
 	"github.com/andrewfstratton/quandoscript/block/widget/stringinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/text"
@@ -40,13 +42,22 @@ func init() {
 }
 
 func main() {
-	// use parse to run a script
-	// e.g. parse(`0 system.log(greeting"Hello",txt"Bob")`
 	lineid, word, params, err := parse.Line(`0 system.log(greeting"Hi",txt"Bob")`)
 	fmt.Println(lineid, word, params, err)
 	o := library.NewAction(word, params, nil)
 
-	o.Exec()
+	action.Actions[lineid] = o
+
+	lineid, word, params, err = parse.Line(`1 system.log(greeting"Hello",txt"Jane")`)
+	fmt.Println(lineid, word, params, err)
+	o = library.NewAction(word, params, nil)
+
+	action.Actions[lineid] = o
+
+	for l, act := range action.Actions {
+		fmt.Println("<" + strconv.Itoa(l) + ">")
+		act.Exec()
+	}
 	// bt, _ := library.FindBlockType("system.log")
 	// fmt.Println(bt)
 	// fmt.Println(bt.Replace("{{.Widgets}}"))

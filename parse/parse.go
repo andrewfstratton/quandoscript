@@ -28,7 +28,7 @@ func (input *Input) matchStart(rxp string, lookfor string) (found string) {
 }
 
 func Line(line string) (lineid int, word string, params param.Params, err error) {
-	if line == "" { // fn and err are nil for a blank line
+	if line == "" { // word and err are nil for a blank line
 		return
 	}
 	input := Input{line: line}

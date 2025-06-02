@@ -10,6 +10,8 @@ type Action struct {
 	// context
 }
 
+var Actions map[int]*Action
+
 type Op func(param.Params)
 type OpOp func(param.Params) func(param.Params)
 
@@ -21,5 +23,6 @@ func (action *Action) Exec() {
 	action.op(action.Params)
 }
 
-// lineid, word, params, err := parse.Line(`0 system.log(greeting"Hi",txt"Bob")`)
-// fmt.Println(lineid, word, params, err)
+func init() {
+	Actions = map[int]*Action{}
+}
