@@ -19,7 +19,6 @@ const (
 )
 
 type Params map[string]Param
-type Op func(Params) func(Params)
 type StringParam struct {
 	Lookup string
 	Val    string
