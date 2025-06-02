@@ -4,7 +4,7 @@ import "fmt"
 
 type PercentInput struct {
 	name     string
-	default_ *float32
+	default_ *float64
 	empty    string
 	width    *int
 }
@@ -32,7 +32,7 @@ func (pi *PercentInput) Generate() string {
 	return fmt.Sprintf(`%v#${%v}`, pi.name, pi.name)
 }
 
-func (pi *PercentInput) Default(f float32) *PercentInput {
+func (pi *PercentInput) Default(f float64) *PercentInput {
 	pi.default_ = &f
 	return pi
 }

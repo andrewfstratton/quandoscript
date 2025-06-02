@@ -4,7 +4,7 @@ import "fmt"
 
 type NumberInput struct {
 	name     string
-	default_ *float32
+	default_ *float64
 	empty    string
 	width    *int
 	min      *int
@@ -41,7 +41,7 @@ func (ni *NumberInput) Generate() string {
 	return fmt.Sprintf(`%v#${%v}`, ni.name, ni.name)
 }
 
-func (ni *NumberInput) Default(f float32) *NumberInput {
+func (ni *NumberInput) Default(f float64) *NumberInput {
 	ni.default_ = &f
 	return ni
 }
