@@ -22,7 +22,7 @@ func TestNewSimple(t *testing.T) {
 	assert.Eq(t, block.TypeName, "log")
 
 	block = New("system.log", "sys", nil)
-	assert.Eq(t, block.Class, "sys")
+	assert.Eq(t, block.Class, "quando-sys")
 	assert.Eq(t, block.TypeName, "system.log")
 }
 

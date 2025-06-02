@@ -3,8 +3,8 @@ package parse
 import (
 	"testing"
 
+	"github.com/andrewfstratton/quandoscript/action/param"
 	"github.com/andrewfstratton/quandoscript/assert"
-	"github.com/andrewfstratton/quandoscript/run/param"
 )
 
 func TestParseId(t *testing.T) {

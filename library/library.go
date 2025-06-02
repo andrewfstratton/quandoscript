@@ -6,10 +6,10 @@ import (
 	"runtime/debug"
 	"testing"
 
+	"github.com/andrewfstratton/quandoscript/action"
+	"github.com/andrewfstratton/quandoscript/action/param"
 	"github.com/andrewfstratton/quandoscript/block"
 	"github.com/andrewfstratton/quandoscript/blocklist"
-	"github.com/andrewfstratton/quandoscript/run/op"
-	"github.com/andrewfstratton/quandoscript/run/param"
 )
 
 const (
@@ -21,7 +21,7 @@ var blocks map[string]*block.BlockType         // lookup for all block types
 var blocklists map[string]*blocklist.BlockList // groups of blocks by 'class' for menu
 var classes []string
 
-func NewBlockType(block_type string, class string, op op.OpOp) (b *block.BlockType) {
+func NewBlockType(block_type string, class string, opop action.OpOp) (b *block.BlockType) {
 	_, inuse := blocks[block_type]
 	if inuse {
 		fmt.Println(`BLOCK "` + block_type + `" ALREADY EXISTS`)
@@ -31,7 +31,7 @@ func NewBlockType(block_type string, class string, op op.OpOp) (b *block.BlockTy
 		debug.PrintStack()
 		os.Exit(99)
 	}
-	b = block.New(block_type, class, op)
+	b = block.New(block_type, class, opop)
 	blocks[block_type] = b
 	bl, ok := blocklists[class]
 	if !ok {
@@ -48,14 +48,14 @@ func FindBlockType(block_type string) (block *block.BlockType, found bool) {
 	return
 }
 
-func NewOp(word string, early param.Params, late param.Params) *op.Op {
+func NewAction(word string, early param.Params, late param.Params) *action.Action {
 	bt, found := FindBlockType(word)
 	if !found {
 		fmt.Println("Error : New word failing")
 		return nil
 	}
-	o := bt.Op(early)                  // run the early binding
-	return &op.Op{Op: o, Params: late} // return the late binding with the closure
+	op := bt.OpOp(early)        // run the early binding
+	return action.New(op, late) // return the late binding with the closure
 }
 
 func Classes() []string {

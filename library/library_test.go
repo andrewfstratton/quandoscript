@@ -3,8 +3,8 @@ package library
 import (
 	"testing"
 
+	"github.com/andrewfstratton/quandoscript/action/param"
 	"github.com/andrewfstratton/quandoscript/assert"
-	"github.com/andrewfstratton/quandoscript/run/param"
 )
 
 func TestNew(t *testing.T) {

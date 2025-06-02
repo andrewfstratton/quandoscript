@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/andrewfstratton/quandoscript/action/param"
 	"github.com/andrewfstratton/quandoscript/block/widget/stringinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/text"
 	"github.com/andrewfstratton/quandoscript/library"
 	"github.com/andrewfstratton/quandoscript/parse"
-	"github.com/andrewfstratton/quandoscript/run/param"
 )
 
 func init_log() {
@@ -44,7 +44,7 @@ func main() {
 	// e.g. parse(`0 system.log(greeting"Hello",txt"Bob")`
 	lineid, word, params, err := parse.Line(`0 system.log(greeting"Hi",txt"Bob")`)
 	fmt.Println(lineid, word, params, err)
-	o := library.NewOp(word, params, nil)
+	o := library.NewAction(word, params, nil)
 
 	o.Exec()
 	// bt, _ := library.FindBlockType("system.log")

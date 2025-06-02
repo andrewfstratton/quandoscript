@@ -8,19 +8,19 @@ import (
 	"testing"
 	"text/template"
 
+	"github.com/andrewfstratton/quandoscript/action"
 	"github.com/andrewfstratton/quandoscript/block/script"
 	"github.com/andrewfstratton/quandoscript/block/widget"
-	"github.com/andrewfstratton/quandoscript/run/op"
 )
 
 type BlockType struct {
 	TypeName string
 	Class    string
 	widgets  []widget.Widget
-	Op       op.OpOp
+	OpOp     action.OpOp
 }
 
-func New(typeName string, class string, op op.OpOp) *BlockType {
+func New(typeName string, class string, opop action.OpOp) *BlockType {
 	if typeName == "" {
 		fmt.Println(`ATTEMPT TO CREATE BLOCK WITH "" BLOCK TYPE`)
 		if testing.Testing() {
@@ -29,7 +29,7 @@ func New(typeName string, class string, op op.OpOp) *BlockType {
 		debug.PrintStack()
 		os.Exit(99)
 	}
-	if op == nil {
+	if opop == nil {
 		fmt.Printf("Warning: block type '%s' has nil operation\n", typeName)
 	}
 	if class != "" {
@@ -38,7 +38,7 @@ func New(typeName string, class string, op op.OpOp) *BlockType {
 	return &BlockType{
 		TypeName: typeName,
 		Class:    class,
-		Op:       op,
+		OpOp:     opop,
 	}
 }
 
