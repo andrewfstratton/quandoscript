@@ -13,7 +13,7 @@ type Action struct {
 
 var Actions map[int]*Action // map id to action
 var last *Action
-var StartId int = -1
+var startId int = -1
 
 type Op func(param.Params)
 type OpOp func(param.Params) func(param.Params)
@@ -23,23 +23,36 @@ func New(o Op, late param.Params) *Action {
 	return &action
 }
 
-func (action *Action) Exec() {
-	action.op(action.Params)
-}
-
 func NewGroup() {
 	last = nil // so we don't append to the same group
 }
 
 func Add(id int, action *Action) {
-	if StartId == -1 {
-		StartId = id
+	if startId == -1 {
+		startId = id
 	}
 	Actions[id] = action
 	if last != nil {
 		last.NextId = id
 	}
 	last = action
+}
+
+func Run(id int) {
+	for id != -1 {
+		// fmt.Print(strconv.Itoa(id) + "-")
+		act := Actions[id]
+		act.op(act.Params)
+		id = act.NextId
+	}
+}
+
+func Start() (msg string) {
+	if startId == -1 {
+		return "No actions found"
+	}
+	Run(startId)
+	return
 }
 
 func init() {

@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"os"
 	"strings"
 	"time"
 
@@ -63,7 +62,7 @@ func timeop(outer param.Params) func(param.Params) {
 		// fmt.Println("After:", secs.Val, "secs, callback:", callback)
 		isecs := int(secs.Val)
 		time.AfterFunc(time.Duration(isecs)*time.Second, func() {
-			runGroup(callback.Val)
+			action.Run(callback.Val)
 		})
 	}
 }
@@ -108,23 +107,11 @@ const (
 `
 )
 
-func runGroup(id int) {
-	if id == -1 { // start at top
-		fmt.Println("No actions found, exiting...")
-		os.Exit(0)
-	}
-
-	for id != -1 {
-		// fmt.Print(strconv.Itoa(id) + "-")
-		act := action.Actions[id]
-		act.Exec()
-		id = act.NextId
-	}
-
-}
-
 func main() {
 	parseLines(TEST_LINES)
-	runGroup(action.StartId)
+	msg := action.Start()
+	if msg != "" {
+		fmt.Println(msg)
+	}
 	time.Sleep(10 * time.Second)
 }
