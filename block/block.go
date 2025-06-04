@@ -13,14 +13,16 @@ import (
 	"github.com/andrewfstratton/quandoscript/block/widget"
 )
 
-type BlockType struct {
+type Block struct {
 	TypeName string
 	Class    string
 	widgets  []widget.Widget
 	OpOp     action.OpOp
 }
 
-func New(typeName string, class string, opop action.OpOp) *BlockType {
+var AddToLibrary func(*Block) // injected by library
+
+func AddNew(typeName string, class string, opop action.OpOp, widgets ...widget.Widget) (block *Block) {
 	if typeName == "" {
 		fmt.Println(`ATTEMPT TO CREATE BLOCK WITH "" BLOCK TYPE`)
 		if testing.Testing() {
@@ -35,19 +37,22 @@ func New(typeName string, class string, opop action.OpOp) *BlockType {
 	if class != "" {
 		class = "quando-" + class
 	}
-	return &BlockType{
+	block = &Block{
 		TypeName: typeName,
 		Class:    class,
 		OpOp:     opop,
 	}
+	block.add(widgets...)
+	AddToLibrary(block)
+	return
 }
 
-func (block *BlockType) Add(widgets ...widget.Widget) {
+func (block *Block) add(widgets ...widget.Widget) {
 	// TODO: handle duplicate name
 	block.widgets = append(block.widgets, widgets...)
 }
 
-func (block *BlockType) Replace(original string) string {
+func (block *Block) Replace(original string) string {
 	var by bytes.Buffer
 	t, err := template.New("tmp").Parse(original)
 	if err != nil {
@@ -62,7 +67,7 @@ func (block *BlockType) Replace(original string) string {
 	return by.String()
 }
 
-func (block *BlockType) Widgets() string {
+func (block *Block) Widgets() string {
 	wh := ""
 	for _, w := range block.widgets {
 		wh += w.Html()
@@ -70,7 +75,7 @@ func (block *BlockType) Widgets() string {
 	return wh
 }
 
-func (block *BlockType) Params() string {
+func (block *Block) Params() string {
 	result := ""
 	for _, w := range block.widgets {
 		s, ok := w.(script.Generator)

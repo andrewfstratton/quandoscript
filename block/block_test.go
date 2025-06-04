@@ -12,23 +12,22 @@ import (
 )
 
 func TestEmpty(t *testing.T) {
-	block := New("", "", nil) // test with empty class here
-	assert.Eq(t, block, nil)  // n.b. will panic when not testing
+	block := AddNew("", "", nil) // test with empty class here
+	assert.Eq(t, block, nil)     // n.b. will panic when not testing
 }
 
 func TestNewSimple(t *testing.T) {
-	block := New("log", "", nil)
+	block := AddNew("log", "", nil)
 	assert.Eq(t, block.Class, "")
 	assert.Eq(t, block.TypeName, "log")
 
-	block = New("system.log", "sys", nil)
+	block = AddNew("system.log", "sys", nil)
 	assert.Eq(t, block.Class, "quando-sys")
 	assert.Eq(t, block.TypeName, "system.log")
 }
 
 func TestNew(t *testing.T) {
-	block := New("system.log", "system", nil)
-	block.Add(
+	block := AddNew("system.log", "system", nil,
 		text.New("Log"),
 		character.New(character.FIXED_SPACE))
 	assert.Eq(t, block.Replace("{{ .Class }}"), "quando-system")
@@ -38,16 +37,15 @@ func TestNew(t *testing.T) {
 }
 
 func TestNewStringInput(t *testing.T) {
-	block := New("system.log", "system", nil)
-	block.Add(
+	block := AddNew("system.log", "system", nil,
 		text.New("Log ").Bold(),
 		stringinput.New("name").Default("!").Empty("message"))
 	assert.Eq(t, block.Replace("{{ .Params }}"), `name"${name}"`)
 }
 
 func TestNewNumberInput(t *testing.T) {
-	block := New("system.log", "system", nil)
-	block.Add(text.New("Log "),
+	block := AddNew("system.log", "system", nil,
+		text.New("Log "),
 		numberinput.New("num").Empty("message").Default(0.5).Min(0).Max(1).Width(4))
 	assert.Eq(t, block.Replace("{{ .Params }}"), `num#${num}`)
 	assert.Eq(t, block.Replace("{{ .Widgets }}"),
@@ -55,9 +53,9 @@ func TestNewNumberInput(t *testing.T) {
 }
 
 func TestNewPercentInput(t *testing.T) {
-	block := New("display.width", "display", nil)
-	block.Add(text.New("Width "))
-	block.Add(percentinput.New("width").Empty("0-100").Default(50))
+	block := AddNew("display.width", "display", nil,
+		text.New("Width "),
+		percentinput.New("width").Empty("0-100").Default(50))
 	assert.Eq(t, block.Replace("{{ .Class }}"), "quando-display")
 	assert.Eq(t, block.Replace("{{ .TypeName }}"), "display.width")
 	assert.Eq(t, block.Replace("{{ .Widgets }}"), `Width <input data-quando-name='width' type='number' value='50' placeholder='0-100' min='0' max='100'/>%`)

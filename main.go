@@ -8,6 +8,7 @@ import (
 
 	"github.com/andrewfstratton/quandoscript/action"
 	"github.com/andrewfstratton/quandoscript/action/param"
+	"github.com/andrewfstratton/quandoscript/block"
 	"github.com/andrewfstratton/quandoscript/block/widget/numberinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/stringinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/text"
@@ -19,7 +20,7 @@ func init_log() {
 	greeting := stringinput.New("greeting").Empty("greeting")
 	txt := stringinput.New("txt").Empty("greeting")
 
-	library.NewBlockType("system.log", "misc", logop).Add(
+	block.AddNew("system.log", "misc", logop,
 		text.New("Log "),
 		greeting,
 		text.New(" "),
@@ -43,7 +44,7 @@ func init_after() {
 	seconds := numberinput.New("secs").Empty("seconds").Min(0).Max(999).Width(4).Default(1)
 	callback := numberinput.New("callback").Empty("callback").Min(0).Max(999).Width(4).Default(999)
 
-	library.NewBlockType("system.after", "misc", timeop).Add(
+	block.AddNew("system.after", "misc", timeop,
 		text.New("After "),
 		seconds,
 		text.New("secs"),

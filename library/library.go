@@ -9,7 +9,7 @@ import (
 	"github.com/andrewfstratton/quandoscript/action"
 	"github.com/andrewfstratton/quandoscript/action/param"
 	"github.com/andrewfstratton/quandoscript/block"
-	"github.com/andrewfstratton/quandoscript/blocklist"
+	"github.com/andrewfstratton/quandoscript/menu"
 )
 
 const (
@@ -17,39 +17,37 @@ const (
 	UNKNOWN = ""
 )
 
-var blocks map[string]*block.BlockType         // lookup for all block types
-var blocklists map[string]*blocklist.BlockList // groups of blocks by 'class' for menu
+var blocks map[string]*block.Block // lookup for all block types
+var menus map[string]*menu.Menu    // groups of blocks by 'class' for menu
 var classes []string
 
-func NewBlockType(block_type string, class string, opop action.OpOp) (b *block.BlockType) {
-	_, inuse := blocks[block_type]
+func addBlock(b *block.Block) { // call through block New
+	_, inuse := blocks[b.TypeName]
 	if inuse {
-		fmt.Println(`BLOCK "` + block_type + `" ALREADY EXISTS`)
+		fmt.Println(`BLOCK "` + b.TypeName + `" ALREADY EXISTS`)
 		if testing.Testing() {
 			return
 		}
 		debug.PrintStack()
 		os.Exit(99)
 	}
-	b = block.New(block_type, class, opop)
-	blocks[block_type] = b
-	bl, ok := blocklists[class]
-	if !ok {
-		bl = blocklist.New(class)
-		blocklists[class] = bl
-		classes = append(classes, class)
+	blocks[b.TypeName] = b
+	bl, found := menus[b.Class]
+	if !found {
+		bl = menu.New(b.Class)
+		menus[b.Class] = bl
+		classes = append(classes, b.Class)
 	}
 	bl.Add(b)
-	return
 }
 
-func FindBlockType(block_type string) (block *block.BlockType, found bool) {
+func FindBlock(block_type string) (block *block.Block, found bool) {
 	block, found = blocks[block_type]
 	return
 }
 
 func NewAction(word string, early param.Params, late param.Params) *action.Action {
-	bt, found := FindBlockType(word)
+	bt, found := FindBlock(word)
 	if !found {
 		fmt.Println("Error : New word failing")
 		return nil
@@ -63,6 +61,7 @@ func Classes() []string {
 }
 
 func init() {
-	blocks = make(map[string]*block.BlockType)
-	blocklists = make(map[string]*blocklist.BlockList)
+	blocks = make(map[string]*block.Block)
+	menus = make(map[string]*menu.Menu)
+	block.AddToLibrary = addBlock
 }
