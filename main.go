@@ -80,9 +80,9 @@ const (
 
 func main() {
 	parse.Lines(TEST_LINES)
-	msg := action.Start()
-	if msg != "" {
-		fmt.Println(msg)
+	warn := action.Start()
+	if warn != "" {
+		fmt.Println(warn)
 	}
 	time.Sleep(10 * time.Second)
 }

@@ -46,7 +46,7 @@ func Run(id int) {
 	}
 }
 
-func Start() (msg string) {
+func Start() (warn string) {
 	if startId == -1 {
 		return "No actions found"
 	}
