@@ -51,7 +51,7 @@ func AddNew(typeName string, class string, early action.Early, widgets ...widget
 }
 
 func (block *Block) Replace(original string) string {
-	var by bytes.Buffer
+	var buf bytes.Buffer
 	t, err := template.New("tmp").Parse(original)
 	if err != nil {
 		fmt.Println(`TEMPLATE PARSING ERROR`)
@@ -61,28 +61,26 @@ func (block *Block) Replace(original string) string {
 		debug.PrintStack()
 		os.Exit(99)
 	}
-	t.Execute(&by, block)
-	return by.String()
+	t.Execute(&buf, block)
+	return buf.String()
 }
 
-func (block *Block) Widgets() string {
-	wh := ""
+func (block *Block) Widgets() (asHtml string) {
 	for _, w := range block.widgets {
-		wh += w.Html()
+		asHtml += w.Html()
 	}
-	return wh
+	return
 }
 
-func (block *Block) Params() string {
-	result := ""
+func (block *Block) Params() (asHtml string) {
 	for _, w := range block.widgets {
 		s, ok := w.(script.Generator)
 		if ok {
-			if result != "" { // separate parameters with comma
-				result += ","
+			if asHtml != "" { // separate parameters with comma
+				asHtml += ","
 			}
-			result += s.Generate()
+			asHtml += s.Generate()
 		}
 	}
-	return result
+	return asHtml
 }
