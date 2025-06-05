@@ -28,10 +28,8 @@ func init_log() {
 }
 
 func logop(outer param.Params) func(param.Params) {
-	greeting := param.StringParam{Lookup: "greeting", Val: ""}
-	greeting.Update(outer)
-	txt := param.StringParam{Lookup: "txt", Val: ""}
-	txt.Update(outer)
+	greeting := param.NewString("greeting", "", outer)
+	txt := param.NewString("txt", "", outer)
 	return func(inner param.Params) {
 		txt.Update(inner)
 		greeting.Update(inner)
@@ -53,10 +51,8 @@ func init_after() {
 }
 
 func timeop(outer param.Params) func(param.Params) {
-	secs := param.NumberParam{Lookup: "secs", Val: 1.0}
-	secs.Update(outer)
-	callback := param.IdParam{Lookup: "callback", Val: 0}
-	callback.Update(outer)
+	secs := param.NewNumber("secs", 1.0, outer)
+	callback := param.NewId("callback", 0, outer)
 	return func(inner param.Params) {
 		secs.Update(inner)
 		callback.Update(inner)

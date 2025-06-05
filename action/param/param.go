@@ -34,38 +34,59 @@ type IdParam struct {
 	Val    int
 }
 
+func NewString(lookup string, val string, params Params) (param *StringParam) {
+	param = &StringParam{Lookup: lookup, Val: val}
+	param.Update(params)
+	return
+}
+
 func (param *StringParam) Update(params Params) {
 	p, found := params[param.Lookup]
-	if found {
-		if p.Qtype == STRING {
-			param.Val = p.Val.(string)
-			return
-		}
-		// lookup variable here...
-		fmt.Println("Error : ", param.Lookup, " incorrect type")
+	if !found {
+		return
 	}
+	if p.Qtype == STRING {
+		param.Val = p.Val.(string)
+		return
+	}
+	// lookup variable here...
+	fmt.Println("Error : ", param.Lookup, " incorrect type")
+}
+
+func NewNumber(lookup string, val float64, params Params) (param *NumberParam) {
+	param = &NumberParam{Lookup: lookup, Val: val}
+	param.Update(params)
+	return
 }
 
 func (param *NumberParam) Update(params Params) {
 	p, found := params[param.Lookup]
-	if found {
-		if p.Qtype == NUMBER {
-			param.Val = p.Val.(float64)
-			return
-		}
-		// lookup variable here...
-		fmt.Println("Error : ", param.Lookup, " incorrect type")
+	if !found {
+		return
 	}
+	if p.Qtype == NUMBER {
+		param.Val = p.Val.(float64)
+		return
+	}
+	// lookup variable here...
+	fmt.Println("Error : ", param.Lookup, " incorrect type")
+}
+
+func NewId(lookup string, val int, params Params) (param *IdParam) {
+	param = &IdParam{Lookup: lookup, Val: val}
+	param.Update(params)
+	return
 }
 
 func (param *IdParam) Update(params Params) {
 	p, found := params[param.Lookup]
-	if found {
-		if p.Qtype == LINEID {
-			param.Val = p.Val.(int)
-			return
-		}
-		// lookup variable here...
-		fmt.Println("Error : ", param.Lookup, " incorrect type")
+	if !found {
+		return
 	}
+	if p.Qtype == LINEID {
+		param.Val = p.Val.(int)
+		return
+	}
+	// lookup variable here...
+	fmt.Println("Error : ", param.Lookup, " incorrect type")
 }
