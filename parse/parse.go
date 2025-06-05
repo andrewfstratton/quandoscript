@@ -209,40 +209,35 @@ func getParam(input *input) (key string, p param.Param) {
 	prefix := input.matchStart(`[!:="#]`, "type prefix/assignment missing ")
 	switch prefix {
 	case "":
-		p.Qtype = param.UNKNOWN
+		p = param.UNKNOWN{} // holds nothing?!
 	case "!": // check for boolean
 		found = input.matchStart("(true|false)", "")
 		if found != "" { // i.e. if found
-			p.Qtype = param.BOOLEAN
-			p.Val = (found == "true")
+			p = (found == "true")
 			return
 		}
 	case ":": // check for lineid
 		lineid := input.getId()
 		if input.err == nil {
-			p.Val = lineid
-			p.Qtype = param.LINEID
+			p = lineid
 			return
 		}
 	case "=": // check for variable
 		name := input.getWord()
 		if input.err == nil {
-			p.Val = name
-			p.Qtype = param.VARIABLE
+			p = name
 			return
 		}
 	case `"`: // check for string
 		str := input.getString()
 		if input.err == nil {
-			p.Val = str
-			p.Qtype = param.STRING
+			p = str
 			return
 		}
 	case "#": // check for float
 		num := input.getFloat()
 		if input.err == nil {
-			p.Val = num
-			p.Qtype = param.NUMBER
+			p = num
 			return
 		}
 	}

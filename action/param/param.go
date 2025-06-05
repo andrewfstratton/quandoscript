@@ -4,34 +4,30 @@ import (
 	"fmt"
 )
 
-type Param struct {
-	Val   any
-	Qtype int
-}
-
-const (
-	UNKNOWN int = iota
-	VARIABLE
-	BOOLEAN
-	STRING
-	NUMBER // may need range and integer
-	LINEID
+type (
+	BOOLEAN  = bool
+	STRING   = string
+	NUMBER   = float64
+	LINEID   = int
+	UNKNOWN  = struct{}
+	VARIABLE string // n.b. is not an alias which may cause extra code
 )
 
+type Param any // horrible but easiest - must be currently
 type Params map[string]Param
 type StringParam struct {
 	Lookup string
-	Val    string
+	Val    STRING
 }
 
 type NumberParam struct {
 	Lookup string
-	Val    float64
+	Val    NUMBER
 }
 
 type IdParam struct {
 	Lookup string
-	Val    int
+	Val    LINEID
 }
 
 func NewString(lookup string, val string, params Params) (param *StringParam) {
@@ -43,14 +39,16 @@ func NewString(lookup string, val string, params Params) (param *StringParam) {
 func (param *StringParam) Update(params Params) {
 	p, found := params[param.Lookup]
 	if !found {
-		return
+		return // nothing to update
 	}
-	if p.Qtype == STRING {
-		param.Val = p.Val.(string)
-		return
+	switch s := p.(type) {
+	case STRING:
+		param.Val = s
+	case VARIABLE:
+		// lookup variable here...
+	default:
+		fmt.Println("Error : ", param.Lookup, " incorrect type")
 	}
-	// lookup variable here...
-	fmt.Println("Error : ", param.Lookup, " incorrect type")
 }
 
 func NewNumber(lookup string, val float64, params Params) (param *NumberParam) {
@@ -64,12 +62,14 @@ func (param *NumberParam) Update(params Params) {
 	if !found {
 		return
 	}
-	if p.Qtype == NUMBER {
-		param.Val = p.Val.(float64)
-		return
+	switch n := p.(type) {
+	case NUMBER:
+		param.Val = n
+	case VARIABLE:
+		// lookup variable here...
+	default:
+		fmt.Println("Error : ", param.Lookup, " incorrect type")
 	}
-	// lookup variable here...
-	fmt.Println("Error : ", param.Lookup, " incorrect type")
 }
 
 func NewId(lookup string, val int, params Params) (param *IdParam) {
@@ -83,10 +83,12 @@ func (param *IdParam) Update(params Params) {
 	if !found {
 		return
 	}
-	if p.Qtype == LINEID {
-		param.Val = p.Val.(int)
-		return
+	switch l := p.(type) {
+	case LINEID:
+		param.Val = l
+	case VARIABLE:
+		// lookup variable here...
+	default:
+		fmt.Println("Error : ", param.Lookup, " incorrect type")
 	}
-	// lookup variable here...
-	fmt.Println("Error : ", param.Lookup, " incorrect type")
 }
