@@ -1,9 +1,7 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/andrewfstratton/quandoscript/action"
@@ -12,7 +10,6 @@ import (
 	"github.com/andrewfstratton/quandoscript/block/widget/numberinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/stringinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/text"
-	"github.com/andrewfstratton/quandoscript/library"
 	"github.com/andrewfstratton/quandoscript/parse"
 )
 
@@ -69,29 +66,6 @@ func init() {
 	init_after()
 }
 
-func parseLines(in string) {
-	scanner := bufio.NewScanner(strings.NewReader(in))
-	new_group := true
-	for scanner.Scan() {
-		line := scanner.Text()
-		if line == "" {
-			// fmt.Println("End of main block")
-			new_group = true
-			continue
-		}
-		lineid, word, params, err := parse.Line(scanner.Text())
-		if err != nil {
-			fmt.Println(lineid, word, params, err)
-		}
-		o := library.NewAction(word, params, nil)
-		if new_group {
-			action.NewGroup()
-			new_group = false
-		}
-		action.Add(lineid, o)
-	}
-}
-
 const (
 	TEST_LINES = `0 system.log(greeting"Hi",txt"Bob")
 1 system.after(secs#2,callback:3)
@@ -105,7 +79,7 @@ const (
 )
 
 func main() {
-	parseLines(TEST_LINES)
+	parse.Lines(TEST_LINES)
 	msg := action.Start()
 	if msg != "" {
 		fmt.Println(msg)
