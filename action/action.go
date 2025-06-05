@@ -5,21 +5,21 @@ import (
 )
 
 type Action struct {
-	op     func(param.Params)
-	Params param.Params
-	NextId int
+	late   func(param.Params)
+	params param.Params
+	nextId int
 	// context
 }
 
-var Actions map[int]*Action // map id to action
+var actions map[int]*Action // map id to action
 var last *Action
 var startId int = -1
 
-type Op func(param.Params)
-type OpOp func(param.Params) func(param.Params)
+type Early func(param.Params) func(param.Params) // outer/setup function that returns late inner function
+type Late func(param.Params)                     // inner function that is run every invocation
 
-func New(o Op, late param.Params) *Action {
-	action := Action{op: o, Params: late, NextId: -1} // N.B. -1 is to show no following action
+func New(late Late, params param.Params) *Action {
+	action := Action{late: late, params: params, nextId: -1} // N.B. -1 is to show no following action
 	return &action
 }
 
@@ -31,19 +31,18 @@ func Add(id int, action *Action) {
 	if startId == -1 {
 		startId = id
 	}
-	Actions[id] = action
+	actions[id] = action
 	if last != nil {
-		last.NextId = id
+		last.nextId = id
 	}
 	last = action
 }
 
 func Run(id int) {
 	for id != -1 {
-		// fmt.Print(strconv.Itoa(id) + "-")
-		act := Actions[id]
-		act.op(act.Params)
-		id = act.NextId
+		act := actions[id]
+		act.late(act.params)
+		id = act.nextId
 	}
 }
 
@@ -56,5 +55,5 @@ func Start() (msg string) {
 }
 
 func init() {
-	Actions = map[int]*Action{} // i.e. the lookup table to find any action
+	actions = map[int]*Action{} // i.e. the lookup table to find any action
 }

@@ -16,7 +16,7 @@ func TestNew(t *testing.T) {
 }
 
 func TestAddBlock(t *testing.T) {
-	b := block.AddNew("quando.unique.id", "system", nil)
+	b := block.AddNew("quando.unique.id", "system", nil, nil)
 	menu := New("system")
 	assert.Eq(t, len(menu.blocks), 0)
 	menu.Add(b)

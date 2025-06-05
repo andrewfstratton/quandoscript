@@ -17,11 +17,11 @@ func TestEmpty(t *testing.T) {
 }
 
 func TestNewSimple(t *testing.T) {
-	block := AddNew("log", "", nil)
+	block := AddNew("log", "", nil, nil)
 	assert.Eq(t, block.Class, "")
 	assert.Eq(t, block.TypeName, "log")
 
-	block = AddNew("system.log", "sys", nil)
+	block = AddNew("system.log", "sys", nil, nil)
 	assert.Eq(t, block.Class, "quando-sys")
 	assert.Eq(t, block.TypeName, "system.log")
 }

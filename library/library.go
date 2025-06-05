@@ -21,7 +21,7 @@ var blocks map[string]*block.Block // lookup for all block types
 var menus map[string]*menu.Menu    // groups of blocks by 'class' for menu
 var classes []string
 
-func addBlock(b *block.Block) { // call through block New
+func AddBlock(b *block.Block) { // call through block New
 	_, inuse := blocks[b.TypeName]
 	if inuse {
 		fmt.Println(`BLOCK "` + b.TypeName + `" ALREADY EXISTS`)
@@ -46,14 +46,14 @@ func FindBlock(block_type string) (block *block.Block, found bool) {
 	return
 }
 
-func NewAction(word string, early param.Params, late param.Params) *action.Action {
+func NewAction(word string, early param.Params, late_params param.Params) *action.Action {
 	bt, found := FindBlock(word)
 	if !found {
 		fmt.Println("Error : New word failing")
 		return nil
 	}
-	op := bt.OpOp(early)        // run the early binding
-	return action.New(op, late) // return the late binding with the closure
+	late := bt.Early(early)              // run the early binding
+	return action.New(late, late_params) // return the late binding with the closure
 }
 
 func Classes() []string {
@@ -63,5 +63,5 @@ func Classes() []string {
 func init() {
 	blocks = make(map[string]*block.Block)
 	menus = make(map[string]*menu.Menu)
-	block.AddToLibrary = addBlock
+	block.AddToLibrary = AddBlock
 }

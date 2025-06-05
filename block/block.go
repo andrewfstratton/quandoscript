@@ -17,12 +17,12 @@ type Block struct {
 	TypeName string
 	Class    string
 	widgets  []widget.Widget
-	OpOp     action.OpOp
+	Early    action.Early
 }
 
 var AddToLibrary func(*Block) // injected by library
 
-func AddNew(typeName string, class string, opop action.OpOp, widgets ...widget.Widget) (block *Block) {
+func AddNew(typeName string, class string, early action.Early, widgets ...widget.Widget) (block *Block) {
 	if typeName == "" {
 		fmt.Println(`ATTEMPT TO CREATE BLOCK WITH "" BLOCK TYPE`)
 		if testing.Testing() {
@@ -31,7 +31,7 @@ func AddNew(typeName string, class string, opop action.OpOp, widgets ...widget.W
 		debug.PrintStack()
 		os.Exit(99)
 	}
-	if opop == nil {
+	if early == nil {
 		fmt.Printf("Warning: block type '%s' has nil operation\n", typeName)
 	}
 	if class != "" {
@@ -40,16 +40,14 @@ func AddNew(typeName string, class string, opop action.OpOp, widgets ...widget.W
 	block = &Block{
 		TypeName: typeName,
 		Class:    class,
-		OpOp:     opop,
+		Early:    early,
 	}
-	block.add(widgets...)
+	block.widgets = append(block.widgets, widgets...)
+	if testing.Testing() && AddToLibrary == nil { // handle tests when AddToLibrary has not been injected by library.init()
+		return
+	}
 	AddToLibrary(block)
 	return
-}
-
-func (block *Block) add(widgets ...widget.Widget) {
-	// TODO: handle duplicate name
-	block.widgets = append(block.widgets, widgets...)
 }
 
 func (block *Block) Replace(original string) string {
