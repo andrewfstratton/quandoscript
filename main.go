@@ -14,51 +14,50 @@ import (
 )
 
 func init_log() {
-	greeting := stringinput.New("greeting").Empty("greeting")
-	txt := stringinput.New("txt").Empty("greeting")
+	greetingUI := stringinput.New("greeting").Empty("greeting")
+	txtUI := stringinput.New("txt").Empty("greeting")
 
-	block.AddNew("system.log", "misc", logop,
+	block.AddNew("system.log", "misc",
 		text.New("Log "),
-		greeting,
+		greetingUI,
 		text.New(" "),
-		txt)
-}
-
-func logop(outer param.Params) func(param.Params) {
-	greeting := param.NewString("greeting", "", outer)
-	txt := param.NewString("txt", "", outer)
-	return func(inner param.Params) {
-		txt.Update(inner)
-		greeting.Update(inner)
-		now := time.Now()
-		fmt.Println("Log:", greeting.Val, txt.Val, now.Format(time.TimeOnly))
-	}
+		txtUI,
+	).Op(
+		func(outer param.Params) func(param.Params) {
+			greeting := param.NewString(greetingUI.Name, "", outer)
+			txt := param.NewString(txtUI.Name, "", outer)
+			return func(inner param.Params) {
+				txt.Update(inner)
+				greeting.Update(inner)
+				now := time.Now()
+				fmt.Println("Log:", greeting.Val, txt.Val, now.Format(time.TimeOnly))
+			}
+		})
 }
 
 func init_after() {
-	seconds := numberinput.New("secs").Empty("seconds").Min(0).Max(999).Width(4).Default(1)
-	callback := numberinput.New("callback").Empty("callback").Min(0).Max(999).Width(4).Default(999)
+	secsUI := numberinput.New("secs").Empty("seconds").Min(0).Max(999).Width(4).Default(1)
+	callbackUI := numberinput.New("callback").Empty("callback").Min(0).Max(999).Width(4).Default(999)
 
-	block.AddNew("system.after", "misc", timeop,
+	block.AddNew("system.after", "misc",
 		text.New("After "),
-		seconds,
+		secsUI,
 		text.New("secs"),
-		callback,
-	)
-}
-
-func timeop(outer param.Params) func(param.Params) {
-	secs := param.NewNumber("secs", 1.0, outer)
-	callback := param.NewId("callback", 0, outer)
-	return func(inner param.Params) {
-		secs.Update(inner)
-		callback.Update(inner)
-		// fmt.Println("After:", secs.Val, "secs, callback:", callback)
-		isecs := int(secs.Val)
-		time.AfterFunc(time.Duration(isecs)*time.Second, func() {
-			action.Run(callback.Val)
+		callbackUI,
+	).Op(
+		func(outer param.Params) func(param.Params) {
+			secs := param.NewNumber(secsUI.Name, 1.0, outer)
+			callback := param.NewId(callbackUI.Name, 0, outer)
+			return func(inner param.Params) {
+				secs.Update(inner)
+				callback.Update(inner)
+				// fmt.Println("After:", secs.Val, "secs, callback:", callback)
+				isecs := int(secs.Val)
+				time.AfterFunc(time.Duration(isecs)*time.Second, func() {
+					action.Run(callback.Val)
+				})
+			}
 		})
-	}
 }
 
 func init() {

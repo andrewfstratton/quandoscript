@@ -3,7 +3,7 @@ package numberinput
 import "fmt"
 
 type NumberInput struct {
-	name     string
+	Name     string
 	default_ *float64
 	empty    string
 	width    *int
@@ -12,11 +12,11 @@ type NumberInput struct {
 }
 
 func New(name string) *NumberInput {
-	return &NumberInput{name: name}
+	return &NumberInput{Name: name}
 }
 
 func (ni *NumberInput) Html() (txt string) {
-	txt = fmt.Sprintf("<input data-quando-name='%v' type='number'", ni.name)
+	txt = fmt.Sprintf("<input data-quando-name='%v' type='number'", ni.Name)
 	if ni.default_ != nil {
 		txt += fmt.Sprintf(" value='%v'", *ni.default_)
 	}
@@ -38,7 +38,7 @@ func (ni *NumberInput) Html() (txt string) {
 }
 
 func (ni *NumberInput) Generate() string {
-	return fmt.Sprintf(`%v#${%v}`, ni.name, ni.name)
+	return fmt.Sprintf(`%v#${%v}`, ni.Name, ni.Name)
 }
 
 func (ni *NumberInput) Default(f float64) *NumberInput {

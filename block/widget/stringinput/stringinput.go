@@ -3,17 +3,17 @@ package stringinput
 import "fmt"
 
 type StringInput struct {
-	name     string
+	Name     string
 	default_ string
 	empty    string
 }
 
 func New(name string) *StringInput {
-	return &StringInput{name: name}
+	return &StringInput{Name: name}
 }
 
 func (si *StringInput) Html() (txt string) {
-	txt = `&quot;<input data-quando-name='` + si.name + `' type='text'`
+	txt = `&quot;<input data-quando-name='` + si.Name + `' type='text'`
 	if si.default_ != "" {
 		txt += " value='" + si.default_ + "'"
 	}
@@ -25,7 +25,7 @@ func (si *StringInput) Html() (txt string) {
 }
 
 func (si *StringInput) Generate() string {
-	return fmt.Sprintf(`%v"${%v}"`, si.name, si.name)
+	return fmt.Sprintf(`%v"${%v}"`, si.Name, si.Name)
 }
 
 func (si *StringInput) Default(s string) *StringInput {

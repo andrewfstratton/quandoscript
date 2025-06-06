@@ -22,7 +22,7 @@ type Block struct {
 
 var AddToLibrary func(*Block) // injected by library
 
-func AddNew(typeName string, class string, early action.Early, widgets ...widget.Widget) (block *Block) {
+func AddNew(typeName string, class string, widgets ...widget.Widget) (block *Block) {
 	if typeName == "" {
 		fmt.Println(`ATTEMPT TO CREATE BLOCK WITH "" BLOCK TYPE`)
 		if testing.Testing() {
@@ -31,16 +31,12 @@ func AddNew(typeName string, class string, early action.Early, widgets ...widget
 		debug.PrintStack()
 		os.Exit(99)
 	}
-	if early == nil {
-		fmt.Printf("Warning: block type '%s' has nil operation\n", typeName)
-	}
 	if class != "" {
 		class = "quando-" + class
 	}
 	block = &Block{
 		TypeName: typeName,
 		Class:    class,
-		Early:    early,
 	}
 	block.widgets = append(block.widgets, widgets...)
 	if testing.Testing() && AddToLibrary == nil { // handle tests when AddToLibrary has not been injected by library.init()
@@ -48,6 +44,12 @@ func AddNew(typeName string, class string, early action.Early, widgets ...widget
 	}
 	AddToLibrary(block)
 	return
+}
+func (block *Block) Op(early action.Early) {
+	if early == nil {
+		fmt.Printf("Warning: block type '%s' has nil operation\n", block.TypeName)
+	}
+	block.Early = early
 }
 
 func (block *Block) Replace(original string) string {
