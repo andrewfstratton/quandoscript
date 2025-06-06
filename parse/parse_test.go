@@ -257,3 +257,11 @@ func TestParseParamNumber(t *testing.T) {
 	assert.Eq(t, match.err, nil)
 	assert.Eq(t, p, -0.99)
 }
+
+func TestParseLine(t *testing.T) {
+	t.Fail()
+}
+
+func TestParseLines(t *testing.T) {
+	t.Fail()
+}

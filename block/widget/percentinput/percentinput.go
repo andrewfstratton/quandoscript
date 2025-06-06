@@ -3,18 +3,18 @@ package percentinput
 import "fmt"
 
 type PercentInput struct {
-	name     string
+	Name     string
 	default_ *float64
 	empty    string
 	width    *int
 }
 
 func New(name string) *PercentInput {
-	return &PercentInput{name: name}
+	return &PercentInput{Name: name}
 }
 
 func (pi *PercentInput) Html() (txt string) {
-	txt = fmt.Sprintf("<input data-quando-name='%v' type='number'", pi.name)
+	txt = fmt.Sprintf("<input data-quando-name='%v' type='number'", pi.Name)
 	if pi.default_ != nil {
 		txt += fmt.Sprintf(" value='%v'", *pi.default_)
 	}
@@ -29,7 +29,7 @@ func (pi *PercentInput) Html() (txt string) {
 }
 
 func (pi *PercentInput) Generate() string {
-	return fmt.Sprintf(`%v#${%v}`, pi.name, pi.name)
+	return fmt.Sprintf(`%v#${%v}`, pi.Name, pi.Name)
 }
 
 func (pi *PercentInput) Default(f float64) *PercentInput {
