@@ -1,6 +1,10 @@
 package stringinput
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/andrewfstratton/quandoscript/action/param"
+)
 
 type StringInput struct {
 	Name     string
@@ -36,4 +40,8 @@ func (si *StringInput) Default(s string) *StringInput {
 func (si *StringInput) Empty(s string) *StringInput {
 	si.empty = s
 	return si
+}
+
+func (si *StringInput) Param(outer param.Params) *param.StringParam {
+	return param.NewString(si.Name, "", outer)
 }

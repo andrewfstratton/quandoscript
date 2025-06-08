@@ -72,6 +72,10 @@ func (param *NumberParam) Update(params Params) {
 	}
 }
 
+func (param *NumberParam) Int() int {
+	return int(param.Val)
+}
+
 func NewId(lookup string, val int, params Params) (param *IdParam) {
 	param = &IdParam{Lookup: lookup, Val: val}
 	param.Update(params)

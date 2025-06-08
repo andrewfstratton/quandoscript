@@ -1,6 +1,10 @@
 package numberinput
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/andrewfstratton/quandoscript/action/param"
+)
 
 type NumberInput struct {
 	Name     string
@@ -64,4 +68,8 @@ func (ni *NumberInput) Width(i int) *NumberInput {
 func (ni *NumberInput) Empty(s string) *NumberInput {
 	ni.empty = s
 	return ni
+}
+
+func (ni *NumberInput) Param(outer param.Params) *param.NumberParam {
+	return param.NewNumber(ni.Name, 0, outer)
 }

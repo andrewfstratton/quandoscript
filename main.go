@@ -7,6 +7,7 @@ import (
 	"github.com/andrewfstratton/quandoscript/action"
 	"github.com/andrewfstratton/quandoscript/action/param"
 	"github.com/andrewfstratton/quandoscript/block"
+	"github.com/andrewfstratton/quandoscript/block/widget/idinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/numberinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/stringinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/text"
@@ -14,18 +15,18 @@ import (
 )
 
 func init_log() {
-	greetingUI := stringinput.New("greeting").Empty("greeting")
-	txtUI := stringinput.New("txt").Empty("greeting")
+	_greeting := stringinput.New("greeting").Empty("greeting")
+	_txt := stringinput.New("txt").Empty("greeting")
 
 	block.AddNew("system.log", "misc",
 		text.New("Log "),
-		greetingUI,
+		_greeting,
 		text.New(" "),
-		txtUI,
+		_txt,
 	).Op(
 		func(outer param.Params) func(param.Params) {
-			greeting := param.NewString(greetingUI.Name, "", outer)
-			txt := param.NewString(txtUI.Name, "", outer)
+			greeting := _greeting.Param(outer)
+			txt := _txt.Param(outer)
 			return func(inner param.Params) {
 				txt.Update(inner)
 				greeting.Update(inner)
@@ -36,24 +37,23 @@ func init_log() {
 }
 
 func init_after() {
-	secsUI := numberinput.New("secs").Empty("seconds").Min(0).Max(999).Width(4).Default(1)
-	callbackUI := numberinput.New("callback").Empty("callback").Min(0).Max(999).Width(4).Default(999)
-
+	_secs := numberinput.New("secs").Empty("seconds").Min(0).Max(999).Width(4).Default(1)
+	_callback := idinput.New("callback")
 	block.AddNew("system.after", "misc",
 		text.New("After "),
-		secsUI,
+		_secs,
 		text.New("secs"),
-		callbackUI,
+		_callback,
 	).Op(
 		func(outer param.Params) func(param.Params) {
-			secs := param.NewNumber(secsUI.Name, 1.0, outer)
-			callback := param.NewId(callbackUI.Name, 0, outer)
+			secs := _secs.Param(outer)
+			callback := _callback.Param(outer)
 			return func(inner param.Params) {
+				//  inner.Update(&secs, &callback)
 				secs.Update(inner)
 				callback.Update(inner)
 				// fmt.Println("After:", secs.Val, "secs, callback:", callback)
-				isecs := int(secs.Val)
-				time.AfterFunc(time.Duration(isecs)*time.Second, func() {
+				time.AfterFunc(time.Duration(secs.Int())*time.Second, func() {
 					action.Run(callback.Val)
 				})
 			}

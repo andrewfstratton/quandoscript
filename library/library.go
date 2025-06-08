@@ -21,7 +21,7 @@ var blocks map[string]*block.Block // lookup for all block types
 var menus map[string]*menu.Menu    // groups of blocks by 'class' for menu
 var classes []string
 
-func AddBlock(b *block.Block) { // call through block New
+func addBlock(b *block.Block) { // call through block New
 	_, inuse := blocks[b.TypeName]
 	if inuse {
 		fmt.Println(`BLOCK "` + b.TypeName + `" ALREADY EXISTS`)
@@ -63,5 +63,5 @@ func Classes() []string {
 func init() {
 	blocks = make(map[string]*block.Block)
 	menus = make(map[string]*menu.Menu)
-	block.AddToLibrary = AddBlock
+	block.AddToLibrary = addBlock
 }
