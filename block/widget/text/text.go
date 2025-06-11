@@ -5,10 +5,10 @@ import (
 )
 
 type Text struct {
+	Txt     string
 	Italic  bool
 	Bold    bool
 	Iconify bool
-	Txt     string
 }
 
 func New(t string) *Text {
