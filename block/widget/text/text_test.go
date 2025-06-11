@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/andrewfstratton/quandoscript/assert"
+	"github.com/andrewfstratton/quandoscript/block/widget"
 )
 
 func TestTextSimple(t *testing.T) {
@@ -12,14 +13,13 @@ func TestTextSimple(t *testing.T) {
 
 	txt = New("Hello")
 	assert.Eq(t, txt.Html(), "Hello")
-	txt.Italic()
+	widget.SetFields(txt, `italic:"true"`)
+	assert.Eq(t, txt.Italic, true)
 	assert.Eq(t, txt.Html(), "<i>Hello</i>")
-	txt.Bold()
-	assert.Eq(t, txt.Html(), "<b><i>Hello</i></b>")
-	txt.Iconify()
+	widget.SetFields(txt, `bold:"true"`)
+	widget.SetFields(txt, `iconify:"true"`)
 	assert.Eq(t, txt.Html(), `<span class="iconify"><b><i>Hello</i></b></span>`)
-
 	txt = New("Hi Bob")
-	txt.Bold().Italic().Iconify() // n.b, order is not preserved?!
-	assert.Eq(t, txt.Html(), `<span class="iconify"><b><i>Hi Bob</i></b></span>`)
+	widget.SetFields(txt, `italic:"false" iconify:"true" bold:"true"`)
+	assert.Eq(t, txt.Html(), `<span class="iconify"><b>Hi Bob</b></span>`) // n.b, order is not preserved?!
 }

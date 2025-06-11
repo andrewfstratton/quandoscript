@@ -76,7 +76,7 @@ func (block *Block) Widgets() (asHtml string) {
 
 func (block *Block) Params() (asHtml string) {
 	for _, w := range block.widgets {
-		s, ok := w.(script.Generator)
+		s, ok := w.(script.Generator) // ignore widgets that are purely visual, i.e. do not provide parameters
 		if ok {
 			if asHtml != "" { // separate parameters with comma
 				asHtml += ","

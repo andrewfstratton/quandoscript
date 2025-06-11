@@ -38,7 +38,7 @@ func TestNew(t *testing.T) {
 
 func TestNewStringInput(t *testing.T) {
 	block := AddNew("system.log", "system",
-		text.New("Log ").Bold(),
+		text.New("Log "),
 		stringinput.New("name").Default("!").Empty("message"))
 	assert.Eq(t, block.Replace("{{ .Params }}"), `name"${name}"`)
 }

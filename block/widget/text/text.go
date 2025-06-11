@@ -5,45 +5,34 @@ import (
 )
 
 type Text struct {
-	italic  bool
-	bold    bool
-	iconify bool
-	txt     string
+	Italic  bool
+	Bold    bool
+	Iconify bool
+	Txt     string
 }
 
 func New(t string) *Text {
-	return &Text{txt: t}
+	return &Text{Txt: t}
 }
 
 func (t *Text) Html() (txt string) {
-	txt = t.txt
-	if t.italic {
-		txt = Tag(txt, "i")
+	txt = t.Txt
+	if t.Italic {
+		txt = TagText(txt, "i")
 	}
-	if t.bold {
-		txt = Tag(txt, "b")
+	if t.Bold {
+		txt = TagText(txt, "b")
 	}
-	if t.iconify {
-		txt = fmt.Sprintf("<%v>%v</%v>", `span class="iconify"`, txt, "span")
+	if t.Iconify {
+		txt = OpenCloseTag(txt, `span class="iconify"`, "span")
 	}
 	return
 }
 
-func (t *Text) Italic() *Text {
-	t.italic = true
-	return t
+func TagText(txt string, tag string) string {
+	return OpenCloseTag(txt, tag, tag)
 }
 
-func (t *Text) Bold() *Text {
-	t.bold = true
-	return t
-}
-
-func (t *Text) Iconify() *Text {
-	t.iconify = true
-	return t
-}
-
-func Tag(txt string, tag string) string {
-	return fmt.Sprintf("<%v>%v</%v>", tag, txt, tag)
+func OpenCloseTag(txt string, open string, close string) string {
+	return fmt.Sprintf("<%v>%v</%v>", open, txt, close)
 }
