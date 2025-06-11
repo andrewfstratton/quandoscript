@@ -1,7 +1,7 @@
 package text
 
 import (
-	"fmt"
+	"github.com/andrewfstratton/quandoscript/block/widget"
 )
 
 type Text struct {
@@ -18,21 +18,13 @@ func New(t string) *Text {
 func (t *Text) Html() (txt string) {
 	txt = t.Txt
 	if t.Italic {
-		txt = TagText(txt, "i")
+		txt = widget.TagText(txt, "i")
 	}
 	if t.Bold {
-		txt = TagText(txt, "b")
+		txt = widget.TagText(txt, "b")
 	}
 	if t.Iconify {
-		txt = OpenCloseTag(txt, `span class="iconify"`, "span")
+		txt = widget.OpenCloseTag(txt, `span class="iconify"`, "span")
 	}
 	return
-}
-
-func TagText(txt string, tag string) string {
-	return OpenCloseTag(txt, tag, tag)
-}
-
-func OpenCloseTag(txt string, open string, close string) string {
-	return fmt.Sprintf("<%v>%v</%v>", open, txt, close)
 }
