@@ -11,6 +11,7 @@ import (
 
 	"github.com/andrewfstratton/quandoscript/action"
 	"github.com/andrewfstratton/quandoscript/action/param"
+	"github.com/andrewfstratton/quandoscript/definition"
 	"github.com/andrewfstratton/quandoscript/library"
 )
 
@@ -209,7 +210,7 @@ func getParam(input *input) (key string, p param.Param) {
 	prefix := input.matchStart(`[!:="#]`, "type prefix/assignment missing ")
 	switch prefix {
 	case "":
-		p = param.UNKNOWN{} // holds nothing?!
+		p = definition.UNKNOWN{} // holds nothing?!
 	case "!": // check for boolean
 		found = input.matchStart("(true|false)", "")
 		if found != "" { // i.e. if found

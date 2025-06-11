@@ -2,32 +2,25 @@ package param
 
 import (
 	"fmt"
-)
 
-type (
-	BOOLEAN  = bool
-	STRING   = string
-	NUMBER   = float64
-	LINEID   = int
-	UNKNOWN  = struct{}
-	VARIABLE string // n.b. is not an alias which may cause extra code
+	"github.com/andrewfstratton/quandoscript/definition"
 )
 
 type Param any // horrible but easiest - must be currently
 type Params map[string]Param
 type StringParam struct {
 	Lookup string
-	Val    STRING
+	Val    definition.STRING
 }
 
 type NumberParam struct {
 	Lookup string
-	Val    NUMBER
+	Val    definition.NUMBER
 }
 
 type IdParam struct {
 	Lookup string
-	Val    LINEID
+	Val    definition.LINEID
 }
 
 func NewString(lookup string, val string, params Params) (param *StringParam) {
@@ -42,9 +35,9 @@ func (param *StringParam) Update(params Params) {
 		return // nothing to update
 	}
 	switch s := p.(type) {
-	case STRING:
+	case definition.STRING:
 		param.Val = s
-	case VARIABLE:
+	case definition.VARIABLE:
 		// lookup variable here...
 	default:
 		fmt.Println("Error : ", param.Lookup, " incorrect type")
@@ -63,9 +56,9 @@ func (param *NumberParam) Update(params Params) {
 		return
 	}
 	switch n := p.(type) {
-	case NUMBER:
+	case definition.NUMBER:
 		param.Val = n
-	case VARIABLE:
+	case definition.VARIABLE:
 		// lookup variable here...
 	default:
 		fmt.Println("Error : ", param.Lookup, " incorrect type")
@@ -88,9 +81,9 @@ func (param *IdParam) Update(params Params) {
 		return
 	}
 	switch l := p.(type) {
-	case LINEID:
+	case definition.LINEID:
 		param.Val = l
-	case VARIABLE:
+	case definition.VARIABLE:
 		// lookup variable here...
 	default:
 		fmt.Println("Error : ", param.Lookup, " incorrect type")
