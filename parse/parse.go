@@ -16,19 +16,19 @@ import (
 )
 
 type Input struct {
-	line string
-	err  error
+	Line string
+	Err  error
 }
 
 func (input *Input) matchStart(rxp string, lookfor string) (found string) {
-	arr := regexp.MustCompile("^" + rxp).FindStringIndex(input.line)
+	arr := regexp.MustCompile("^" + rxp).FindStringIndex(input.Line)
 	if len(arr) != 2 {
-		input.err = errors.New("Failed to match " + lookfor + " with '" + rxp + "' at start of '" + input.line + "'")
+		input.Err = errors.New("Failed to match " + lookfor + " with '" + rxp + "' at start of '" + input.Line + "'")
 		return
 	}
 	count := arr[1] // start must be 0 due to regexp starting ^
-	found = input.line[:count]
-	input.line = input.line[count:]
+	found = input.Line[:count]
+	input.Line = input.Line[count:]
 	return
 }
 
@@ -36,25 +36,25 @@ func line(line string) (lineid int, word string, params param.Params, err error)
 	if line == "" { // word and err are nil for a blank line
 		return
 	}
-	input := Input{line: line}
+	input := Input{Line: line}
 	lineid = input.getId()
-	if input.err != nil {
-		err = input.err
+	if input.Err != nil {
+		err = input.Err
 		return
 	}
 	input.stripSpacer()
-	if input.err != nil {
-		err = input.err
+	if input.Err != nil {
+		err = input.Err
 		return
 	}
-	word = input.getWord()
-	if input.err != nil {
-		err = input.err
+	word = input.GetWord()
+	if input.Err != nil {
+		err = input.Err
 		return
 	}
 	params = input.getParams()
-	if input.err != nil {
-		err = input.err
+	if input.Err != nil {
+		err = input.Err
 		return
 	}
 	return
@@ -83,7 +83,7 @@ func Lines(in string) {
 	}
 }
 
-// removes and returns a [0..9] integer from start of input.line, or input.err.
+// removes and returns a [0..9] integer from start of input.Line, or input.Err.
 func (input *Input) getId() (id int) {
 	found := input.matchStart("([0-9])+", "Id")
 	if found == "" {
@@ -98,34 +98,34 @@ func (input *Input) getId() (id int) {
 	return
 }
 
-// strips space/tab from start of input.line, or input.err if missing
+// strips space/tab from start of input.Line, or input.Err if missing
 func (input *Input) stripSpacer() {
 	_ = input.matchStart("[( )\t]+", "space/tab")
 }
 
-// removes and returns a word at start of input.line, or err if missing.
+// removes and returns a word at start of input.Line, or err if missing.
 // word starts with a letter, then may also include digits . or _
-func (input *Input) getWord() string {
+func (input *Input) GetWord() string {
 	return input.matchStart("[a-zA-Z][a-zA-Z0-9_.]*", "word starting a-z or A-Z")
 }
 
-// removes and returns a string" at start of input.line, or err if missing.
+// removes and returns a string" at start of input.Line, or err if missing.
 // the string may contain \\, \", \t and \n, which will be substituted
 // N.B. string does NOT start with '"' - this will already have parsed
-func (input *Input) getString() (str string) {
+func (input *Input) GetString() (str string) {
 	for {
-		if len(input.line) == 0 {
-			input.err = errors.New(`string does not terminate with '"' before end of line`)
+		if len(input.Line) == 0 {
+			input.Err = errors.New(`string does not terminate with '"' before end of line`)
 			break
 		}
-		ch := input.line[:1]
-		input.line = input.line[1:] // consume first character
+		ch := input.Line[:1]
+		input.Line = input.Line[1:] // consume first character
 		var skip bool
 		if ch == `"` {
 			break
 		}
-		if ch == `\` && len(input.line) > 0 {
-			ch2 := input.line[:1]
+		if ch == `\` && len(input.Line) > 0 {
+			ch2 := input.Line[:1]
 			switch ch2 {
 			case `\`:
 				ch = `\`
@@ -143,13 +143,13 @@ func (input *Input) getString() (str string) {
 		}
 		str += ch
 		if skip {
-			input.line = input.line[1:]
+			input.Line = input.Line[1:]
 		}
 	}
 	return str
 }
 
-// removes and returns a decimal floating point number at start of input.line, or err if missing.
+// removes and returns a decimal floating point number at start of input.Line, or err if missing.
 func (input *Input) getFloat() (f float64) {
 	found := input.matchStart("[+-]?[0-9]+[.]?[0-9]*([eE][+-]?[0-9]+)?", "floating point number")
 	if found == "" {
@@ -177,13 +177,13 @@ func (input *Input) getParams() (params param.Params) {
 		if key == "" { // no key
 			break
 		}
-		if input.err != nil {
+		if input.Err != nil {
 			return
 		}
 		params[key] = param
 		found = input.matchStart(`,`, "")
 		if found != "," {
-			input.err = nil // clear out err and drop out of loop
+			input.Err = nil // clear out err and drop out of loop
 			break
 		}
 	}
@@ -193,16 +193,16 @@ func (input *Input) getParams() (params param.Params) {
 
 // key returns "" when none found
 func getParam(input *Input) (key string, p param.Param) {
-	restore := input.line
+	restore := input.Line
 	// Check for ) and return without error or change to input if found
 	found := input.matchStart(`\)`, "")
-	input.err = nil   // supress error
+	input.Err = nil   // supress error
 	if found == `)` { // found ) so reset
-		input.line = restore
-		input.err = nil
+		input.Line = restore
+		input.Err = nil
 		return
 	}
-	key = input.getWord()
+	key = input.GetWord()
 	if key == "" {
 		return
 	}
@@ -219,31 +219,39 @@ func getParam(input *Input) (key string, p param.Param) {
 		}
 	case ":": // check for lineid
 		lineid := input.getId()
-		if input.err == nil {
+		if input.Err == nil {
 			p = lineid
 			return
 		}
 	case "=": // check for variable
-		name := input.getWord()
-		if input.err == nil {
+		name := input.GetWord()
+		if input.Err == nil {
 			p = name
 			return
 		}
 	case `"`: // check for string
-		str := input.getString()
-		if input.err == nil {
+		str := input.GetString()
+		if input.Err == nil {
 			p = str
 			return
 		}
 	case "#": // check for float
 		num := input.getFloat()
-		if input.err == nil {
+		if input.Err == nil {
 			p = num
 			return
 		}
 	}
 	// error (or not handled, e.g. due to mismatch with generator)
 	key = "" // have to reset since already stored
-	input.line = restore
+	input.Line = restore
+	return
+}
+
+func (input *Input) GetColonDoublequote() (err error) {
+	found := input.matchStart(`:"`, `:"`)
+	if found == "" {
+		err = errors.New(`missing ':"' in ` + input.Line)
+	}
 	return
 }
