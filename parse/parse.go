@@ -15,12 +15,12 @@ import (
 	"github.com/andrewfstratton/quandoscript/library"
 )
 
-type input struct {
+type Input struct {
 	line string
 	err  error
 }
 
-func (input *input) matchStart(rxp string, lookfor string) (found string) {
+func (input *Input) matchStart(rxp string, lookfor string) (found string) {
 	arr := regexp.MustCompile("^" + rxp).FindStringIndex(input.line)
 	if len(arr) != 2 {
 		input.err = errors.New("Failed to match " + lookfor + " with '" + rxp + "' at start of '" + input.line + "'")
@@ -36,7 +36,7 @@ func line(line string) (lineid int, word string, params param.Params, err error)
 	if line == "" { // word and err are nil for a blank line
 		return
 	}
-	input := input{line: line}
+	input := Input{line: line}
 	lineid = input.getId()
 	if input.err != nil {
 		err = input.err
@@ -84,7 +84,7 @@ func Lines(in string) {
 }
 
 // removes and returns a [0..9] integer from start of input.line, or input.err.
-func (input *input) getId() (id int) {
+func (input *Input) getId() (id int) {
 	found := input.matchStart("([0-9])+", "Id")
 	if found == "" {
 		return
@@ -99,20 +99,20 @@ func (input *input) getId() (id int) {
 }
 
 // strips space/tab from start of input.line, or input.err if missing
-func (input *input) stripSpacer() {
+func (input *Input) stripSpacer() {
 	_ = input.matchStart("[( )\t]+", "space/tab")
 }
 
 // removes and returns a word at start of input.line, or err if missing.
 // word starts with a letter, then may also include digits . or _
-func (input *input) getWord() string {
+func (input *Input) getWord() string {
 	return input.matchStart("[a-zA-Z][a-zA-Z0-9_.]*", "word starting a-z or A-Z")
 }
 
 // removes and returns a string" at start of input.line, or err if missing.
 // the string may contain \\, \", \t and \n, which will be substituted
 // N.B. string does NOT start with '"' - this will already have parsed
-func (input *input) getString() (str string) {
+func (input *Input) GetString() (str string) {
 	for {
 		if len(input.line) == 0 {
 			input.err = errors.New(`string does not terminate with '"' before end of line`)
@@ -150,7 +150,7 @@ func (input *input) getString() (str string) {
 }
 
 // removes and returns a decimal floating point number at start of input.line, or err if missing.
-func (input *input) getFloat() (f float64) {
+func (input *Input) getFloat() (f float64) {
 	found := input.matchStart("[+-]?[0-9]+[.]?[0-9]*([eE][+-]?[0-9]+)?", "floating point number")
 	if found == "" {
 		return
@@ -166,7 +166,7 @@ func (input *input) getFloat() (f float64) {
 
 // returns parameters as nil if just (), or Param parameters, err if not starting with ( or not terminated correctly with ).
 // remaining is the rest of the string
-func (input *input) getParams() (params param.Params) {
+func (input *Input) getParams() (params param.Params) {
 	found := input.matchStart(`\(`, "(")
 	if found == "" {
 		return
@@ -192,7 +192,7 @@ func (input *input) getParams() (params param.Params) {
 }
 
 // key returns "" when none found
-func getParam(input *input) (key string, p param.Param) {
+func getParam(input *Input) (key string, p param.Param) {
 	restore := input.line
 	// Check for ) and return without error or change to input if found
 	found := input.matchStart(`\)`, "")
@@ -230,7 +230,7 @@ func getParam(input *input) (key string, p param.Param) {
 			return
 		}
 	case `"`: // check for string
-		str := input.getString()
+		str := input.GetString()
 		if input.err == nil {
 			p = str
 			return
