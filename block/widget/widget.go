@@ -13,9 +13,20 @@ type Widget interface {
 	Html() string
 }
 
-func SetFields(widget any, tag string) {
+func Setup(widget any, name string, tag string) {
 	// using reflection to set fields
 	v := reflect.ValueOf(widget).Elem() // i.e. pointer to struct
+	if name != "_" && name != "" {
+		// using reflection to set name
+		vName := v.FieldByName("Name")
+		if vName.CanSet() {
+			name = strings.ToLower(name[:1]) + name[1:] // lower case first letter
+			vName.SetString(name)
+		} else {
+			fmt.Printf("Cannot set Name field on %T\n", widget)
+		}
+	}
+
 	tagMap, err := tagToMap(tag)
 
 	if err != nil {
@@ -23,7 +34,6 @@ func SetFields(widget any, tag string) {
 		return
 	}
 	for key, str := range tagMap {
-		fmt.Println(key, "=", str)
 		vField := v.FieldByName(key)
 		if vField.CanSet() {
 			switch vField.Type().Name() {
@@ -32,7 +42,6 @@ func SetFields(widget any, tag string) {
 			case "bool":
 				vField.SetBool(str == "true")
 			case "Pfloat":
-				fmt.Println("::", str)
 				f, err := strconv.ParseFloat(str, 64)
 				if err != nil {
 					fmt.Printf("Error parsing float for field '%s': %v\n", key, err)
@@ -40,7 +49,6 @@ func SetFields(widget any, tag string) {
 				}
 				vField.Set(reflect.ValueOf(&f))
 			case "Pint":
-				fmt.Println("::", str)
 				i, err := strconv.ParseInt(str, 10, 64)
 				if err != nil {
 					fmt.Printf("Error parsing int for field '%s': %v\n", key, err)

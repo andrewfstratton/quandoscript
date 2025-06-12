@@ -62,9 +62,16 @@ func New(defn any) (block *Block) {
 			continue
 		}
 		// N.B. below must only run when a valid widget has been created - note the use of continue above
-		widget.SetFields(w, string(tag))
+		widget.Setup(w, f.Name, string(tag))
 		block.widgets = append(block.widgets, w)
 	}
+	if AddToLibrary == nil { // handle tests when AddToLibrary has not been injected by library.init()
+		if testing.Testing() {
+			return
+		}
+		fmt.Println("Fatal Error: AddToLibrary is nil, cannot add block to library")
+	}
+	AddToLibrary(block)
 	return
 }
 
@@ -91,6 +98,7 @@ func AddNew(typeName string, class string, widgets ...widget.Widget) (block *Blo
 	AddToLibrary(block)
 	return
 }
+
 func (block *Block) Op(early action.Early) {
 	if early == nil {
 		fmt.Printf("Warning: block type '%s' has nil operation\n", block.TypeName)

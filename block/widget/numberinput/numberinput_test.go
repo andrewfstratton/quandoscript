@@ -14,10 +14,13 @@ func TestNumberEmpty(t *testing.T) { // n.b. should never happen
 
 func TestTextFieldSimple(t *testing.T) {
 	tf := New("name")
-	widget.SetFields(tf, `default:"10"`)
-	widget.SetFields(tf, `empty:"empty"`)
+	widget.Setup(tf, "_", `default:"10" empty:"empty"`)
 	assert.Eq(t, tf.Html(), `<input data-quando-name='name' type='number' value='10' placeholder='empty'/>`)
-	widget.SetFields(tf, `width:"4" min:"0" max:"100"`)
+}
+
+func TestTextFieldSimple2(t *testing.T) {
+	tf := &NumberInput{}
+	widget.Setup(tf, "Name", `default:"10" empty:"empty" width:"4" min:"0" max:"100"`)
 	assert.Eq(t, tf.Html(), `<input data-quando-name='name' type='number' value='10' placeholder='empty' style='width:4em' min='0' max='100'/>`)
 }
 

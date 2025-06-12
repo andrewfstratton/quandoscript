@@ -14,8 +14,8 @@ func TestTextFieldEmpty(t *testing.T) { // n.b. should never happen
 
 func TestTextFieldSimple(t *testing.T) {
 	tf := New("name")
-	widget.SetFields(tf, `default:"default"`)
-	widget.SetFields(tf, `empty:"empty"`)
+	widget.Setup(tf, "", `default:"default"`)
+	widget.Setup(tf, "_", `empty:"empty"`)
 	assert.Eq(t, tf.Html(), `&quot;<input data-quando-name='name' type='text' value='default' placeholder='empty'/>&quot;`)
 }
 

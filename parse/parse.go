@@ -61,7 +61,7 @@ func line(line string) (lineid int, word string, params param.Params, err error)
 	return
 }
 
-func Lines(in string) {
+func Lines(in string) { // setup the whole script as actions for calling - only does early setup
 	scanner := bufio.NewScanner(strings.NewReader(in))
 	new_group := true
 	for scanner.Scan() {
