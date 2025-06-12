@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/andrewfstratton/quandoscript/assert"
+	"github.com/andrewfstratton/quandoscript/block/widget"
 )
 
 func TestNumberEmpty(t *testing.T) { // n.b. should never happen
@@ -13,10 +14,10 @@ func TestNumberEmpty(t *testing.T) { // n.b. should never happen
 
 func TestTextFieldSimple(t *testing.T) {
 	tf := New("name")
-	tf.Default(10)
-	tf.Empty("empty")
+	widget.SetFields(tf, `default:"10"`)
+	widget.SetFields(tf, `empty:"empty"`)
 	assert.Eq(t, tf.Html(), `<input data-quando-name='name' type='number' value='10' placeholder='empty'/>`)
-	tf.Width(4).Min(0).Max(100)
+	widget.SetFields(tf, `width:"4" min:"0" max:"100"`)
 	assert.Eq(t, tf.Html(), `<input data-quando-name='name' type='number' value='10' placeholder='empty' style='width:4em' min='0' max='100'/>`)
 }
 

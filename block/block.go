@@ -29,6 +29,7 @@ var AddToLibrary func(*Block) // injected by library
 
 func New(defn any) (block *Block) {
 	t := reflect.TypeOf(defn).Elem() // i.e. pointer to struct
+	// 	N.B. TypeName and Class exist in Defn - not in widgets
 	block = &Block{}
 	for i := range t.NumField() {
 		f := t.Field(i)

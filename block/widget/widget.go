@@ -3,6 +3,7 @@ package widget
 import (
 	"fmt"
 	"reflect"
+	"strconv"
 	"strings"
 
 	"github.com/andrewfstratton/quandoscript/parse"
@@ -30,6 +31,22 @@ func SetFields(widget any, tag string) {
 				vField.SetString(str)
 			case "bool":
 				vField.SetBool(str == "true")
+			case "Pfloat":
+				fmt.Println("::", str)
+				f, err := strconv.ParseFloat(str, 64)
+				if err != nil {
+					fmt.Printf("Error parsing float for field '%s': %v\n", key, err)
+					continue
+				}
+				vField.Set(reflect.ValueOf(&f))
+			case "Pint":
+				fmt.Println("::", str)
+				i, err := strconv.ParseInt(str, 10, 64)
+				if err != nil {
+					fmt.Printf("Error parsing int for field '%s': %v\n", key, err)
+					continue
+				}
+				vField.Set(reflect.ValueOf(&i))
 			default:
 				fmt.Printf("Unknown type '%s' for field '%s' with value '%s'\n", vField.Type().Name(), key, str)
 			}

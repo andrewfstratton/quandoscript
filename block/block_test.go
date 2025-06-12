@@ -46,10 +46,10 @@ func TestNewStringInput(t *testing.T) {
 func TestNewNumberInput(t *testing.T) {
 	block := AddNew("system.log", "system",
 		text.New("Log "),
-		numberinput.New("num").Empty("message").Default(0.5).Min(0).Max(1).Width(4))
+		numberinput.New("num"))
 	assert.Eq(t, block.Replace("{{ .Params }}"), `num#${num}`)
 	assert.Eq(t, block.Replace("{{ .Widgets }}"),
-		`Log <input data-quando-name='num' type='number' value='0.5' placeholder='message' style='width:4em' min='0' max='1'/>`)
+		`Log <input data-quando-name='num' type='number'/>`)
 }
 
 func TestNewPercentInput(t *testing.T) {
