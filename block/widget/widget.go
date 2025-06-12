@@ -76,7 +76,6 @@ func tagToMap(tag string) (tagMap map[string]string, err error) {
 			return
 		}
 		tagMap[key] = val
-		fmt.Printf("Parsed tag - Key: %s, Value: %s\n", key, val)
 		// this needs to be done so empty string detected correctly on next pass
 		input.StripSpacer() // Note: ignores error if missing, i.e. at start of line
 	}

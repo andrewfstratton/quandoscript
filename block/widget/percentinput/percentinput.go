@@ -1,12 +1,16 @@
 package percentinput
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/andrewfstratton/quandoscript/block/widget/numberinput"
+)
 
 type PercentInput struct {
-	Name     string
-	default_ *float64
-	empty    string
-	width    *int
+	Name    string
+	Default numberinput.Pfloat
+	Empty   string
+	Width   numberinput.Pint
 }
 
 func New(name string) *PercentInput {
@@ -15,14 +19,14 @@ func New(name string) *PercentInput {
 
 func (pi *PercentInput) Html() (txt string) {
 	txt = fmt.Sprintf("<input data-quando-name='%v' type='number'", pi.Name)
-	if pi.default_ != nil {
-		txt += fmt.Sprintf(" value='%v'", *pi.default_)
+	if pi.Default != nil {
+		txt += fmt.Sprintf(" value='%v'", *pi.Default)
 	}
-	if pi.empty != "" {
-		txt += " placeholder='" + pi.empty + "'"
+	if pi.Empty != "" {
+		txt += " placeholder='" + pi.Empty + "'"
 	}
-	if pi.width != nil {
-		txt += fmt.Sprintf(" style='width:%dem'", *pi.width)
+	if pi.Width != nil {
+		txt += fmt.Sprintf(" style='width:%dem'", *pi.Width)
 	}
 	txt += ` min='0' max='100'/>%`
 	return
@@ -30,19 +34,4 @@ func (pi *PercentInput) Html() (txt string) {
 
 func (pi *PercentInput) Generate() string {
 	return fmt.Sprintf(`%v#${%v}`, pi.Name, pi.Name)
-}
-
-func (pi *PercentInput) Default(f float64) *PercentInput {
-	pi.default_ = &f
-	return pi
-}
-
-func (pi *PercentInput) Width(i int) *PercentInput {
-	pi.width = &i
-	return pi
-}
-
-func (pi *PercentInput) Empty(s string) *PercentInput {
-	pi.empty = s
-	return pi
 }

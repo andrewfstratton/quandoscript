@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/andrewfstratton/quandoscript/assert"
+	"github.com/andrewfstratton/quandoscript/block/widget"
 )
 
 func TestNumberEmpty(t *testing.T) { // n.b. should never happen
@@ -14,7 +15,8 @@ func TestNumberEmpty(t *testing.T) { // n.b. should never happen
 func TestTextFieldSimple(t *testing.T) {
 	tf := New("percent")
 	assert.Eq(t, tf.Html(), `<input data-quando-name='percent' type='number' min='0' max='100'/>%`)
-	tf.Default(50).Empty("empty").Width(4)
+	widget.SetFields(tf, `default:"50"`)
+	widget.SetFields(tf, `empty:"empty" width:"4"`)
 	assert.Eq(t, tf.Html(), `<input data-quando-name='percent' type='number' value='50' placeholder='empty' style='width:4em' min='0' max='100'/>%`)
 }
 

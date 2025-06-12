@@ -55,9 +55,9 @@ func TestNewNumberInput(t *testing.T) {
 func TestNewPercentInput(t *testing.T) {
 	block := AddNew("display.width", "display",
 		text.New("Width "),
-		percentinput.New("width").Empty("0-100").Default(50))
+		percentinput.New("width"))
 	assert.Eq(t, block.Replace("{{ .Class }}"), "quando-display")
 	assert.Eq(t, block.Replace("{{ .TypeName }}"), "display.width")
-	assert.Eq(t, block.Replace("{{ .Widgets }}"), `Width <input data-quando-name='width' type='number' value='50' placeholder='0-100' min='0' max='100'/>%`)
+	assert.Eq(t, block.Replace("{{ .Widgets }}"), `Width <input data-quando-name='width' type='number' min='0' max='100'/>%`)
 	assert.Eq(t, block.Replace("{{ .Params }}"), "width#${width}")
 }
