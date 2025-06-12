@@ -28,17 +28,17 @@ func TestParseId(t *testing.T) {
 
 func TestParseSpacer(t *testing.T) {
 	match := Input{Line: ""}
-	match.stripSpacer()
+	match.StripSpacer()
 	assert.Neq(t, match.Err, nil)
 	assert.Eq(t, match.Line, "")
 
 	match = Input{Line: "word.word"}
-	match.stripSpacer()
+	match.StripSpacer()
 	assert.Neq(t, match.Err, nil)
 	assert.Eq(t, match.Line, "word.word")
 
 	match = Input{Line: " \t  w"}
-	match.stripSpacer()
+	match.StripSpacer()
 	assert.Eq(t, match.Err, nil)
 	assert.Eq(t, match.Line, "w")
 

@@ -14,19 +14,23 @@ import (
 	"github.com/andrewfstratton/quandoscript/parse"
 )
 
-func init_log() {
-	_greeting := stringinput.New("greeting").Empty("greeting")
-	_txt := stringinput.New("txt").Empty("greeting")
+type LogDefn struct {
+	TypeName struct{}                `_:"system.log"`
+	Class    struct{}                `_:"misc"`
+	_        text.Text               `txt:"Log "`
+	Greeting stringinput.StringInput `empty:"greeting"`
+	_        text.Text               `txt:" "`
+	Txt      stringinput.StringInput `empty:"name"`
+}
 
-	block.AddNew("system.log", "misc",
-		text.New("Log "),
-		_greeting,
-		text.New(" "),
-		_txt,
-	).Op(
+func init_log() {
+	log := &LogDefn{}
+	b := block.New(log)
+	fmt.Println("block = ", b)
+	b.Op(
 		func(outer param.Params) func(param.Params) {
-			greeting := _greeting.Param(outer)
-			txt := _txt.Param(outer)
+			greeting := log.Greeting.Param(outer)
+			txt := log.Txt.Param(outer)
 			return func(inner param.Params) {
 				txt.Update(inner)
 				greeting.Update(inner)
@@ -36,18 +40,24 @@ func init_log() {
 		})
 }
 
+type AfterDefn struct {
+	TypeName struct{}                `_:"system.after"`
+	Class    struct{}                `_:"misc"`
+	_        text.Text               `txt:"After " iconify:"true"`
+	Secs     numberinput.NumberInput `empty:"seconds" min:"0" max:"999" width:"4" default:"1"` // min:0 max:999 width:4 default:1`
+	// Secs     numberinput.NumberInput `empty:"seconds" _:"min:0,max:999,width:4,default:1` // min:0 max:999 width:4 default:1`
+	_        text.Text `txt:" "`
+	Callback idinput.IdInput
+}
+
 func init_after() {
-	_secs := numberinput.New("secs").Empty("seconds").Min(0).Max(999).Width(4).Default(1)
-	_callback := idinput.New("callback")
-	block.AddNew("system.after", "misc",
-		text.New("After "),
-		_secs,
-		text.New("secs"),
-		_callback,
-	).Op(
+	after := &AfterDefn{}
+	b := block.New(after)
+	fmt.Println("block = ", b)
+	b.Op(
 		func(outer param.Params) func(param.Params) {
-			secs := _secs.Param(outer)
-			callback := _callback.Param(outer)
+			secs := after.Secs.Param(outer)
+			callback := after.Callback.Param(outer)
 			return func(inner param.Params) {
 				//  inner.Update(&secs, &callback)
 				secs.Update(inner)

@@ -10,6 +10,7 @@ import (
 	"github.com/andrewfstratton/quandoscript/action/param"
 	"github.com/andrewfstratton/quandoscript/block"
 	"github.com/andrewfstratton/quandoscript/menu"
+	"github.com/andrewfstratton/quandoscript/parse"
 )
 
 const (
@@ -63,5 +64,6 @@ func Classes() []string {
 func init() {
 	blocks = make(map[string]*block.Block)
 	menus = make(map[string]*menu.Menu)
-	block.AddToLibrary = addBlock
+	block.AddToLibrary = addBlock      // inject function
+	parse.LibraryNewAction = NewAction // inject function
 }

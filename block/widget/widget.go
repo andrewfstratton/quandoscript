@@ -1,8 +1,71 @@
 package widget
 
+import (
+	"fmt"
+	"reflect"
+	"strings"
+
+	"github.com/andrewfstratton/quandoscript/parse"
+)
+
 type Widget interface {
 	Html() string
 }
+
+func SetFields(widget any, tag string) {
+	// using reflection to set fields
+	v := reflect.ValueOf(widget).Elem() // i.e. pointer to struct
+	tagMap, err := tagToMap(tag)
+
+	if err != nil {
+		fmt.Println("error :", err)
+		return
+	}
+	for key, str := range tagMap {
+		fmt.Println(key, "=", str)
+		vField := v.FieldByName(key)
+		if vField.CanSet() {
+			switch vField.Type().Name() {
+			case "string":
+				vField.SetString(str)
+			case "bool":
+				vField.SetBool(str == "true")
+			default:
+				fmt.Printf("Unknown type '%s' for field '%s' with value '%s'\n", vField.Type().Name(), key, str)
+			}
+		}
+		// Note: TypeName and Class exist in Defn - not in widgets and txt used for widget txt to show
+	}
+
+}
+
+func tagToMap(tag string) (tagMap map[string]string, err error) {
+	input := parse.Input{Line: tag}
+	tagMap = make(map[string]string)
+	for input.Line != "" {
+		key := input.GetWord() // ends when it runs out of letter/digit/_ which is by chance the same as :?!
+		if input.Err != nil {
+			err = input.Err
+			return
+		}
+		key = strings.ToUpper(key[0:1]) + key[1:] // upper case first letter
+		if input.GetColonDoublequote(); input.Err != nil {
+			err = input.Err
+			return
+		}
+		val := input.GetString()
+		if input.Err != nil {
+			err = input.Err
+			return
+		}
+		tagMap[key] = val
+		fmt.Printf("Parsed tag - Key: %s, Value: %s\n", key, val)
+		// this needs to be done so empty string detected correctly on next pass
+		input.StripSpacer() // Note: ignores error if missing, i.e. at start of line
+	}
+	return
+}
+
 func TagText(txt string, tag string) string {
 	return OpenCloseTag(txt, tag, tag)
 }

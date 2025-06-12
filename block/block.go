@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"reflect"
 	"runtime/debug"
 	"testing"
 	"text/template"
@@ -11,6 +12,10 @@ import (
 	"github.com/andrewfstratton/quandoscript/action"
 	"github.com/andrewfstratton/quandoscript/block/script"
 	"github.com/andrewfstratton/quandoscript/block/widget"
+	"github.com/andrewfstratton/quandoscript/block/widget/idinput"
+	"github.com/andrewfstratton/quandoscript/block/widget/numberinput"
+	"github.com/andrewfstratton/quandoscript/block/widget/stringinput"
+	"github.com/andrewfstratton/quandoscript/block/widget/text"
 )
 
 type Block struct {
@@ -21,6 +26,46 @@ type Block struct {
 }
 
 var AddToLibrary func(*Block) // injected by library
+
+func New(defn any) (block *Block) {
+	t := reflect.TypeOf(defn).Elem() // i.e. pointer to struct
+	block = &Block{}
+	for i := range t.NumField() {
+		f := t.Field(i)
+		tag := f.Tag
+		underscore := tag.Get("_")
+		if f.Name == "TypeName" {
+			block.TypeName = underscore
+			continue
+		}
+		if f.Name == "Class" {
+			block.Class = underscore
+			continue
+		}
+		// Otherwise check the type
+		var w widget.Widget
+		switch f.Type.Name() {
+		case "Text":
+			w = &text.Text{}
+		case "StringInput":
+			w = &stringinput.StringInput{}
+		case "NumberInput":
+			w = &numberinput.NumberInput{}
+		case "IdInput":
+			w = &idinput.IdInput{}
+		default:
+			fmt.Println("not yet handling:", f.Type.Name())
+			if underscore != "" {
+				fmt.Println("_ = ", underscore)
+			}
+			continue
+		}
+		// N.B. below must only run when a valid widget has been created - note the use of continue above
+		widget.SetFields(w, string(tag))
+		block.widgets = append(block.widgets, w)
+	}
+	return
+}
 
 func AddNew(typeName string, class string, widgets ...widget.Widget) (block *Block) {
 	if typeName == "" {

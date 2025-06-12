@@ -12,8 +12,9 @@ import (
 	"github.com/andrewfstratton/quandoscript/action"
 	"github.com/andrewfstratton/quandoscript/action/param"
 	"github.com/andrewfstratton/quandoscript/definition"
-	"github.com/andrewfstratton/quandoscript/library"
 )
+
+var LibraryNewAction func(word string, early param.Params, late_params param.Params) *action.Action // injected by library
 
 type Input struct {
 	Line string
@@ -42,7 +43,7 @@ func line(line string) (lineid int, word string, params param.Params, err error)
 		err = input.Err
 		return
 	}
-	input.stripSpacer()
+	input.StripSpacer()
 	if input.Err != nil {
 		err = input.Err
 		return
@@ -74,7 +75,7 @@ func Lines(in string) {
 		if err != nil {
 			fmt.Println(lineid, word, params, err)
 		}
-		o := library.NewAction(word, params, nil)
+		o := LibraryNewAction(word, params, nil)
 		if new_group {
 			action.NewGroup()
 			new_group = false
@@ -99,7 +100,7 @@ func (input *Input) getId() (id int) {
 }
 
 // strips space/tab from start of input.Line, or input.Err if missing
-func (input *Input) stripSpacer() {
+func (input *Input) StripSpacer() {
 	_ = input.matchStart("[( )\t]+", "space/tab")
 }
 

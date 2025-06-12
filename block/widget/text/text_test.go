@@ -19,7 +19,7 @@ func TestTextSimple(t *testing.T) {
 	widget.SetFields(txt, `bold:"true"`)
 	widget.SetFields(txt, `iconify:"true"`)
 	assert.Eq(t, txt.Html(), `<span class="iconify"><b><i>Hello</i></b></span>`)
-	txt = New("Hi Bob")
-	widget.SetFields(txt, `italic:"false" iconify:"true" bold:"true"`)
+	txt = &Text{}
+	widget.SetFields(txt, `txt:"Hi Bob" italic:"false" iconify:"true" bold:"true"`)
 	assert.Eq(t, txt.Html(), `<span class="iconify"><b>Hi Bob</b></span>`) // n.b, order is not preserved?!
 }
