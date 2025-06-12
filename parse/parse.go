@@ -112,7 +112,7 @@ func (input *Input) getWord() string {
 // removes and returns a string" at start of input.line, or err if missing.
 // the string may contain \\, \", \t and \n, which will be substituted
 // N.B. string does NOT start with '"' - this will already have parsed
-func (input *Input) GetString() (str string) {
+func (input *Input) getString() (str string) {
 	for {
 		if len(input.line) == 0 {
 			input.err = errors.New(`string does not terminate with '"' before end of line`)
@@ -230,7 +230,7 @@ func getParam(input *Input) (key string, p param.Param) {
 			return
 		}
 	case `"`: // check for string
-		str := input.GetString()
+		str := input.getString()
 		if input.err == nil {
 			p = str
 			return
