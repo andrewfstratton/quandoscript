@@ -11,6 +11,7 @@ import (
 	"github.com/andrewfstratton/quandoscript/block/widget/numberinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/stringinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/text"
+	_ "github.com/andrewfstratton/quandoscript/library"
 	"github.com/andrewfstratton/quandoscript/parse"
 )
 
