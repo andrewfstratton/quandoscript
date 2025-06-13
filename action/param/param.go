@@ -2,6 +2,7 @@ package param
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/andrewfstratton/quandoscript/definition"
 )
@@ -67,6 +68,11 @@ func (param *NumberParam) Update(params Params) {
 
 func (param *NumberParam) Int() int {
 	return int(param.Val)
+}
+
+func (param *NumberParam) Duration() time.Duration {
+	// N.B. below is to allow for sub second times...
+	return time.Duration(param.Val * float64(time.Second))
 }
 
 func NewId(lookup string, val int, params Params) (param *IdParam) {
