@@ -15,7 +15,7 @@ func TestNumberEmpty(t *testing.T) { // n.b. should never happen
 func TestTextFieldSimple(t *testing.T) {
 	tf := New("percent")
 	assert.Eq(t, tf.Html(), `<input data-quando-name='percent' type='number' min='0' max='100'/>%`)
-	widget.Setup(tf, tf.Name, `default:"50" empty:"empty" width:"4"`)
+	widget.SetFields(tf, `default:"50" empty:"empty" width:"4"`)
 	assert.Eq(t, tf.Html(), `<input data-quando-name='percent' type='number' value='50' placeholder='empty' style='width:4em' min='0' max='100'/>%`)
 }
 

@@ -16,6 +16,7 @@ import (
 	"github.com/andrewfstratton/quandoscript/block/widget/numberinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/stringinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/text"
+	"github.com/andrewfstratton/quandoscript/definition"
 )
 
 type Block struct {
@@ -49,11 +50,11 @@ func New(defn any) (block *Block) {
 		case "Text":
 			w = &text.Text{}
 		case "StringInput":
-			w = &stringinput.StringInput{}
+			w = &stringinput.StringInput{Name: f.Name}
 		case "NumberInput":
-			w = &numberinput.NumberInput{}
+			w = &numberinput.NumberInput{Name: f.Name}
 		case "IdInput":
-			w = &idinput.IdInput{}
+			w = &idinput.IdInput{Name: f.Name}
 		default:
 			fmt.Println("not yet handling:", f.Type.Name())
 			if underscore != "" {
@@ -61,9 +62,10 @@ func New(defn any) (block *Block) {
 			}
 			continue
 		}
-		// N.B. below must only run when a valid widget has been created - note the use of continue above
-		widget.Setup(w, f.Name, string(tag))
+		// N.B. run when a valid widget has been created - note the use of continue above
+		widget.SetFields(w, string(tag))
 		block.widgets = append(block.widgets, w)
+		definition.SetupWidget(defn, f.Name)
 	}
 	if AddToLibrary == nil { // handle tests when AddToLibrary has not been injected by library.init()
 		if testing.Testing() {

@@ -70,16 +70,15 @@ func init() {
 }
 
 const (
-	TEST_LINES = `0 system.log(greeting"Hi",txt"Bob")`
+	TEST_LINES = `0 system.log(greeting"Hi",txt"Bob")
+1 system.after(secs#2,callback:3)
 
-// 1 system.after(secs#2,callback:3)
+3 system.log(greeting"Hello",txt"Jane")
+4 system.log(greeting"Bye",txt"Bob")
+5 system.after(secs#2,callback:6)
 
-// 3 system.log(greeting"Hello",txt"Jane")
-// 4 system.log(greeting"Bye",txt"Bob")
-// 5 system.after(secs#2,callback:6)
-
-// 6 system.log(greeting"Bye",txt"Jane")
-// `
+6 system.log(greeting"Bye",txt"Jane")
+`
 )
 
 func main() {

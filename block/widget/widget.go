@@ -13,19 +13,9 @@ type Widget interface {
 	Html() string
 }
 
-func Setup(widget any, name string, tag string) {
+func SetFields(widget any, tag string) {
 	// using reflection to set fields
 	v := reflect.ValueOf(widget).Elem() // i.e. pointer to struct
-	if name != "_" && name != "" {
-		// using reflection to set name
-		vName := v.FieldByName("Name")
-		if vName.CanSet() {
-			name = strings.ToLower(name[:1]) + name[1:] // lower case first letter
-			vName.SetString(name)
-		} else {
-			fmt.Printf("Cannot set Name field on %T\n", widget)
-		}
-	}
 
 	tagMap, err := tagToMap(tag)
 
@@ -33,7 +23,7 @@ func Setup(widget any, name string, tag string) {
 		fmt.Println("error :", err)
 		return
 	}
-	for key, str := range tagMap {
+	for key, str := range tagMap { // iterate through the tags
 		vField := v.FieldByName(key)
 		if vField.CanSet() {
 			switch vField.Type().Name() {
@@ -59,7 +49,6 @@ func Setup(widget any, name string, tag string) {
 				fmt.Printf("Unknown type '%s' for field '%s' with value '%s'\n", vField.Type().Name(), key, str)
 			}
 		}
-		// Note: TypeName and Class exist in Defn - not in widgets and txt used for widget txt to show
 	}
 
 }
