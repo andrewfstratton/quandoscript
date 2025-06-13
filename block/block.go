@@ -35,13 +35,13 @@ func New(defn any) (block *Block) {
 	for i := range t.NumField() {
 		f := t.Field(i)
 		tag := f.Tag
-		underscore := tag.Get("_")
+		underscoreTag := tag.Get("_")
 		if f.Name == "TypeName" {
-			block.TypeName = underscore
+			block.TypeName = underscoreTag
 			continue
 		}
 		if f.Name == "Class" {
-			block.Class = underscore
+			block.Class = underscoreTag
 			continue
 		}
 		// Otherwise check the type
@@ -57,8 +57,8 @@ func New(defn any) (block *Block) {
 			w = &idinput.IdInput{Name: f.Name}
 		default:
 			fmt.Println("not yet handling:", f.Type.Name())
-			if underscore != "" {
-				fmt.Println("_ = ", underscore)
+			if underscoreTag != "" {
+				fmt.Println("_ = ", underscoreTag)
 			}
 			continue
 		}
