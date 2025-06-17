@@ -1,7 +1,7 @@
 package text
 
 import (
-	"github.com/andrewfstratton/quandoscript/block/widget"
+	"quandoscript/block/widget"
 )
 
 type Text struct {

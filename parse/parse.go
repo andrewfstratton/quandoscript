@@ -9,9 +9,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/andrewfstratton/quandoscript/action"
-	"github.com/andrewfstratton/quandoscript/action/param"
-	"github.com/andrewfstratton/quandoscript/definition"
+	"quandoscript/action"
+	"quandoscript/action/param"
+	"quandoscript/definition"
 )
 
 var LibraryNewAction func(word string, early param.Params, late_params param.Params) *action.Action // injected by library

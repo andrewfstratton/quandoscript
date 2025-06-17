@@ -6,11 +6,11 @@ import (
 	"runtime/debug"
 	"testing"
 
-	"github.com/andrewfstratton/quandoscript/action"
-	"github.com/andrewfstratton/quandoscript/action/param"
-	"github.com/andrewfstratton/quandoscript/block"
-	"github.com/andrewfstratton/quandoscript/menu"
-	"github.com/andrewfstratton/quandoscript/parse"
+	"quandoscript/action"
+	"quandoscript/action/param"
+	"quandoscript/block"
+	"quandoscript/menu"
+	"quandoscript/parse"
 )
 
 const (
@@ -59,6 +59,10 @@ func NewAction(word string, early param.Params, late_params param.Params) *actio
 
 func Classes() []string {
 	return classes
+}
+
+func Menus(class string) *menu.Menu {
+	return menus[class]
 }
 
 func init() {

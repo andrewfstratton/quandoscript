@@ -3,12 +3,12 @@ package block
 import (
 	"testing"
 
-	"github.com/andrewfstratton/quandoscript/assert"
-	"github.com/andrewfstratton/quandoscript/block/widget/character"
-	"github.com/andrewfstratton/quandoscript/block/widget/numberinput"
-	"github.com/andrewfstratton/quandoscript/block/widget/percentinput"
-	"github.com/andrewfstratton/quandoscript/block/widget/stringinput"
-	"github.com/andrewfstratton/quandoscript/block/widget/text"
+	"quandoscript/assert"
+	"quandoscript/block/widget/character"
+	"quandoscript/block/widget/numberinput"
+	"quandoscript/block/widget/percentinput"
+	"quandoscript/block/widget/stringinput"
+	"quandoscript/block/widget/text"
 )
 
 func TestEmpty(t *testing.T) {

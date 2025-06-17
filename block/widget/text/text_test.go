@@ -3,8 +3,8 @@ package text
 import (
 	"testing"
 
-	"github.com/andrewfstratton/quandoscript/assert"
-	"github.com/andrewfstratton/quandoscript/block/widget"
+	"quandoscript/assert"
+	"quandoscript/block/widget"
 )
 
 func TestTextSimple(t *testing.T) {

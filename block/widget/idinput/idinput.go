@@ -3,7 +3,7 @@ package idinput
 import (
 	"fmt"
 
-	"github.com/andrewfstratton/quandoscript/action/param"
+	"quandoscript/action/param"
 )
 
 type IdInput struct {

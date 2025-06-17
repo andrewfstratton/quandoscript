@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/andrewfstratton/quandoscript/definition"
+	"quandoscript/definition"
 )
 
 type Param any // horrible but easiest - must be currently

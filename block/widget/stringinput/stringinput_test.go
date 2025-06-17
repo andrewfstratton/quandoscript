@@ -3,8 +3,8 @@ package stringinput
 import (
 	"testing"
 
-	"github.com/andrewfstratton/quandoscript/assert"
-	"github.com/andrewfstratton/quandoscript/block/widget"
+	"quandoscript/assert"
+	"quandoscript/block/widget"
 )
 
 func TestTextFieldEmpty(t *testing.T) { // n.b. should never happen

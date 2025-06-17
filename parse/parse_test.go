@@ -3,7 +3,7 @@ package parse
 import (
 	"testing"
 
-	"github.com/andrewfstratton/quandoscript/assert"
+	"quandoscript/assert"
 )
 
 func TestParseId(t *testing.T) {

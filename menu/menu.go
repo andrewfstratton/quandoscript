@@ -1,7 +1,7 @@
 package menu
 
 import (
-	"github.com/andrewfstratton/quandoscript/block"
+	"quandoscript/block"
 )
 
 const (
