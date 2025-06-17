@@ -2,17 +2,15 @@ package main
 
 import (
 	"fmt"
+	"quandoscript/action"
 	"quandoscript/action/param"
 	"quandoscript/block"
 	"quandoscript/block/widget/idinput"
 	"quandoscript/block/widget/numberinput"
 	"quandoscript/block/widget/stringinput"
 	"quandoscript/block/widget/text"
-	_ "quandoscript/library"
-	"quandoscript/parse"
+	"quandoscript/library"
 	"time"
-
-	"quandoscript/action"
 )
 
 type LogDefn struct {
@@ -112,7 +110,7 @@ const (
 )
 
 func main() {
-	parse.Lines(TEST_LINES)
+	library.Parse(TEST_LINES)
 	warn := action.Start()
 	if warn != "" {
 		fmt.Println(warn)

@@ -49,7 +49,7 @@ func FindBlock(block_type string) (block *block.Block, found bool) {
 	return
 }
 
-func NewAction(word string, early param.Params, late_params param.Params) *action.Action {
+func newAction(word string, early param.Params, late_params param.Params) *action.Action {
 	bt, found := FindBlock(word)
 	if !found {
 		fmt.Println("Error : New word failing")
@@ -67,8 +67,11 @@ func Menus(class string) *menu.Menu {
 	return menus[class]
 }
 
+func Parse(lines string) { // setup the whole script as actions for calling - only does early setup
+	parse.Lines(lines, newAction)
+}
+
 func init() {
 	blocks = make(map[string]*block.Block)
 	menus = make(map[string]*menu.Menu)
-	parse.LibraryNewAction = NewAction // inject function
 }

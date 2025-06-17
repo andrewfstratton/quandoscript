@@ -14,7 +14,7 @@ import (
 	"quandoscript/definition"
 )
 
-var LibraryNewAction func(word string, early param.Params, late_params param.Params) *action.Action // injected by library
+type NewAction func(word string, early param.Params, late_params param.Params) *action.Action // passed in by library
 
 type Input struct {
 	Line string
@@ -61,7 +61,7 @@ func line(line string) (lineid int, word string, params param.Params, err error)
 	return
 }
 
-func Lines(in string) { // setup the whole script as actions for calling - only does early setup
+func Lines(in string, libraryNewAction NewAction) { // setup the whole script as actions for calling - only does early setup
 	scanner := bufio.NewScanner(strings.NewReader(in))
 	new_group := true
 	for scanner.Scan() {
@@ -75,7 +75,7 @@ func Lines(in string) { // setup the whole script as actions for calling - only 
 		if err != nil {
 			fmt.Println(lineid, word, params, err)
 		}
-		o := LibraryNewAction(word, params, nil)
+		o := libraryNewAction(word, params, nil)
 		if new_group {
 			action.NewGroup()
 			new_group = false
