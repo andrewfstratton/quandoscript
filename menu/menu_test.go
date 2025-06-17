@@ -15,8 +15,13 @@ func TestNew(t *testing.T) {
 	assert.Eq(t, menu.class, "system")
 }
 
+type SimpleDefn struct {
+	TypeName string `_:"system.log"`
+	Class    string `_:"system"`
+}
+
 func TestAddBlock(t *testing.T) {
-	b := block.AddNew("quando.unique.id", "system")
+	b := block.New(&SimpleDefn{})
 	menu := New("system")
 	assert.Eq(t, len(menu.blocks), 0)
 	menu.Add(b)

@@ -4,60 +4,74 @@ import (
 	"testing"
 
 	"quandoscript/assert"
-	"quandoscript/block/widget/character"
 	"quandoscript/block/widget/numberinput"
 	"quandoscript/block/widget/percentinput"
 	"quandoscript/block/widget/stringinput"
 	"quandoscript/block/widget/text"
 )
 
-func TestEmpty(t *testing.T) {
-	block := AddNew("", "")  // test with empty class here
-	assert.Eq(t, block, nil) // n.b. will panic when not testing
+type FailDefn struct {
+	TypeName string
+	Class    string
 }
 
-func TestNewSimple(t *testing.T) {
-	block := AddNew("log", "")
-	assert.Eq(t, block.Class, "")
-	assert.Eq(t, block.TypeName, "log")
+func TestEmpty(t *testing.T) {
+	block := New(&FailDefn{}) // test with empty blocktype here
+	assert.Eq(t, block, nil)  // n.b. will panic when not testing
+}
 
-	block = AddNew("system.log", "sys")
+type TagDefn struct {
+	TypeName string `_:"system.log"`
+	Class    string `_:"sys"`
+}
+
+func TestEmptyTag(t *testing.T) {
+	block := New(&TagDefn{}) // test with struct initialised blocktype and class here
 	assert.Eq(t, block.Class, "quando-sys")
 	assert.Eq(t, block.TypeName, "system.log")
 }
 
-func TestNew(t *testing.T) {
-	block := AddNew("system.log", "system",
-		text.New("Log"),
-		character.New(character.FIXED_SPACE))
+type TextDefn struct {
+	TypeName string    `_:"system.log"`
+	Class    string    `_:"system"`
+	_        text.Text `txt:"Log "`
+}
+
+func TestNewFull(t *testing.T) {
+	block := New(&TextDefn{})
 	assert.Eq(t, block.Replace("{{ .Class }}"), "quando-system")
 	assert.Eq(t, block.Replace("{{ .TypeName }}"), "system.log")
-	assert.Eq(t, block.Replace("{{ .Widgets }}"), "Log&nbsp;")
+	assert.Eq(t, block.Replace("{{ .Widgets }}"), "Log ")
 	assert.Eq(t, block.Replace("{{ .Params }}"), "")
 }
 
-func TestNewStringInput(t *testing.T) {
-	block := AddNew("system.log", "system",
-		text.New("Log "),
-		stringinput.New("name"))
-	assert.Eq(t, block.Replace("{{ .Params }}"), `name"${name}"`)
+type InputDefn struct {
+	TypeName string    `_:"system.log"`
+	Class    string    `_:"system"`
+	_        text.Text `txt:"Log "`
+	Name     stringinput.StringInput
+	Num      numberinput.NumberInput
 }
 
-func TestNewNumberInput(t *testing.T) {
-	block := AddNew("system.log", "system",
-		text.New("Log "),
-		numberinput.New("num"))
-	assert.Eq(t, block.Replace("{{ .Params }}"), `num#${num}`)
-	assert.Eq(t, block.Replace("{{ .Widgets }}"),
-		`Log <input data-quando-name='num' type='number'/>`)
+func TestFullInput(t *testing.T) {
+	block := New(&InputDefn{})
+	assert.Eq(t, block.Replace("{{ .Class }}"), "quando-system")
+	assert.Eq(t, block.Replace("{{ .TypeName }}"), "system.log")
+	assert.Eq(t, block.Replace("{{ .Widgets }}"), `Log &quot;<input data-quando-name='Name' type='text'/>&quot;<input data-quando-name='Num' type='number'/>`)
+	assert.Eq(t, block.Replace("{{ .Params }}"), `Name"${Name}",Num#${Num}`)
 }
 
-func TestNewPercentInput(t *testing.T) {
-	block := AddNew("display.width", "display",
-		text.New("Width "),
-		percentinput.New("width"))
+type PercentDefn struct {
+	TypeName string    `_:"display.width"`
+	Class    string    `_:"display"`
+	_        text.Text `txt:"Width "`
+	Width    percentinput.PercentInput
+}
+
+func TestPercentInput(t *testing.T) {
+	block := New(&PercentDefn{})
 	assert.Eq(t, block.Replace("{{ .Class }}"), "quando-display")
 	assert.Eq(t, block.Replace("{{ .TypeName }}"), "display.width")
-	assert.Eq(t, block.Replace("{{ .Widgets }}"), `Width <input data-quando-name='width' type='number' min='0' max='100'/>%`)
-	assert.Eq(t, block.Replace("{{ .Params }}"), "width#${width}")
+	assert.Eq(t, block.Replace("{{ .Widgets }}"), `Width <input data-quando-name='Width' type='number' min='0' max='100'/>%`)
+	assert.Eq(t, block.Replace("{{ .Params }}"), `Width#${Width}`)
 }

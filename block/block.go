@@ -27,8 +27,6 @@ type Block struct {
 	Early    action.Early
 }
 
-var AddToLibrary func(*Block) // injected by library
-
 func New(defn any) (block *Block) {
 	t := reflect.TypeOf(defn).Elem() // i.e. pointer to struct
 	// 	N.B. TypeName and Class exist in Defn - not in widgets
@@ -70,37 +68,17 @@ func New(defn any) (block *Block) {
 		block.widgets = append(block.widgets, w)
 		definition.SetupWidget(defn, f.Name)
 	}
-	if AddToLibrary == nil { // handle tests when AddToLibrary has not been injected by library.init()
-		if testing.Testing() {
-			return
-		}
-		fmt.Println("Fatal Error: AddToLibrary is nil, cannot add block to library")
-	}
-	AddToLibrary(block)
-	return
-}
-
-func AddNew(typeName string, class string, widgets ...widget.Widget) (block *Block) {
-	if typeName == "" {
-		fmt.Println(`ATTEMPT TO CREATE BLOCK WITH "" BLOCK TYPE`)
+	if block.TypeName == "" {
+		fmt.Println(`ATTEMPT TO CREATE BLOCK WITH EMPTY ("") BLOCK TYPE`)
 		if testing.Testing() {
 			return nil
 		}
 		debug.PrintStack()
 		os.Exit(99)
 	}
-	if class != "" {
-		class = "quando-" + class
+	if block.Class != "" {
+		block.Class = "quando-" + block.Class // always insert quando- infront of class
 	}
-	block = &Block{
-		TypeName: typeName,
-		Class:    class,
-	}
-	block.widgets = append(block.widgets, widgets...)
-	if testing.Testing() && AddToLibrary == nil { // handle tests when AddToLibrary has not been injected by library.init()
-		return
-	}
-	AddToLibrary(block)
 	return
 }
 

@@ -3,17 +3,18 @@ package library
 import (
 	"testing"
 
-	"quandoscript/action/param"
 	"quandoscript/assert"
-	"quandoscript/block"
 )
 
+type SimpleDefn struct {
+	TypeName string `_:"system.log"`
+	Class    string `_:"system"`
+}
+
 func TestNew(t *testing.T) {
-	b := block.AddNew("", "system")
-	assert.True(t, b == nil)
 	assert.True(t, menus != nil)
 	assert.True(t, blocks != nil)
-	b = block.AddNew("system.log", "system")
+	b := Block(&SimpleDefn{})
 	assert.True(t, b != nil)
 }
 
@@ -22,26 +23,23 @@ func TestFind(t *testing.T) {
 	assert.True(t, b == nil)
 	assert.Eq(t, found, false)
 
-	b, found = FindBlock("display.log")
+	b, found = FindBlock("system.log")
 	assert.True(t, b == nil)
 	assert.Eq(t, found, false)
 
-	block.AddNew("display.log", "display")
-	b, found = FindBlock("display.log")
+	Block(&SimpleDefn{}) // don't keep reference here...
+	b, found = FindBlock("system.log")
 	assert.True(t, b != nil)
 	assert.Eq(t, found, true)
 }
 
-func TestString(t *testing.T) {
-	params := param.Params{}
-	none := param.StringParam{Lookup: "", Val: ""}
-	none.Update(params)
-	assert.Eq(t, none.Val, "")
+type SimpleDefn2 struct {
+	TypeName string `_:"display.show"`
+	Class    string `_:"display"`
 }
 
 func TestClasses(t *testing.T) {
-	block.AddNew("system.log", "system")
-	block.AddNew("display.show", "display")
-	block.AddNew("debug", "")
-	assert.Eq(t, len(Classes()), 3)
+	Block(&SimpleDefn{})
+	Block(&SimpleDefn2{})
+	assert.Eq(t, len(Classes()), 2)
 }
