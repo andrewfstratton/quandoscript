@@ -14,6 +14,7 @@ import (
 	"quandoscript/block/widget"
 	"quandoscript/block/widget/idinput"
 	"quandoscript/block/widget/numberinput"
+	"quandoscript/block/widget/percentinput"
 	"quandoscript/block/widget/stringinput"
 	"quandoscript/block/widget/text"
 	"quandoscript/definition"
@@ -55,6 +56,8 @@ func New(defn any) (block *Block) {
 			w = &numberinput.NumberInput{Name: f.Name}
 		case "IdInput":
 			w = &idinput.IdInput{Name: f.Name}
+		case "PercentInput":
+			w = &percentinput.PercentInput{Name: f.Name}
 		default:
 			fmt.Println("not yet handling:", f.Type.Name())
 			if underscoreTag != "" {
