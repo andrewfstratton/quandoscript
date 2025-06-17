@@ -3,8 +3,8 @@ package menu
 import (
 	"testing"
 
-	"quandoscript/assert"
-	"quandoscript/block"
+	"github.com/andrewfstratton/quandoscript/assert"
+	"github.com/andrewfstratton/quandoscript/block"
 )
 
 func TestNew(t *testing.T) {

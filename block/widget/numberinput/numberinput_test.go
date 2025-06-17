@@ -3,8 +3,8 @@ package numberinput
 import (
 	"testing"
 
-	"quandoscript/assert"
-	"quandoscript/block/widget"
+	"github.com/andrewfstratton/quandoscript/assert"
+	"github.com/andrewfstratton/quandoscript/block/widget"
 )
 
 func TestNumberEmpty(t *testing.T) { // n.b. should never happen

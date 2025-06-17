@@ -3,7 +3,7 @@ package numberinput
 import (
 	"fmt"
 
-	"quandoscript/action/param"
+	"github.com/andrewfstratton/quandoscript/action/param"
 )
 
 type Pfloat *float64

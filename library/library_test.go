@@ -3,7 +3,7 @@ package library
 import (
 	"testing"
 
-	"quandoscript/assert"
+	"github.com/andrewfstratton/quandoscript/assert"
 )
 
 type SimpleDefn struct {

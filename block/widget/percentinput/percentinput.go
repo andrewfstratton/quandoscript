@@ -3,7 +3,7 @@ package percentinput
 import (
 	"fmt"
 
-	"quandoscript/block/widget/numberinput"
+	"github.com/andrewfstratton/quandoscript/block/widget/numberinput"
 )
 
 type PercentInput struct {

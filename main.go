@@ -2,15 +2,16 @@ package main
 
 import (
 	"fmt"
-	"quandoscript/action"
-	"quandoscript/action/param"
-	"quandoscript/block"
-	"quandoscript/block/widget/idinput"
-	"quandoscript/block/widget/numberinput"
-	"quandoscript/block/widget/stringinput"
-	"quandoscript/block/widget/text"
-	"quandoscript/library"
 	"time"
+
+	"github.com/andrewfstratton/quandoscript/action"
+	"github.com/andrewfstratton/quandoscript/action/param"
+	"github.com/andrewfstratton/quandoscript/block"
+	"github.com/andrewfstratton/quandoscript/block/widget/idinput"
+	"github.com/andrewfstratton/quandoscript/block/widget/numberinput"
+	"github.com/andrewfstratton/quandoscript/block/widget/stringinput"
+	"github.com/andrewfstratton/quandoscript/block/widget/text"
+	"github.com/andrewfstratton/quandoscript/library"
 )
 
 type LogDefn struct {

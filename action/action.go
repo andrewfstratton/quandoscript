@@ -1,7 +1,7 @@
 package action
 
 import (
-	"quandoscript/action/param"
+	"github.com/andrewfstratton/quandoscript/action/param"
 )
 
 type Action struct {

@@ -3,7 +3,7 @@ package stringinput
 import (
 	"fmt"
 
-	"quandoscript/action/param"
+	"github.com/andrewfstratton/quandoscript/action/param"
 )
 
 type StringInput struct {

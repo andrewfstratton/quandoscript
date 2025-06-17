@@ -3,11 +3,11 @@ package block
 import (
 	"testing"
 
-	"quandoscript/assert"
-	"quandoscript/block/widget/numberinput"
-	"quandoscript/block/widget/percentinput"
-	"quandoscript/block/widget/stringinput"
-	"quandoscript/block/widget/text"
+	"github.com/andrewfstratton/quandoscript/assert"
+	"github.com/andrewfstratton/quandoscript/block/widget/numberinput"
+	"github.com/andrewfstratton/quandoscript/block/widget/percentinput"
+	"github.com/andrewfstratton/quandoscript/block/widget/stringinput"
+	"github.com/andrewfstratton/quandoscript/block/widget/text"
 )
 
 type FailDefn struct {

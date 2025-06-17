@@ -6,11 +6,11 @@ import (
 	"runtime/debug"
 	"testing"
 
-	"quandoscript/action"
-	"quandoscript/action/param"
-	"quandoscript/block"
-	"quandoscript/menu"
-	"quandoscript/parse"
+	"github.com/andrewfstratton/quandoscript/action"
+	"github.com/andrewfstratton/quandoscript/action/param"
+	"github.com/andrewfstratton/quandoscript/block"
+	"github.com/andrewfstratton/quandoscript/menu"
+	"github.com/andrewfstratton/quandoscript/parse"
 )
 
 const (

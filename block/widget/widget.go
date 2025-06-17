@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"quandoscript/parse"
+	"github.com/andrewfstratton/quandoscript/parse"
 )
 
 type Widget interface {

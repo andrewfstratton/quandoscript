@@ -9,15 +9,15 @@ import (
 	"testing"
 	"text/template"
 
-	"quandoscript/action"
-	"quandoscript/block/script"
-	"quandoscript/block/widget"
-	"quandoscript/block/widget/idinput"
-	"quandoscript/block/widget/numberinput"
-	"quandoscript/block/widget/percentinput"
-	"quandoscript/block/widget/stringinput"
-	"quandoscript/block/widget/text"
-	"quandoscript/definition"
+	"github.com/andrewfstratton/quandoscript/action"
+	"github.com/andrewfstratton/quandoscript/block/script"
+	"github.com/andrewfstratton/quandoscript/block/widget"
+	"github.com/andrewfstratton/quandoscript/block/widget/idinput"
+	"github.com/andrewfstratton/quandoscript/block/widget/numberinput"
+	"github.com/andrewfstratton/quandoscript/block/widget/percentinput"
+	"github.com/andrewfstratton/quandoscript/block/widget/stringinput"
+	"github.com/andrewfstratton/quandoscript/block/widget/text"
+	"github.com/andrewfstratton/quandoscript/definition"
 )
 
 type Block struct {
