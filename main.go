@@ -63,7 +63,7 @@ func init_after() {
 		})
 }
 
-type EveryDefn struct {
+type Every struct {
 	TypeName struct{}                `_:"system.every"`
 	Class    struct{}                `_:"misc"`
 	_        text.Text               `txt:"Every " iconify:"true"`
@@ -73,11 +73,11 @@ type EveryDefn struct {
 }
 
 func init_every() {
-	every := &EveryDefn{}
-	block.New(every).Op(
+	defn := &Every{}
+	block.New(defn).Op(
 		func(early param.Params) func(param.Params) {
-			secs := every.Secs.Param(early)
-			callback := every.Callback.Param(early)
+			secs := defn.Secs.Param(early)
+			callback := defn.Callback.Param(early)
 			return func(late param.Params) {
 				secs.Update(late)
 				callback.Update(late)
