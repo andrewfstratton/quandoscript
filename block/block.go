@@ -27,7 +27,7 @@ type Block struct {
 	Early    action.Early
 }
 
-func Create(defn any) (block *Block) {
+func CreateFromDefinition(defn any) (block *Block) {
 	t := reflect.TypeOf(defn).Elem() // i.e. pointer to struct
 	// 	N.B. TypeName and Class exist in Defn - not in widgets
 	block = &Block{}

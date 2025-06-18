@@ -23,7 +23,7 @@ var menus map[string]*menu.Menu    // groups of blocks by 'class' for menu
 var classes []string
 
 func Block(defn any) (b *block.Block) { // call through block New
-	b = block.Create(defn)
+	b = block.CreateFromDefinition(defn)
 	_, inuse := blocks[b.TypeName]
 	if inuse {
 		fmt.Println(`BLOCK "` + b.TypeName + `" ALREADY EXISTS`)
