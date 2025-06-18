@@ -38,7 +38,7 @@ func init_log() { // sets up the Block (UI) ONLY  - doesn't setup any action eve
 		})
 }
 
-type AfterDefn struct {
+type Defn struct {
 	TypeName struct{}                `_:"system.after"`
 	Class    struct{}                `_:"misc"`
 	_        text.Text               `txt:"After " iconify:"true"`
@@ -48,11 +48,11 @@ type AfterDefn struct {
 }
 
 func init_after() {
-	after := &AfterDefn{}
-	block.New(after).Op(
+	defn := &Defn{}
+	block.New(defn).Op(
 		func(early param.Params) func(param.Params) {
-			secs := after.Secs.Param(early)
-			callback := after.Callback.Param(early)
+			secs := defn.Secs.Param(early)
+			callback := defn.Callback.Param(early)
 			return func(late param.Params) {
 				secs.Update(late)
 				callback.Update(late)
