@@ -6,8 +6,10 @@ import (
 	"github.com/andrewfstratton/quandoscript/action/param"
 )
 
-type Pfloat *float64
-type Pint *int64
+type (
+	Pfloat *float64
+	Pint   *int64
+)
 
 type NumberInput struct {
 	Name    string
