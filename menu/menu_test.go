@@ -21,7 +21,7 @@ type SimpleDefn struct {
 }
 
 func TestAddBlock(t *testing.T) {
-	b := block.New(&SimpleDefn{})
+	b := block.Create(&SimpleDefn{})
 	menu := New("system")
 	assert.Eq(t, len(menu.blocks), 0)
 	menu.Add(b)

@@ -16,8 +16,8 @@ type FailDefn struct {
 }
 
 func TestEmpty(t *testing.T) {
-	block := New(&FailDefn{}) // test with empty blocktype here
-	assert.Eq(t, block, nil)  // n.b. will panic when not testing
+	block := Create(&FailDefn{}) // test with empty blocktype here
+	assert.Eq(t, block, nil)     // n.b. will panic when not testing
 }
 
 type TagDefn struct {
@@ -26,7 +26,7 @@ type TagDefn struct {
 }
 
 func TestEmptyTag(t *testing.T) {
-	block := New(&TagDefn{}) // test with struct initialised blocktype and class here
+	block := Create(&TagDefn{}) // test with struct initialised blocktype and class here
 	assert.Eq(t, block.Class, "quando-sys")
 	assert.Eq(t, block.TypeName, "system.log")
 }
@@ -38,7 +38,7 @@ type TextDefn struct {
 }
 
 func TestNewFull(t *testing.T) {
-	block := New(&TextDefn{})
+	block := Create(&TextDefn{})
 	assert.Eq(t, block.Replace("{{ .Class }}"), "quando-system")
 	assert.Eq(t, block.Replace("{{ .TypeName }}"), "system.log")
 	assert.Eq(t, block.Replace("{{ .Widgets }}"), "Log ")
@@ -54,7 +54,7 @@ type InputDefn struct {
 }
 
 func TestFullInput(t *testing.T) {
-	block := New(&InputDefn{})
+	block := Create(&InputDefn{})
 	assert.Eq(t, block.Replace("{{ .Class }}"), "quando-system")
 	assert.Eq(t, block.Replace("{{ .TypeName }}"), "system.log")
 	assert.Eq(t, block.Replace("{{ .Widgets }}"), `Log &quot;<input data-quando-name='Name' type='text'/>&quot;<input data-quando-name='Num' type='number'/>`)
@@ -69,7 +69,7 @@ type PercentDefn struct {
 }
 
 func TestPercentInput(t *testing.T) {
-	block := New(&PercentDefn{})
+	block := Create(&PercentDefn{})
 	assert.Eq(t, block.Replace("{{ .Class }}"), "quando-display")
 	assert.Eq(t, block.Replace("{{ .TypeName }}"), "display.width")
 	assert.Eq(t, block.Replace("{{ .Widgets }}"), `Width <input data-quando-name='Width' type='number' min='0' max='100'/>%`)

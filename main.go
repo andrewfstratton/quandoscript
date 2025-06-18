@@ -6,7 +6,6 @@ import (
 
 	"github.com/andrewfstratton/quandoscript/action"
 	"github.com/andrewfstratton/quandoscript/action/param"
-	"github.com/andrewfstratton/quandoscript/block"
 	"github.com/andrewfstratton/quandoscript/block/widget/idinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/numberinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/stringinput"
@@ -25,7 +24,7 @@ type LogDefn struct {
 
 func init_log() { // sets up the Block (UI) ONLY  - doesn't setup any action even though the early/late functions are referenced
 	log := &LogDefn{}
-	block.New(log).Op(
+	library.Block(log).Op(
 		func(early param.Params) func(param.Params) {
 			greeting := log.Greeting.Param(early)
 			txt := log.Txt.Param(early)
@@ -49,7 +48,7 @@ type Defn struct {
 
 func init_after() {
 	defn := &Defn{}
-	block.New(defn).Op(
+	library.Block(defn).Op(
 		func(early param.Params) func(param.Params) {
 			secs := defn.Secs.Param(early)
 			callback := defn.Callback.Param(early)
@@ -74,7 +73,7 @@ type Every struct {
 
 func init_every() {
 	defn := &Every{}
-	block.New(defn).Op(
+	library.Block(defn).Op(
 		func(early param.Params) func(param.Params) {
 			secs := defn.Secs.Param(early)
 			callback := defn.Callback.Param(early)
@@ -89,6 +88,7 @@ func init_every() {
 			}
 		})
 }
+
 func init() {
 	init_log()
 	init_after()
@@ -96,17 +96,17 @@ func init() {
 }
 
 const (
-	TEST_LINES = `0 system.log(greeting"Hi",txt"Bob")
-1 system.after(secs#2,callback:3)
-2 system.every(secs#0.5,callback:7)
+	TEST_LINES = `0 system.log(Greeting"Hi",Txt"Bob")
+1 system.after(Secs#2,Callback:3)
+2 system.every(Secs#0.5,Callback:7)
 
-3 system.log(greeting"Hello",txt"Jane")
-4 system.log(greeting"Bye",txt"Bob")
-5 system.after(secs#0.9,callback:6)
+3 system.log(Greeting"Hello",Txt"Jane")
+4 system.log(Greeting"Bye",Txt"Bob")
+5 system.after(Secs#0.9,Callback:6)
 
-6 system.log(greeting"Bye",txt"Jane")
+6 system.log(Greeting"Bye",Txt"Jane")
 
-7 system.log(txt".")
+7 system.log(Txt".")
 `
 )
 
