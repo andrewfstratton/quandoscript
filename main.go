@@ -6,7 +6,7 @@ import (
 
 	"github.com/andrewfstratton/quandoscript/action"
 	"github.com/andrewfstratton/quandoscript/action/param"
-	"github.com/andrewfstratton/quandoscript/block/widget/idinput"
+	"github.com/andrewfstratton/quandoscript/block/widget/boxinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/numberinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/stringinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/text"
@@ -43,7 +43,7 @@ type Defn struct {
 	_        text.Text               `txt:"After " iconify:"true"`
 	Secs     numberinput.NumberInput `empty:"seconds" min:"0" max:"999" width:"4" default:"1"` // min:0 max:999 width:4 default:1`
 	_        text.Text               `txt:"seconds"`
-	Callback idinput.IdInput
+	Callback boxinput.BoxInput       `txt:"box"`
 }
 
 func init_after() {
@@ -68,7 +68,7 @@ type Every struct {
 	_        text.Text               `txt:"Every " iconify:"true"`
 	Secs     numberinput.NumberInput `empty:"seconds" min:"0" max:"999" width:"4" default:"1"`
 	_        text.Text               `txt:"seconds"`
-	Callback idinput.IdInput
+	Callback boxinput.BoxInput       `txt:"box"`
 }
 
 func init_every() {

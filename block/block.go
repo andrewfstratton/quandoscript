@@ -12,7 +12,7 @@ import (
 	"github.com/andrewfstratton/quandoscript/action"
 	"github.com/andrewfstratton/quandoscript/block/script"
 	"github.com/andrewfstratton/quandoscript/block/widget"
-	"github.com/andrewfstratton/quandoscript/block/widget/idinput"
+	"github.com/andrewfstratton/quandoscript/block/widget/boxinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/numberinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/percentinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/stringinput"
@@ -52,8 +52,8 @@ func CreateFromDefinition(defn any) (block *Block) {
 			w = &stringinput.StringInput{Name: f.Name}
 		case "NumberInput":
 			w = &numberinput.NumberInput{Name: f.Name}
-		case "IdInput":
-			w = &idinput.IdInput{Name: f.Name}
+		case "BoxInput":
+			w = &boxinput.BoxInput{Name: f.Name}
 		case "PercentInput":
 			w = &percentinput.PercentInput{Name: f.Name}
 		default:
