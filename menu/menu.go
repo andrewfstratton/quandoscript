@@ -9,21 +9,21 @@ const (
 )
 
 type Menu struct {
-	class  string
-	blocks []block.Block
+	Class  string
+	Blocks []block.Block
 }
 
 func New(class string) *Menu {
-	return &Menu{class: class}
+	return &Menu{Class: class}
 }
 
 func (menu *Menu) Add(block *block.Block) {
-	menu.blocks = append(menu.blocks, *block)
+	menu.Blocks = append(menu.Blocks, *block)
 }
 
 func (menu *Menu) CSSClass(prefix string) string {
-	if menu.class == "" {
+	if menu.Class == "" {
 		return prefix + UNKNOWN_CLASS
 	}
-	return prefix + menu.class
+	return prefix + menu.Class
 }

@@ -63,7 +63,7 @@ func Classes() []string {
 	return classes
 }
 
-func Menus(class string) *menu.Menu {
+func Menu(class string) *menu.Menu {
 	return menus[class]
 }
 

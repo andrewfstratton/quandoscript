@@ -9,10 +9,10 @@ import (
 
 func TestNew(t *testing.T) {
 	menu := New("")
-	assert.Eq(t, menu.class, "")
+	assert.Eq(t, menu.Class, "")
 
 	menu = New("system")
-	assert.Eq(t, menu.class, "system")
+	assert.Eq(t, menu.Class, "system")
 }
 
 type SimpleDefn struct {
@@ -23,9 +23,9 @@ type SimpleDefn struct {
 func TestAddBlock(t *testing.T) {
 	b := block.CreateFromDefinition(&SimpleDefn{})
 	menu := New("system")
-	assert.Eq(t, len(menu.blocks), 0)
+	assert.Eq(t, len(menu.Blocks), 0)
 	menu.Add(b)
-	assert.Eq(t, len(menu.blocks), 1)
+	assert.Eq(t, len(menu.Blocks), 1)
 }
 
 func TestClass(t *testing.T) {
