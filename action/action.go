@@ -13,13 +13,13 @@ type Action struct {
 
 var actions map[int]*Action // map id to action
 var last *Action
-var startId int = -1
+var startId int = 0
 
 type Early func(param.Params) func(param.Params) // outer/setup function that returns late inner function
 type Late func(param.Params)                     // inner function that is run every invocation
 
 func New(late Late, params param.Params) *Action {
-	action := Action{late: late, params: params, nextId: -1} // N.B. -1 is to show no following action
+	action := Action{late: late, params: params, nextId: 0} // N.B. 0 is to show no following action
 	return &action
 }
 
@@ -28,7 +28,7 @@ func NewGroup() {
 }
 
 func Add(id int, action *Action) {
-	if startId == -1 {
+	if startId == 0 {
 		startId = id
 	}
 	actions[id] = action
@@ -39,7 +39,7 @@ func Add(id int, action *Action) {
 }
 
 func Run(id int) {
-	for id != -1 {
+	for id != 0 {
 		act := actions[id]
 		act.late(act.params)
 		id = act.nextId
@@ -47,7 +47,7 @@ func Run(id int) {
 }
 
 func Start() (warn string) {
-	if startId == -1 {
+	if startId == 0 {
 		return "No actions found"
 	}
 	Run(startId)
