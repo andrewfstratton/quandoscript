@@ -62,16 +62,16 @@ func line(line string) (lineid int, word string, params param.Params, err error)
 }
 
 func Lines(in string, libraryNewAction NewAction) { // setup the whole script as actions for calling - only does early setup
-	scanner := bufio.NewScanner(strings.NewReader(in))
+	line_scanner := bufio.NewScanner(strings.NewReader(in))
 	new_group := true
-	for scanner.Scan() {
-		in := scanner.Text()
+	for line_scanner.Scan() {
+		in := line_scanner.Text()
 		if in == "" {
 			// fmt.Println("End of main block")
 			new_group = true
 			continue
 		}
-		lineid, word, params, err := line(scanner.Text())
+		lineid, word, params, err := line(line_scanner.Text())
 		if err != nil {
 			fmt.Println(lineid, word, params, err)
 		}
