@@ -49,8 +49,8 @@ type InputDefn struct {
 	TypeName string    `_:"system.log"`
 	Class    string    `_:"system"`
 	_        text.Text `txt:"Log "`
-	Name     stringinput.StringInput
-	Num      numberinput.NumberInput
+	Name     stringinput.String
+	Num      numberinput.Number
 }
 
 func TestFullInput(t *testing.T) {
@@ -65,7 +65,7 @@ type PercentDefn struct {
 	TypeName string    `_:"display.width"`
 	Class    string    `_:"display"`
 	_        text.Text `txt:"Width "`
-	Width    percentinput.PercentInput
+	Width    percentinput.Percent
 }
 
 func TestPercentInput(t *testing.T) {

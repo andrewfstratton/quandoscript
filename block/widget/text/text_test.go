@@ -8,10 +8,11 @@ import (
 )
 
 func TestTextSimple(t *testing.T) {
-	txt := New("")
+	txt := New()
 	assert.Eq(t, txt.Html(), "")
 
-	txt = New("Hello")
+	txt = New()
+	widget.SetFields(txt, `txt:"Hello"`)
 	assert.Eq(t, txt.Html(), "Hello")
 	widget.SetFields(txt, `italic:"true"`)
 	assert.Eq(t, txt.Italic, true)

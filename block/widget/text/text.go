@@ -11,8 +11,8 @@ type Text struct {
 	Iconify bool
 }
 
-func New(t string) *Text {
-	return &Text{Txt: t}
+func New() *Text {
+	return &Text{}
 }
 
 func (t *Text) Html() (txt string) {

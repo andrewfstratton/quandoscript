@@ -50,15 +50,15 @@ func CreateFromDefinition(defn any) (block *Block) {
 		_, typeName := path.Split(fullTypeName) // split on last /
 		switch typeName {
 		case "text.Text":
-			w = &text.Text{}
+			w = text.New()
 		case "stringinput.String":
-			w = &stringinput.String{Name: f.Name}
+			w = stringinput.New(f.Name)
 		case "numberinput.Number":
-			w = &numberinput.Number{Name: f.Name}
+			w = numberinput.New(f.Name)
 		case "boxinput.Box":
-			w = &boxinput.Box{Name: f.Name}
+			w = boxinput.New(f.Name)
 		case "percentinput.Percent":
-			w = &percentinput.Percent{Name: f.Name}
+			w = percentinput.New(f.Name)
 		default:
 			fmt.Println("Block:CreateFromDefinition() not handling:", fullTypeName, "as", typeName)
 			continue
