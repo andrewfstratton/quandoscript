@@ -14,6 +14,7 @@ import (
 	"github.com/andrewfstratton/quandoscript/block/script"
 	"github.com/andrewfstratton/quandoscript/block/widget"
 	"github.com/andrewfstratton/quandoscript/block/widget/boxinput"
+	"github.com/andrewfstratton/quandoscript/block/widget/menuinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/numberinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/percentinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/stringinput"
@@ -59,6 +60,8 @@ func CreateFromDefinition(defn any) (block *Block) {
 			w = boxinput.New(f.Name)
 		case "percentinput.Percent":
 			w = percentinput.New(f.Name)
+		case "menuinput.MenuInt":
+			w = menuinput.NewMenuInt(f.Name)
 		default:
 			fmt.Println("Block:CreateFromDefinition() not handling:", fullTypeName, "as", typeName)
 			continue

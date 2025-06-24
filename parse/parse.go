@@ -110,6 +110,12 @@ func (input *Input) GetWord() string {
 	return input.matchStart("[a-zA-Z][a-zA-Z0-9_.]*", "word starting a-z or A-Z")
 }
 
+// removes and returns a tag at start of input.Line, or err if missing.
+// tag contains multiple letter|digit|_|.
+func (input *Input) GetTagKey() string {
+	return input.matchStart("[a-zA-Z0-9_.]*", "tag key containing a-z or A-Z or 0..9 or _ or .")
+}
+
 // removes and returns a string" at start of input.Line, or err if missing.
 // the string may contain \\, \", \t and \n, which will be substituted
 // N.B. string does NOT start with '"' - this will already have parsed

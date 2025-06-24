@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/andrewfstratton/quandoscript/block/widget/menuinput"
 	"github.com/andrewfstratton/quandoscript/parse"
 )
 
@@ -25,7 +26,19 @@ func SetFields(widget any, tag string) {
 	}
 	for key, str := range tagMap { // iterate through the tags
 		vField := v.FieldByName(key)
-		if vField.CanSet() {
+		if !vField.CanSet() {
+			if v.Type().Name() == "MenuInt" { // need to set map[int]string
+				mi, ok := widget.(*menuinput.MenuInt)
+				if ok {
+					i, err := strconv.Atoi(key)
+					if err == nil {
+						mi.Choices[i] = str
+						continue
+					}
+				}
+			}
+			fmt.Printf("SetFields cannot set field '%s' in widget type '%s' with value '%s'\n", key, v.Type().Name(), str)
+		} else {
 			switch vField.Type().Name() {
 			case "string":
 				vField.SetString(str)
@@ -57,7 +70,7 @@ func tagToMap(tag string) (tagMap map[string]string, err error) {
 	input := parse.Input{Line: tag}
 	tagMap = make(map[string]string)
 	for input.Line != "" {
-		key := input.GetWord() // ends when it runs out of letter/digit/_ which is by chance the same as :?!
+		key := input.GetTagKey() // ends when it runs out of letter/digit/_/. which will be at the ':' separator
 		if input.Err != nil {
 			err = input.Err
 			return
