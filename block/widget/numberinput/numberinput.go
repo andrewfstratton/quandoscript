@@ -11,7 +11,7 @@ type (
 	Pint   *int64
 )
 
-type NumberInput struct {
+type Number struct {
 	Name    string
 	Default Pfloat
 	Empty   string
@@ -20,11 +20,11 @@ type NumberInput struct {
 	Max     Pint
 }
 
-func New(name string) *NumberInput {
-	return &NumberInput{Name: name}
+func New(name string) *Number {
+	return &Number{Name: name}
 }
 
-func (ni *NumberInput) Html() (txt string) {
+func (ni *Number) Html() (txt string) {
 	txt = fmt.Sprintf("<input data-quando-name='%v' type='number'", ni.Name)
 	if ni.Default != nil {
 		txt += fmt.Sprintf(" value='%v'", *ni.Default)
@@ -46,10 +46,10 @@ func (ni *NumberInput) Html() (txt string) {
 	return
 }
 
-func (ni *NumberInput) Generate() string {
+func (ni *Number) Generate() string {
 	return fmt.Sprintf(`%v#${%v}`, ni.Name, ni.Name)
 }
 
-func (ni *NumberInput) Param(outer param.Params) *param.NumberParam {
+func (ni *Number) Param(outer param.Params) *param.NumberParam {
 	return param.NewNumber(ni.Name, 0, outer)
 }

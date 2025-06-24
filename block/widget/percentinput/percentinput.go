@@ -6,18 +6,18 @@ import (
 	"github.com/andrewfstratton/quandoscript/block/widget/numberinput"
 )
 
-type PercentInput struct {
+type Percent struct {
 	Name    string
 	Default numberinput.Pfloat
 	Empty   string
 	Width   numberinput.Pint
 }
 
-func New(name string) *PercentInput {
-	return &PercentInput{Name: name}
+func New(name string) *Percent {
+	return &Percent{Name: name}
 }
 
-func (pi *PercentInput) Html() (txt string) {
+func (pi *Percent) Html() (txt string) {
 	txt = fmt.Sprintf("<input data-quando-name='%v' type='number'", pi.Name)
 	if pi.Default != nil {
 		txt += fmt.Sprintf(" value='%v'", *pi.Default)
@@ -32,6 +32,6 @@ func (pi *PercentInput) Html() (txt string) {
 	return
 }
 
-func (pi *PercentInput) Generate() string {
+func (pi *Percent) Generate() string {
 	return fmt.Sprintf(`%v#${%v}`, pi.Name, pi.Name)
 }

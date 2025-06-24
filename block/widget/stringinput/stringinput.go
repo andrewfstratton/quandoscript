@@ -6,17 +6,17 @@ import (
 	"github.com/andrewfstratton/quandoscript/action/param"
 )
 
-type StringInput struct {
+type String struct {
 	Name    string
 	Default string
 	Empty   string
 }
 
-func New(name string) *StringInput {
-	return &StringInput{Name: name}
+func New(name string) *String {
+	return &String{Name: name}
 }
 
-func (si *StringInput) Html() (txt string) {
+func (si *String) Html() (txt string) {
 	txt = `&quot;<input data-quando-name='` + si.Name + `' type='text'`
 	if si.Default != "" {
 		txt += " value='" + si.Default + "'"
@@ -28,10 +28,10 @@ func (si *StringInput) Html() (txt string) {
 	return
 }
 
-func (si *StringInput) Generate() string {
+func (si *String) Generate() string {
 	return fmt.Sprintf(`%v"${%v}"`, si.Name, si.Name)
 }
 
-func (si *StringInput) Param(outer param.Params) *param.StringParam {
+func (si *String) Param(outer param.Params) *param.StringParam {
 	return param.NewString(si.Name, "", outer)
 }

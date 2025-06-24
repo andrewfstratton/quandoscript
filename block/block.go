@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"path"
 	"reflect"
 	"runtime/debug"
 	"testing"
@@ -45,22 +46,21 @@ func CreateFromDefinition(defn any) (block *Block) {
 		}
 		// Otherwise check the type
 		var w widget.Widget
-		switch f.Type.Name() {
-		case "Text":
+		fullTypeName := f.Type.PkgPath() + "." + f.Type.Name()
+		_, typeName := path.Split(fullTypeName) // split on last /
+		switch typeName {
+		case "text.Text":
 			w = &text.Text{}
-		case "StringInput":
-			w = &stringinput.StringInput{Name: f.Name}
-		case "NumberInput":
-			w = &numberinput.NumberInput{Name: f.Name}
-		case "BoxInput":
-			w = &boxinput.BoxInput{Name: f.Name}
-		case "PercentInput":
-			w = &percentinput.PercentInput{Name: f.Name}
+		case "stringinput.String":
+			w = &stringinput.String{Name: f.Name}
+		case "numberinput.Number":
+			w = &numberinput.Number{Name: f.Name}
+		case "boxinput.Box":
+			w = &boxinput.Box{Name: f.Name}
+		case "percentinput.Percent":
+			w = &percentinput.Percent{Name: f.Name}
 		default:
-			fmt.Println("not yet handling:", f.Type.Name())
-			if underscoreTag != "" {
-				fmt.Println("_ = ", underscoreTag)
-			}
+			fmt.Println("Block:CreateFromDefinition() not handling:", fullTypeName, "as", typeName)
 			continue
 		}
 		// N.B. run when a valid widget has been created - note the use of continue above
