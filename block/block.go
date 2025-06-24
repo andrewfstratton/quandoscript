@@ -41,8 +41,8 @@ func CreateFromDefinition(defn any) (block *Block) {
 			block.TypeName = underscoreTag
 			continue
 		}
-		if f.Name == "Class" {
-			block.Class = underscoreTag
+		if f.Name == "Class" && underscoreTag != "" {
+			block.Class = "quando-" + underscoreTag // always insert quando- infront of class
 			continue
 		}
 		// Otherwise check the type
@@ -57,7 +57,7 @@ func CreateFromDefinition(defn any) (block *Block) {
 		case "numberinput.Number":
 			w = numberinput.New(f.Name)
 		case "boxinput.Box":
-			w = boxinput.New(f.Name)
+			w = boxinput.New(f.Name, block.Class)
 		case "percentinput.Percent":
 			w = percentinput.New(f.Name)
 		case "menuinput.MenuInt":
@@ -78,9 +78,6 @@ func CreateFromDefinition(defn any) (block *Block) {
 		}
 		debug.PrintStack()
 		os.Exit(99)
-	}
-	if block.Class != "" {
-		block.Class = "quando-" + block.Class // always insert quando- infront of class
 	}
 	return
 }
