@@ -10,21 +10,29 @@ import (
 	"github.com/andrewfstratton/quandoscript/parse"
 )
 
-type Widget interface {
-	Html() string
-}
+type (
+	Widget interface {
+		Html() string
+	}
+	Tag struct {
+		Key string
+		Val string
+	}
+)
 
 func SetFields(widget any, tag string) {
 	// using reflection to set fields
 	v := reflect.ValueOf(widget).Elem() // i.e. pointer to struct
 
-	tagMap, err := tagToMap(tag)
+	tagList, err := tagToList(tag) // sorted list of struct tags in declaration order
 
 	if err != nil {
 		fmt.Println("error :", err)
 		return
 	}
-	for key, str := range tagMap { // iterate through the tags
+	for _, tag := range tagList { // iterate through the tags
+		key := tag.Key
+		val := tag.Val
 		vField := v.FieldByName(key)
 		if !vField.CanSet() {
 			if v.Type().Name() == "MenuInt" { // need to set map[int]string
@@ -32,43 +40,42 @@ func SetFields(widget any, tag string) {
 				if ok {
 					i, err := strconv.Atoi(key)
 					if err == nil {
-						mi.Choices[i] = str
+						mi.Choices = append(mi.Choices, menuinput.IntStr{Key: i, Val: val})
 						continue
 					}
 				}
 			}
-			fmt.Printf("SetFields cannot set field '%s' in widget type '%s' with value '%s'\n", key, v.Type().Name(), str)
+			fmt.Printf("SetFields cannot set field '%s' in widget type '%s' with value '%s'\n", key, v.Type().Name(), val)
 		} else {
 			switch vField.Type().Name() {
 			case "string":
-				vField.SetString(str)
+				vField.SetString(val)
 			case "bool":
-				vField.SetBool(str == "true")
+				vField.SetBool(val == "true")
 			case "Pfloat":
-				f, err := strconv.ParseFloat(str, 64)
+				f, err := strconv.ParseFloat(val, 64)
 				if err != nil {
-					fmt.Printf("Error parsing float for field '%s': %v\n", key, err)
+					fmt.Printf("Error parsing float for field '%s': %v\n", val, err)
 					continue
 				}
 				vField.Set(reflect.ValueOf(&f))
 			case "Pint":
-				i, err := strconv.ParseInt(str, 10, 64)
+				i, err := strconv.ParseInt(val, 10, 64)
 				if err != nil {
 					fmt.Printf("Error parsing int for field '%s': %v\n", key, err)
 					continue
 				}
 				vField.Set(reflect.ValueOf(&i))
 			default:
-				fmt.Printf("Unknown type '%s' for field '%s' with value '%s'\n", vField.Type().Name(), key, str)
+				fmt.Printf("Unknown type '%s' for field '%s' with value '%s'\n", vField.Type().Name(), key, val)
 			}
 		}
 	}
-
 }
 
-func tagToMap(tag string) (tagMap map[string]string, err error) {
+func tagToList(tag string) (tagList []Tag, err error) {
 	input := parse.Input{Line: tag}
-	tagMap = make(map[string]string)
+	tagList = make([]Tag, 0)
 	for input.Line != "" {
 		key := input.GetTagKey() // ends when it runs out of letter/digit/_/. which will be at the ':' separator
 		if input.Err != nil {
@@ -85,7 +92,8 @@ func tagToMap(tag string) (tagMap map[string]string, err error) {
 			err = input.Err
 			return
 		}
-		tagMap[key] = val
+		tag := Tag{Key: key, Val: val}
+		tagList = append(tagList, tag)
 		// this needs to be done so empty string detected correctly on next pass
 		input.StripSpacer() // Note: ignores error if missing, i.e. at start of line
 	}
