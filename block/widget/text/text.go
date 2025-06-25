@@ -9,6 +9,7 @@ type Text struct {
 	Italic  bool
 	Bold    bool
 	Iconify bool
+	Show    string
 }
 
 func New() *Text {
@@ -25,6 +26,9 @@ func (t *Text) Html() (txt string) {
 	}
 	if t.Iconify {
 		txt = widget.OpenCloseTag(txt, `span class="iconify"`, "span")
+	}
+	if t.Show != "" {
+		txt = widget.OpenCloseTag(txt, `span data-quando-toggle="`+t.Show+`"`, "span")
 	}
 	return
 }
