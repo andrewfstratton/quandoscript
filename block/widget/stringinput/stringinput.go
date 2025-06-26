@@ -10,6 +10,7 @@ type String struct {
 	Name    string
 	Default string
 	Empty   string
+	Length  string
 }
 
 func New(name string) *String {
@@ -23,6 +24,9 @@ func (si *String) Html() (txt string) {
 	}
 	if si.Empty != "" {
 		txt += " placeholder='" + si.Empty + "'"
+	}
+	if si.Length != "" {
+		txt += " maxlength='" + si.Length + "'"
 	}
 	txt += `/>&quot;`
 	return
