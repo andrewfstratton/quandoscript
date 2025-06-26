@@ -16,6 +16,7 @@ type (
 
 type MenuInt struct {
 	Name    string
+	Hover   bool
 	Choices IntStrings
 }
 
@@ -24,7 +25,11 @@ func NewMenuInt(name string) *MenuInt {
 }
 
 func (widg *MenuInt) Html() (txt string) {
-	txt = fmt.Sprintf(`<select data-quando-name="%v">`, widg.Name)
+	txt = fmt.Sprintf(`<select data-quando-name="%v"`, widg.Name)
+	if widg.Hover {
+		txt += ` class="hover-display"`
+	}
+	txt += `>`
 	for _, choice := range widg.Choices {
 		txt += fmt.Sprintf("\n<option value='%d'>%s</option>", choice.Key, choice.Val)
 	}

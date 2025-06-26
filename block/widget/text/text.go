@@ -10,6 +10,7 @@ type Text struct {
 	Bold    bool
 	Iconify bool
 	Show    string
+	Hover   bool
 }
 
 func New() *Text {
@@ -18,6 +19,9 @@ func New() *Text {
 
 func (t *Text) Html() (txt string) {
 	txt = t.Txt
+	if t.Hover {
+		txt = widget.OpenCloseTag(txt, `span class="hover-display"`, "span")
+	}
 	if t.Italic {
 		txt = widget.TagText(txt, "i")
 	}
