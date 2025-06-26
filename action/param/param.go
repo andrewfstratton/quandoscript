@@ -71,7 +71,7 @@ func (param *NumberParam) Int() int {
 }
 
 func (param *NumberParam) Bool() bool {
-	return param.Val > 0.5
+	return param.Val >= 0.5
 }
 
 func (param *NumberParam) Duration() time.Duration {
