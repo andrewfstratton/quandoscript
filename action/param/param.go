@@ -70,6 +70,10 @@ func (param *NumberParam) Int() int {
 	return int(param.Val)
 }
 
+func (param *NumberParam) Bool() bool {
+	return param.Val > 0.5
+}
+
 func (param *NumberParam) Duration() time.Duration {
 	// N.B. below is to allow for sub second times...
 	return time.Duration(param.Val * float64(time.Second))
