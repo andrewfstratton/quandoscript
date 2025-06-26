@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/andrewfstratton/quandoscript/action/param"
+	"github.com/andrewfstratton/quandoscript/block/widget"
 )
 
 type String struct {
@@ -11,6 +12,7 @@ type String struct {
 	Default string
 	Empty   string
 	Length  string
+	Show    string
 }
 
 func New(name string) *String {
@@ -29,6 +31,9 @@ func (si *String) Html() (txt string) {
 		txt += " maxlength='" + si.Length + "'"
 	}
 	txt += `/>&quot;`
+	if si.Show != "" {
+		txt = widget.OpenCloseTag(txt, `span data-quando-toggle="`+si.Show+`"`, "span")
+	}
 	return
 }
 
