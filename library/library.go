@@ -49,10 +49,10 @@ func FindBlock(block_type string) (block *block.Block, found bool) {
 	return
 }
 
-func newAction(word string, early param.Params, late_params param.Params) *action.Action {
+func libraryNewAction(word string, early param.Params, late_params param.Params) *action.Action {
 	bt, found := FindBlock(word)
 	if !found {
-		fmt.Printf("Error : Lookup failing for : '%s'\n", word)
+		fmt.Printf("Error : libraryNewAction cannot find word '%s'\n", word)
 		return nil
 	}
 	late := bt.Early(early)              // run the early binding
@@ -68,7 +68,7 @@ func Menu(class string) *menu.Menu {
 }
 
 func Parse(lines string) { // setup the whole script as actions for calling - only does early setup
-	parse.Lines(lines, newAction)
+	parse.Lines(lines, libraryNewAction)
 }
 
 func init() {

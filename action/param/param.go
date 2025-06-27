@@ -10,28 +10,28 @@ import (
 type Param any // horrible but easiest - must be currently
 type Params map[string]Param
 type StringParam struct {
-	Lookup string
-	Val    definition.STRING
+	Name string
+	Val  definition.STRING
 }
 
 type NumberParam struct {
-	Lookup string
-	Val    definition.NUMBER
+	Name string
+	Val  definition.NUMBER
 }
 
 type IdParam struct {
-	Lookup string
-	Val    definition.LINEID
+	Name string
+	Val  definition.LINEID
 }
 
-func NewString(lookup string, val string, params Params) (param *StringParam) {
-	param = &StringParam{Lookup: lookup, Val: val}
+func NewString(name string, val string, params Params) (param *StringParam) {
+	param = &StringParam{Name: name, Val: val}
 	param.Update(params)
 	return
 }
 
 func (param *StringParam) Update(params Params) {
-	p, found := params[param.Lookup]
+	p, found := params[param.Name]
 	if !found {
 		return // nothing to update
 	}
@@ -41,18 +41,18 @@ func (param *StringParam) Update(params Params) {
 	case definition.VARIABLE:
 		// lookup variable here...
 	default:
-		fmt.Println("Error : ", param.Lookup, " incorrect type")
+		fmt.Println("Error : ", param.Name, " incorrect type")
 	}
 }
 
-func NewNumber(lookup string, val float64, params Params) (param *NumberParam) {
-	param = &NumberParam{Lookup: lookup, Val: val}
+func NewNumber(name string, val float64, params Params) (param *NumberParam) {
+	param = &NumberParam{Name: name, Val: val}
 	param.Update(params)
 	return
 }
 
 func (param *NumberParam) Update(params Params) {
-	p, found := params[param.Lookup]
+	p, found := params[param.Name]
 	if !found {
 		return
 	}
@@ -62,7 +62,7 @@ func (param *NumberParam) Update(params Params) {
 	case definition.VARIABLE:
 		// lookup variable here...
 	default:
-		fmt.Println("Error : ", param.Lookup, " incorrect type")
+		fmt.Println("Error : ", param.Name, " incorrect type")
 	}
 }
 
@@ -79,14 +79,14 @@ func (param *NumberParam) Duration() time.Duration {
 	return time.Duration(param.Val * float64(time.Second))
 }
 
-func NewId(lookup string, val int, params Params) (param *IdParam) {
-	param = &IdParam{Lookup: lookup, Val: val}
+func NewId(name string, val int, params Params) (param *IdParam) {
+	param = &IdParam{Name: name, Val: val}
 	param.Update(params)
 	return
 }
 
 func (param *IdParam) Update(params Params) {
-	p, found := params[param.Lookup]
+	p, found := params[param.Name]
 	if !found {
 		return
 	}
@@ -96,6 +96,6 @@ func (param *IdParam) Update(params Params) {
 	case definition.VARIABLE:
 		// lookup variable here...
 	default:
-		fmt.Println("Error : ", param.Lookup, " incorrect type")
+		fmt.Println("Error : ", param.Name, " incorrect type")
 	}
 }

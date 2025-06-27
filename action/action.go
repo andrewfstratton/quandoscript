@@ -15,8 +15,13 @@ var actions map[int]*Action // map id to action
 var last *Action
 var startId int = 0
 
-type Early func(param.Params) func(param.Params) // outer/setup function that returns late inner function
-type Late func(param.Params)                     // inner function that is run every invocation
+type (
+	// outer/setup function that returns late inner function
+	Early func(param.Params) func(param.Params) // e.g. used for menu options/constants chosen by the end user
+
+	// inner function that is run every invocation
+	Late func(param.Params) // e.g. used for variable substitution
+)
 
 func New(late Late, params param.Params) *Action {
 	action := Action{late: late, params: params, nextId: 0} // N.B. 0 is to show no following action
@@ -55,5 +60,5 @@ func Start() (warn string) {
 }
 
 func init() {
-	actions = map[int]*Action{} // i.e. the lookup table to find any action
+	actions = map[int]*Action{} // i.e. the table to find action on id
 }
