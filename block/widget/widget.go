@@ -10,6 +10,12 @@ import (
 	"github.com/andrewfstratton/quandoscript/parse"
 )
 
+const (
+	RELEASE       = 0
+	PRESS         = 1
+	PRESS_RELEASE = 2
+)
+
 type (
 	Widget interface {
 		Html() string
