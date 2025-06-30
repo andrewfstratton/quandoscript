@@ -49,14 +49,14 @@ func FindBlock(block_type string) (block *block.Block, found bool) {
 	return
 }
 
-func libraryNewAction(word string, early param.Params, late_params param.Params) *action.Action {
+func libraryNewAction(word string, first_child_ids []int, early param.Params, late_params param.Params) *action.Action {
 	bt, found := FindBlock(word)
 	if !found {
 		fmt.Printf("Error : libraryNewAction cannot find word '%s'\n", word)
 		return nil
 	}
-	late := bt.Early(early)              // run the early binding
-	return action.New(late, late_params) // return the late binding with the closure
+	late := bt.Early(early)                               // run the early binding
+	return action.New(late, late_params, first_child_ids) // return the late binding with the closure
 }
 
 func Classes() []string {

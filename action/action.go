@@ -5,13 +5,15 @@ import (
 )
 
 type Action struct {
-	late   func(param.Params)
-	params param.Params
-	nextId int
+	late          func(param.Params)
+	params        param.Params
+	firstChildren []int
+	parent        int
+	nextId        int // default 0 means none following
 	// context
 }
 
-var actions map[int]*Action // map id to action
+var actions map[int]*Action = map[int]*Action{} // map id to action
 var last *Action
 var startId int = 0
 
@@ -23,8 +25,8 @@ type (
 	Late func(param.Params) // e.g. used for variable substitution
 )
 
-func New(late Late, params param.Params) *Action {
-	action := Action{late: late, params: params, nextId: 0} // N.B. 0 is to show no following action
+func New(late Late, params param.Params, first_child_ids []int) *Action {
+	action := Action{late: late, params: params, firstChildren: first_child_ids}
 	return &action
 }
 
@@ -55,10 +57,22 @@ func Start() (warn string) {
 	if startId == 0 {
 		return "No actions found"
 	}
+	setParents(startId)
 	Run(startId)
 	return
 }
 
-func init() {
-	actions = map[int]*Action{} // i.e. the table to find action on id
+func setParents(parentId int) {
+	parent, found := actions[parentId]
+	if !found {
+		return
+	}
+	for _, childId := range parent.firstChildren {
+		child, found := actions[childId]
+		if !found {
+			return
+		}
+		child.parent = parentId
+		setParents(childId)
+	}
 }

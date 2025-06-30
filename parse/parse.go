@@ -14,7 +14,7 @@ import (
 	"github.com/andrewfstratton/quandoscript/definition"
 )
 
-type NewAction func(word string, early param.Params, late_params param.Params) *action.Action // passed in by library
+type NewAction func(word string, first_child_ids []int, early param.Params, late_params param.Params) *action.Action // passed in by library
 
 type Input struct {
 	Line string
@@ -33,7 +33,7 @@ func (input *Input) matchStart(rxp string, lookfor string) (found string) {
 	return
 }
 
-func line(line string) (lineid int, word string, params param.Params, err error) {
+func line(line string) (lineid int, first_child_ids []int, word string, params param.Params, err error) {
 	if line == "" { // word and err are nil for a blank line
 		return
 	}
@@ -47,6 +47,22 @@ func line(line string) (lineid int, word string, params param.Params, err error)
 	if input.Err != nil {
 		err = input.Err
 		return
+	}
+	// consume any available ids
+	for {
+		restore := input.Line
+		child := input.getId()
+		if input.Err != nil {
+			input.Line = restore
+			input.Err = nil
+			break
+		}
+		first_child_ids = append(first_child_ids, child)
+		input.StripSpacer()
+		if input.Err != nil {
+			err = input.Err
+			return
+		}
 	}
 	word = input.GetWord()
 	if input.Err != nil {
@@ -71,11 +87,11 @@ func Lines(in string, libraryNewAction NewAction) { // setup the whole script as
 			new_group = true
 			continue
 		}
-		lineid, word, params, err := line(line_scanner.Text())
+		lineid, first_child_ids, word, params, err := line(line_scanner.Text())
 		if err != nil {
-			fmt.Println(lineid, word, params, err)
+			fmt.Println(lineid, first_child_ids, word, params, err)
 		}
-		o := libraryNewAction(word, params, nil)
+		o := libraryNewAction(word, first_child_ids, params, nil)
 		if new_group {
 			action.NewGroup()
 			new_group = false
