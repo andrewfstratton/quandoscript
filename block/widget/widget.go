@@ -6,7 +6,9 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/andrewfstratton/quandoscript/block/widget/boxinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/menuinput"
+	"github.com/andrewfstratton/quandoscript/block/widget/numberinput"
 	"github.com/andrewfstratton/quandoscript/parse"
 )
 
@@ -24,6 +26,15 @@ type (
 	Tag struct {
 		Key string
 		Val string
+	}
+	P_ressRelease struct {
+		PressRelease menuinput.MenuInt `2:"⇕" 1:"press" 0:"release"`
+	}
+	S_ecs struct {
+		Secs numberinput.Number `empty:"seconds" min:"0" max:"999" width:"4" default:"1"`
+	}
+	B_ox struct {
+		Box boxinput.Box
 	}
 )
 
