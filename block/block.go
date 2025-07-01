@@ -19,7 +19,6 @@ import (
 	"github.com/andrewfstratton/quandoscript/block/widget/percentinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/stringinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/text"
-	"github.com/andrewfstratton/quandoscript/definition"
 )
 
 type Block struct {
@@ -30,47 +29,9 @@ type Block struct {
 }
 
 func CreateFromDefinition(defn any) (block *Block) {
-	t := reflect.TypeOf(defn).Elem() // i.e. pointer to struct
 	// 	N.B. TypeName and Class exist in Defn - not in widgets
 	block = &Block{}
-	for i := range t.NumField() {
-		f := t.Field(i)
-		tag := f.Tag
-		underscoreTag := tag.Get("_")
-		if f.Name == "TypeName" {
-			block.TypeName = underscoreTag
-			continue
-		}
-		if f.Name == "Class" && underscoreTag != "" {
-			block.Class = "quando-" + underscoreTag // always insert quando- infront of class
-			continue
-		}
-		// Otherwise check the type
-		var w widget.Widget
-		fullTypeName := f.Type.PkgPath() + "." + f.Type.Name()
-		_, typeName := path.Split(fullTypeName) // split on last /
-		switch typeName {
-		case "text.Text":
-			w = text.New()
-		case "stringinput.String":
-			w = stringinput.New(f.Name)
-		case "numberinput.Number":
-			w = numberinput.New(f.Name)
-		case "boxinput.Box":
-			w = boxinput.New(f.Name, block.Class)
-		case "percentinput.Percent":
-			w = percentinput.New(f.Name)
-		case "menuinput.MenuInt":
-			w = menuinput.NewMenuInt(f.Name)
-		default:
-			fmt.Println("Block:CreateFromDefinition() not handling:", fullTypeName, "as", typeName)
-			continue
-		}
-		// N.B. run when a valid widget has been created - note the use of continue above
-		widget.SetFields(w, string(tag))
-		block.widgets = append(block.widgets, w)
-		definition.SetupWidget(defn, f.Name)
-	}
+	block.setupWidgets(defn, "")
 	if block.TypeName == "" {
 		fmt.Println(`ATTEMPT TO CREATE BLOCK WITH EMPTY ("") BLOCK TYPE`)
 		if testing.Testing() {
@@ -80,6 +41,61 @@ func CreateFromDefinition(defn any) (block *Block) {
 		os.Exit(99)
 	}
 	return
+}
+
+func (block *Block) setupWidgets(defn any, applyTag string) { // applyTag is added to the (sub struct) widget tags
+	typeDefn := reflect.TypeOf(defn)
+	valueDefn := reflect.ValueOf(defn)
+	for i := range typeDefn.NumField() {
+		field := typeDefn.Field(i)
+		tag := field.Tag
+		underscoreTag := tag.Get("_")
+		if field.Name == "TypeName" {
+			block.TypeName = underscoreTag
+			continue
+		}
+		if field.Name == "Class" && underscoreTag != "" {
+			block.Class = "quando-" + underscoreTag // always insert quando- infront of class
+			continue
+		}
+		// Otherwise check the type
+		var w widget.Widget
+		fullTypeName := field.Type.PkgPath() + "." + field.Type.Name()
+		if fullTypeName == "." {
+			fmt.Printf("setupWidgets field '%s' has no type -- may be pointer", field.Name)
+		}
+		_, typeName := path.Split(fullTypeName) // split on last /
+		fullTag := string(tag)
+		if applyTag != "" {
+			fullTag = applyTag + " " + fullTag
+		}
+		switch typeName {
+		case "text.Text":
+			w = text.New()
+		case "stringinput.String":
+			w = stringinput.New(field.Name)
+		case "numberinput.Number":
+			w = numberinput.New(field.Name)
+		case "boxinput.Box":
+			w = boxinput.New(field.Name, block.Class)
+		case "percentinput.Percent":
+			w = percentinput.New(field.Name)
+		case "menuinput.MenuInt":
+			w = menuinput.NewMenuInt(field.Name)
+		default:
+			// check for sub struct definition
+			valueField := valueDefn.Field(i)
+			if valueField.Kind() == reflect.Struct {
+				block.setupWidgets(valueField.Interface(), fullTag) // access the embedded struct with inherited tag
+			} else {
+				fmt.Println("Block:setupWidgets() not handling:", fullTypeName, "as", typeName)
+			}
+			continue
+		}
+		// N.B. below runs when a valid widget has been created - note the use of continue above
+		widget.SetFields(w, fullTag)
+		block.widgets = append(block.widgets, w)
+	}
 }
 
 func (block *Block) Op(early action.Early) {

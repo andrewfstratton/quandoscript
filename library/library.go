@@ -22,7 +22,7 @@ var blocks map[string]*block.Block // lookup for all block types
 var menus map[string]*menu.Menu    // groups of blocks by 'class' for menu
 var classes []string
 
-func Block(defn any) (b *block.Block) { // call through block New
+func NewBlock(defn any) (b *block.Block) {
 	b = block.CreateFromDefinition(defn)
 	_, inuse := blocks[b.TypeName]
 	if inuse {

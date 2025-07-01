@@ -17,6 +17,7 @@ const (
 )
 
 type (
+	None   struct{}
 	Widget interface {
 		Html() string
 	}
