@@ -14,12 +14,17 @@ type (
 	IntStrings []IntStr
 )
 
-type MenuInt struct {
-	Name    string
-	Hover   bool
-	Toggle  bool
-	Choices IntStrings
-}
+type (
+	MenuInt struct {
+		Name    string
+		Hover   bool
+		Toggle  bool
+		Choices IntStrings
+	}
+	P_ressRelease struct {
+		PressRelease MenuInt `2:"⇕" 1:"press" 0:"release"`
+	}
+)
 
 func NewMenuInt(name string) *MenuInt {
 	return &MenuInt{Name: name, Choices: make(IntStrings, 0)}

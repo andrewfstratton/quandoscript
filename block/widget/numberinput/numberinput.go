@@ -11,14 +11,19 @@ type (
 	Pint   *int64
 )
 
-type Number struct {
-	Name    string
-	Default Pfloat
-	Empty   string
-	Width   Pint
-	Min     Pint
-	Max     Pint
-}
+type (
+	Number struct {
+		Name    string
+		Default Pfloat
+		Empty   string
+		Width   Pint
+		Min     Pint
+		Max     Pint
+	}
+	S_ecs struct {
+		Secs Number `empty:"seconds" min:"0" max:"999" width:"4" default:"1"`
+	}
+)
 
 func New(name string) *Number {
 	return &Number{Name: name}

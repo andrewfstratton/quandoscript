@@ -6,10 +6,15 @@ import (
 	"github.com/andrewfstratton/quandoscript/action/param"
 )
 
-type Box struct {
-	Name  string
-	Class string
-}
+type (
+	Box struct {
+		Name  string
+		Class string
+	}
+	B_ox struct {
+		Box Box
+	}
+)
 
 func New(name string, class string) *Box {
 	return &Box{Name: name, Class: class}
