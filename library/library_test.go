@@ -14,7 +14,7 @@ type SimpleDefn struct {
 func TestNew(t *testing.T) {
 	assert.True(t, menus != nil)
 	assert.True(t, blocks != nil)
-	b := Block(&SimpleDefn{})
+	b := NewBlock(SimpleDefn{})
 	assert.True(t, b != nil)
 }
 
@@ -32,14 +32,14 @@ func TestFind(t *testing.T) {
 	assert.True(t, b == nil)
 	assert.Eq(t, found, false)
 
-	Block(&SimpleDefn2{}) // don't keep reference here...
+	NewBlock(SimpleDefn2{}) // don't keep reference here...
 	b, found = FindBlock("display.show")
 	assert.True(t, b != nil)
 	assert.Eq(t, found, true)
 }
 
 func TestClasses(t *testing.T) {
-	Block(&SimpleDefn{})
-	Block(&SimpleDefn2{})
+	NewBlock(SimpleDefn{})
+	NewBlock(SimpleDefn2{})
 	assert.Eq(t, len(Classes()), 2)
 }

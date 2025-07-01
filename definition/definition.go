@@ -23,21 +23,28 @@ type (
 	PERCENT  = float64
 )
 
-func SetupWidget(defn any, name string) {
-	if name == "_" || name == "" {
-		return
-	}
-	// using reflection to set fields
-	v := reflect.ValueOf(defn).Elem() // i.e. pointer to struct
-	vField := v.FieldByName(name)     // get (input) widget
-	if vField.CanSet() {
-		vName := vField.FieldByName("Name")
-		if vName.CanSet() {
-			vName.SetString(name)
-			return
+// Below is seperate since otherwise a copy is made of the definition and the copy only is changed
+// unlike the block that is a new copy that is returned anyway...
+func Setup(defn any) {
+	typeDefn := reflect.TypeOf(defn).Elem()
+	valueDefn := reflect.ValueOf(defn).Elem()
+	for i := range typeDefn.NumField() {
+		field := valueDefn.Field(i)
+		name := typeDefn.Field(i).Name
+		// nameTag := typeDefn.Field(i).Tag.Get("name")
+		if name == "" || name == "_" {
+			continue
 		}
-		fmt.Printf("Cannot set Name on %T\n", defn)
-		return
+		// use reflection to set name field
+		if field.CanSet() {
+			vName := field.FieldByName("Name")
+			if vName.CanSet() {
+				vName.SetString(name)
+				continue
+			}
+			fmt.Printf("Cannot set Name on %T\n", defn)
+			continue
+		}
+		fmt.Printf("Cannot set field '%s' on %T\n", name, defn)
 	}
-	fmt.Printf("Cannot set field '%s' on %T\n", name, defn)
 }

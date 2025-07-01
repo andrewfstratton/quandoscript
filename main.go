@@ -6,30 +6,59 @@ import (
 
 	"github.com/andrewfstratton/quandoscript/action"
 	"github.com/andrewfstratton/quandoscript/action/param"
-	"github.com/andrewfstratton/quandoscript/block/widget/boxinput"
+	"github.com/andrewfstratton/quandoscript/block/widget"
 	"github.com/andrewfstratton/quandoscript/block/widget/menuinput"
+	"github.com/andrewfstratton/quandoscript/block/widget/stringinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/text"
+	"github.com/andrewfstratton/quandoscript/definition"
 	"github.com/andrewfstratton/quandoscript/library"
+	"github.com/andrewfstratton/quandoscript/property"
 )
 
 type Defn struct {
-	TypeName     struct{}          `_:"gamepad.button"`
-	Class        struct{}          `_:"server-devices"`
-	_            text.Text         `txt:"🕹️️️️️ When "`
-	Index        menuinput.MenuInt `0:"Ⓐ/✕" 1:"Ⓑ/◯" 2:"Ⓧ/☐" 3:"Ⓨ/🛆" 14:"🠈" 15:"🠊" 12:"🠉" 13:"🠋" 4:"👈 Bumper" 5:"👉 Bumper" 10:"📍👈" 11:"👉📍" 8:"Back 👈" 9:"👉 Start"`
-	_            text.Text         `txt:" button " iconify:"true"`
-	PressRelease menuinput.MenuInt `2:"⇕" 1:"Press" 0:"Release"`
-	Box          boxinput.Box
+	TypeName     widget.None        `_:"keyboard.control"`
+	Class        widget.None        `_:"server-devices"`
+	Vari         stringinput.String `empty:"⇕" show:"PressRelease=2"`
+	_            text.Text          `txt:"⌨️ Key "`
+	_            text.Text          `txt:"ctrl+" show:"Ctrl=1"`
+	_            text.Text          `txt:"alt+" show:"Alt=1"`
+	_            text.Text          `txt:"shift+" show:"Shift=1"`
+	Key          stringinput.String `empty:"🗚" length:"1"`
+	_            text.Text          `txt:" "`
+	PressRelease menuinput.MenuInt  `2:"⇕" 1:"press" 0:"release"`
+	HoverDefn    `hover:"true"`
+}
+
+type HoverDefn struct {
+	_          text.Text `txt:"<br>"`
+	ToggleDefn `toggle:"true"`
+}
+
+type ToggleDefn struct {
+	Ctrl  menuinput.MenuInt `0:"no ctrl" 1:"ctrl"`
+	Alt   menuinput.MenuInt `0:"no alt" 1:"alt"`
+	Shift menuinput.MenuInt `0:"no shift" 1:"shift"`
 }
 
 func _init() {
-	defn := &Defn{}
-	library.Block(defn).Op(
+	defn := Defn{}
+	definition.Setup(&defn)
+	library.NewBlock(defn).Op(
 		func(early param.Params) func(param.Params) {
-			index := defn.Index.Param(early)
+			key := defn.Key.Param(early)
+			press_release := defn.PressRelease.Param(early)
+			ctrl := defn.Ctrl.Param(early)
+			alt := defn.Alt.Param(early)
+			shift := defn.Shift.Param(early)
+			vari := defn.Vari.Param(early)
 			return func(late param.Params) {
-				index.Update(late)
-				fmt.Println("Button :", index.Val)
+				key.Update(late)
+				vari.Update(late)
+				press := press_release.Int() == widget.PRESS
+				if press_release.Int() == widget.PRESS_RELEASE {
+					press = property.GetBool(0, vari.Val)
+				}
+				fmt.Printf("control_keyboard.PressRelease('%s', %t, %t, %t, %t)\n", key.Val, press, shift.Bool(), ctrl.Bool(), alt.Bool())
 			}
 		})
 }
@@ -39,7 +68,7 @@ func init() {
 }
 
 const (
-	TEST_LINES = `11 gamepad.button(Index#10)`
+	TEST_LINES = `8 keyboard.control(Vari"",Key"a",PressRelease#1,Ctrl#1,Alt#0,Shift#0)`
 )
 
 func main() {
