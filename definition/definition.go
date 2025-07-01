@@ -29,20 +29,22 @@ func Setup(defn any) {
 	typeDefn := reflect.TypeOf(defn).Elem()
 	valueDefn := reflect.ValueOf(defn).Elem()
 	for i := range typeDefn.NumField() {
-		field := valueDefn.Field(i)
+		vField := valueDefn.Field(i)
 		name := typeDefn.Field(i).Name
-		// nameTag := typeDefn.Field(i).Tag.Get("name")
 		if name == "" || name == "_" {
 			continue
 		}
 		// use reflection to set name field
-		if field.CanSet() {
-			vName := field.FieldByName("Name")
+		if vField.CanSet() {
+			vName := vField.FieldByName("Name")
+			if !vName.IsValid() { // i.e. not found, skip
+				continue
+			}
 			if vName.CanSet() {
 				vName.SetString(name)
 				continue
 			}
-			fmt.Printf("Cannot set Name on %T\n", defn)
+			fmt.Printf("Cannot set Name on %s\n", name)
 			continue
 		}
 		fmt.Printf("Cannot set field '%s' on %T\n", name, defn)
