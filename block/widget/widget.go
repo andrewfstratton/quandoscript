@@ -53,7 +53,14 @@ func SetFields(widget any, tag string) {
 					}
 				}
 			}
-			fmt.Printf("SetFields cannot set field '%s' in widget type '%s' with value '%s'\n", key, v.Type().Name(), val)
+			if v.Type().Name() == "MenuStr" { // need to set map[int]string
+				mi, ok := widget.(*menuinput.MenuStr)
+				if ok {
+					mi.Choices = append(mi.Choices, menuinput.StringString{Key: key, Val: val})
+					continue
+				}
+			}
+			fmt.Printf("SetFields cannot set field '%s' in widget type '%s' with value '%s'\n", ukey, v.Type().Name(), val)
 		} else {
 			switch vField.Type().Name() {
 			case "string":

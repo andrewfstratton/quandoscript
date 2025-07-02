@@ -77,6 +77,8 @@ func (block *Block) setupWidgets(defn any) {
 			w = percentinput.New(field.Name)
 		case "menuinput.MenuInt":
 			w = menuinput.NewMenuInt(field.Name)
+		case "menuinput.MenuStr":
+			w = menuinput.NewMenuStr(field.Name)
 		default:
 			fmt.Println("Block:setupWidgets() not handling:", fullTypeName, "as", typeName, "with kind", field.Type.Kind())
 			continue
