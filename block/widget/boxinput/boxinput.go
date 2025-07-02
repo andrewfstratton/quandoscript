@@ -11,18 +11,14 @@ type (
 		Name  string
 		Class string
 	}
-	B_ox struct {
-		Box Box
-	}
 )
 
 func New(name string, class string) *Box {
 	return &Box{Name: name, Class: class}
 }
 
-func (bi *Box) Html() (txt string) {
-	txt = fmt.Sprintf("</div><div data-quando-name='%s' class='quando-box'></div>\n<div class='quando-row %s'>\n", bi.Name, bi.Class)
-	return
+func (bi *Box) Html() string {
+	return fmt.Sprintf("</div><div data-quando-name='%s' class='quando-box'></div>\n<div class='quando-row %s'>\n", bi.Name, bi.Class)
 }
 
 func (bi *Box) Generate() string {

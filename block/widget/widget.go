@@ -40,14 +40,15 @@ func SetFields(widget any, tag string) {
 	for _, tag := range tagList { // iterate through the tags
 		key := tag.Key
 		val := tag.Val
-		vField := v.FieldByName(key)
+		ukey := strings.ToUpper(key[0:1]) + key[1:] // upper case first letter
+		vField := v.FieldByName(ukey)
 		if !vField.CanSet() {
 			if v.Type().Name() == "MenuInt" { // need to set map[int]string
 				mi, ok := widget.(*menuinput.MenuInt)
 				if ok {
 					i, err := strconv.Atoi(key)
 					if err == nil {
-						mi.Choices = append(mi.Choices, menuinput.IntStr{Key: i, Val: val})
+						mi.Choices = append(mi.Choices, menuinput.IntString{Key: i, Val: val})
 						continue
 					}
 				}
@@ -69,7 +70,7 @@ func SetFields(widget any, tag string) {
 			case "Pint":
 				i, err := strconv.ParseInt(val, 10, 64)
 				if err != nil {
-					fmt.Printf("Error parsing int for field '%s': %v\n", key, err)
+					fmt.Printf("Error parsing int for field '%s': %v\n", ukey, err)
 					continue
 				}
 				vField.Set(reflect.ValueOf(&i))
@@ -84,13 +85,8 @@ func tagToList(tag string) (tagList []Tag, err error) {
 	input := parse.Input{Line: tag}
 	tagList = make([]Tag, 0)
 	for input.Line != "" {
-		key := input.GetTagKey() // ends when it runs out of letter/digit/_/. which will be at the ':' separator
+		key := input.GetTagKey() // returns everything upto the next ':"'
 		if input.Err != nil {
-			err = input.Err
-			return
-		}
-		key = strings.ToUpper(key[0:1]) + key[1:] // upper case first letter
-		if input.GetColonDoublequote(); input.Err != nil {
 			err = input.Err
 			return
 		}

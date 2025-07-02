@@ -18,6 +18,7 @@ import (
 type Defn struct {
 	TypeName     widget.None        `_:"keyboard.control"`
 	Class        widget.None        `_:"server-devices"`
+	PressRelease menuinput.MenuInt  `2:"⇕" 1:"press" 0:"release"`
 	Vari         stringinput.String `empty:"⇕" show:"PressRelease=2"`
 	_            text.Text          `txt:"⌨️ Key "`
 	_            text.Text          `txt:"ctrl+" show:"Ctrl=1"`
@@ -25,19 +26,10 @@ type Defn struct {
 	_            text.Text          `txt:"shift+" show:"Shift=1"`
 	Key          stringinput.String `empty:"🗚" length:"1"`
 	_            text.Text          `txt:" "`
-	PressRelease menuinput.MenuInt  `2:"⇕" 1:"press" 0:"release"`
-	HoverDefn    `hover:"true"`
-}
-
-type HoverDefn struct {
-	_          text.Text `txt:"<br>"`
-	ToggleDefn `toggle:"true"`
-}
-
-type ToggleDefn struct {
-	Ctrl  menuinput.MenuInt `0:"no ctrl" 1:"ctrl"`
-	Alt   menuinput.MenuInt `0:"no alt" 1:"alt"`
-	Shift menuinput.MenuInt `0:"no shift" 1:"shift"`
+	_            text.Text          `txt:"<br>" hover:"true"`
+	Ctrl         menuinput.MenuInt  `0:"no ctrl" 1:"ctrl" hover:"true" toggle:"true"`
+	Alt          menuinput.MenuInt  `0:"no alt" 1:"alt" hover:"true" toggle:"true"`
+	Shift        menuinput.MenuInt  `0:"no shift" 1:"shift" hover:"true" toggle:"true"`
 }
 
 func _init() {
@@ -58,7 +50,7 @@ func _init() {
 				if press_release.Int() == widget.PRESS_RELEASE {
 					press = property.GetBool(0, vari.Val)
 				}
-				fmt.Printf("control_keyboard.PressRelease('%s', %t, %t, %t, %t)\n", key.Val, press, shift.Bool(), ctrl.Bool(), alt.Bool())
+				fmt.Printf("control_keyboard.PressRelease('%s', %t, %t, %t, %t)\n", key.Val, press, ctrl.Bool(), alt.Bool(), shift.Bool())
 			}
 		})
 }
@@ -68,7 +60,7 @@ func init() {
 }
 
 const (
-	TEST_LINES = `8 keyboard.control(Vari"",Key"a",PressRelease#1,Ctrl#1,Alt#0,Shift#0)`
+	TEST_LINES = `8 keyboard.control(Vari"a",Key"a",PressRelease#1,Ctrl#1,Alt#1,Shift#1)`
 )
 
 func main() {

@@ -31,7 +31,7 @@ type Block struct {
 func CreateFromDefinition(defn any) (block *Block) {
 	// 	N.B. TypeName and Class exist in Defn - not in widgets
 	block = &Block{}
-	block.setupWidgets(defn, "")
+	block.setupWidgets(defn)
 	if block.TypeName == "" {
 		fmt.Println(`ATTEMPT TO CREATE BLOCK WITH EMPTY ("") BLOCK TYPE`)
 		if testing.Testing() {
@@ -43,9 +43,8 @@ func CreateFromDefinition(defn any) (block *Block) {
 	return
 }
 
-func (block *Block) setupWidgets(defn any, applyTag string) { // applyTag is added to the (sub struct) widget tags
+func (block *Block) setupWidgets(defn any) {
 	typeDefn := reflect.TypeOf(defn)
-	valueDefn := reflect.ValueOf(defn)
 	for i := range typeDefn.NumField() {
 		field := typeDefn.Field(i)
 		tag := field.Tag
@@ -65,10 +64,6 @@ func (block *Block) setupWidgets(defn any, applyTag string) { // applyTag is add
 			fmt.Printf("setupWidgets field '%s' has no type -- may be pointer", field.Name)
 		}
 		_, typeName := path.Split(fullTypeName) // split on last /
-		fullTag := string(tag)
-		if applyTag != "" {
-			fullTag = applyTag + " " + fullTag
-		}
 		switch typeName {
 		case "text.Text":
 			w = text.New()
@@ -83,17 +78,11 @@ func (block *Block) setupWidgets(defn any, applyTag string) { // applyTag is add
 		case "menuinput.MenuInt":
 			w = menuinput.NewMenuInt(field.Name)
 		default:
-			// check for sub struct definition
-			valueField := valueDefn.Field(i)
-			if valueField.Kind() == reflect.Struct {
-				block.setupWidgets(valueField.Interface(), fullTag) // access the embedded struct with inherited tag
-			} else {
-				fmt.Println("Block:setupWidgets() not handling:", fullTypeName, "as", typeName)
-			}
+			fmt.Println("Block:setupWidgets() not handling:", fullTypeName, "as", typeName, "with kind", field.Type.Kind())
 			continue
 		}
 		// N.B. below runs when a valid widget has been created - note the use of continue above
-		widget.SetFields(w, fullTag)
+		widget.SetFields(w, string(tag))
 		block.widgets = append(block.widgets, w)
 	}
 }

@@ -129,7 +129,9 @@ func (input *Input) GetWord() string {
 // removes and returns a tag at start of input.Line, or err if missing.
 // tag contains multiple letter|digit|_|.
 func (input *Input) GetTagKey() string {
-	return input.matchStart("[a-zA-Z0-9_.]*", "tag key containing a-z or A-Z or 0..9 or _ or .")
+	str := input.matchStart(`^(.*?):"`, `tag key to the next ':"'`)
+	str = strings.TrimSuffix(str, `:"`)
+	return str
 }
 
 // removes and returns a string" at start of input.Line, or err if missing.

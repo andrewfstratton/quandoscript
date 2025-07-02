@@ -20,9 +20,6 @@ type (
 		Min     Pint
 		Max     Pint
 	}
-	S_ecs struct {
-		Secs Number `empty:"seconds" min:"0" max:"999" width:"4" default:"1"`
-	}
 )
 
 func New(name string) *Number {
