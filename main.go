@@ -24,12 +24,17 @@ type Defn struct {
 	_            text.Text          `txt:"ctrl+" show:"Ctrl=1"`
 	_            text.Text          `txt:"alt+" show:"Alt=1"`
 	_            text.Text          `txt:"shift+" show:"Shift=1"`
-	Key          stringinput.String `empty:"🗚" length:"1"`
-	_            text.Text          `txt:" "`
-	_            text.Text          `txt:"<br>" hover:"true"`
-	Ctrl         menuinput.MenuInt  `0:"no ctrl" 1:"ctrl" hover:"true" toggle:"true"`
-	Alt          menuinput.MenuInt  `0:"no alt" 1:"alt" hover:"true" toggle:"true"`
-	Shift        menuinput.MenuInt  `0:"no shift" 1:"shift" hover:"true" toggle:"true"`
+	K_ey
+	// Key          stringinput.String `empty:"🗚" length:"1"`
+	_     text.Text         `txt:" "`
+	_     text.Text         `txt:"<br>" hover:"true"`
+	Ctrl  menuinput.MenuInt `0:"no ctrl" 1:"ctrl" hover:"true" toggle:"true"`
+	Alt   menuinput.MenuInt `0:"no alt" 1:"alt" hover:"true" toggle:"true"`
+	Shift menuinput.MenuInt `0:"no shift" 1:"shift" hover:"true" toggle:"true"`
+}
+
+type K_ey struct {
+	Key stringinput.String `empty:"🗚" length:"1"`
 }
 
 func _init() {

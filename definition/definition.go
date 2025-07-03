@@ -31,17 +31,20 @@ func Setup(defn any) {
 	for i := range typeDefn.NumField() {
 		vField := valueDefn.Field(i)
 		name := typeDefn.Field(i).Name
+		fmt.Printf("field name is '%s'\n", name)
 		if name == "" || name == "_" {
 			continue
 		}
 		// use reflection to set name field
 		if vField.CanSet() {
 			vName := vField.FieldByName("Name")
-			if !vName.IsValid() { // i.e. not found, skip
+			fmt.Printf("...can set field, Vname '%s'\n", vName)
+			if !vName.IsValid() { // i.e. not found/no value so skip
 				continue
 			}
 			if vName.CanSet() {
 				vName.SetString(name)
+				fmt.Printf("...has set Vname to '%s'\n", name)
 				continue
 			}
 			fmt.Printf("Cannot set Name on %s\n", name)
